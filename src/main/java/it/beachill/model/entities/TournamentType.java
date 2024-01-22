@@ -1,6 +1,5 @@
 package it.beachill.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.List;
 @Table(name = "domain_type_tournament", schema = "tournament")
 public class TournamentType {
     @Id
-    @Column(name = "tournament_type", length = 20)
-    private String tournamentType;
+    @Column(name = "tournament_type_name", length = 20)
+    private String tournamentTypeName;
 
     @Column(name = "tournament_description")
     private String tournamentDescription;
@@ -23,16 +22,16 @@ public class TournamentType {
     public TournamentType(){}
 
     public TournamentType(String tournamentType, String tournamentDescription) {
-        this.tournamentType = tournamentType;
+        this.tournamentTypeName = tournamentType;
         this.tournamentDescription = tournamentDescription;
     }
 
-    public String getTournamentType() {
-        return tournamentType;
+    public String getTournamentTypeName() {
+        return tournamentTypeName;
     }
 
-    public void setTournamentType(String tournamentType) {
-        this.tournamentType = tournamentType;
+    public void setTournamentTypeName(String tournamentType) {
+        this.tournamentTypeName = tournamentType;
     }
 
     public String getTournamentDescription() {

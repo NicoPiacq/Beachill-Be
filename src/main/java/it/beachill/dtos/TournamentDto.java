@@ -1,8 +1,6 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.Tournament;
-import it.beachill.model.entities.TournamentPlace;
-import it.beachill.model.entities.TournamentType;
 
 import java.sql.Timestamp;
 
@@ -22,7 +20,7 @@ public class TournamentDto {
         this.tournamentName = tournament.getTournamentName();
         this.startDate = tournament.getStartDate();
         this.endDate = tournament.getEndDate();
-        this.tournamentTypeName = tournament.getTournamentType().getTournamentType();
+        this.tournamentTypeName = tournament.getTournamentType().getTournamentTypeName();
         if(tournament.getPlace() == null){
             this.place = null;
         } else {

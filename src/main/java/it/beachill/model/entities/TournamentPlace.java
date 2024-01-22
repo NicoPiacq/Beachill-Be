@@ -11,7 +11,7 @@ public class TournamentPlace {
     @Id
     private String place;
 
-    private String adress;
+    private String address;
 
     @Column(name = "field_number")
     private int fieldNumber;
@@ -22,9 +22,9 @@ public class TournamentPlace {
 
     public TournamentPlace(){}
 
-    public TournamentPlace(String place, String adress, int fieldNumber) {
+    public TournamentPlace(String place, String address, int fieldNumber) {
         this.place = place;
-        this.adress = adress;
+        this.address = address;
         this.fieldNumber = fieldNumber;
     }
 
@@ -36,12 +36,12 @@ public class TournamentPlace {
         this.place = place;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getFieldNumber() {

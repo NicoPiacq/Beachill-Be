@@ -5,7 +5,7 @@ create schema tournament;
 create table tournament.player (
     id serial,
     nickname varchar(64) not null,
-    score bigint,
+    score bigint default 500,
     --nome varchar(255) not null,
     --cognome varchar(255) not null,
     --data_nascita date,
@@ -37,16 +37,16 @@ create table tournament.team_component (
 -- TABELLA DOMINIO DEI LUOGHI DOVE SI SVOLGONO I TORNEI
 create table tournament.domain_place_tournament(
     place varchar(255) not null,
-    adress varchar(255),
+    address varchar(255),
     field_number int not null,
     constraint domain_place_tournament_pk primary key (place)
 );
 
 -- TABELLA DOMINIO DEI TIPI DI TORNEO
 create table tournament.domain_type_tournament(
-    tournament_type varchar(20) not null, --DA CAMBIARE NOME FA SCHIFOOOOO
+    tournament_type_name varchar(20) not null, --DA CAMBIARE NOME FA SCHIFOOOOO
     tournament_description varchar(255),
-    constraint domain_type_tournament_pk primary key (tournament_type)
+    constraint domain_type_tournament_pk primary key (tournament_type_name)
 );
 
 -- TABELLA TORNEO
@@ -58,13 +58,14 @@ create table tournament.tournament (
     place varchar(255),
     tournament_type varchar(20) not null,
     constraint tournament_pk primary key (id),
-    constraint tournament_type_fk foreign key (tournament_type) references tournament.domain_type_tournament(tournament_type),
+    constraint tournament_type_fk foreign key (tournament_type) references tournament.domain_type_tournament(tournament_type_name),
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
 );
 
 --TABELLA TEAM ISCRITTI AL TORNEO
 create table tournament.team_in_tournament(
     id serial,
+    round int,
     team_id bigint not null,
     tournament_id bigint not null,
     constraint team_in_tournament_pk primary key (id),
@@ -121,3 +122,25 @@ create table tournament.pizza_order_line(
     constraint pizza_order_id_fk foreign key (pizza_order_id) references tournament.pizza_order(id),
     constraint player_id_fk foreign key (player_id) references tournament.player(id)
 );
+
+insert into tournament.domain_type_tournament (tournament_type_name, tournament_description)
+values ('10-corto', 'Torneo composto da 10 squadre, 2 gironi da 5, seconda fase corta ...'),
+('10-lungo', 'Torneo composto da 10 squadre, 2 gironi da 5, seconda fase lunga ...');
+
+insert into tournament.domain_place_tournament (place, field_number)
+values ('generation', 2);
+
+insert into tournament.tournament (tournament_name, place, tournament_type)
+values ('torneo prova - 10-corto', 'generation', '10-corto'),
+('torneo prova - 10-lungo', 'generation', '10-lungo');
+
+insert into tournament.player (nickname)
+values('QuaiFede'), ('Gianlu97'), ('Nick');
+
+insert into tournament.team (team_name, team_leader)
+values('fede''s team', 1), ('Gianlu''s team', 2), ('Nick''s team', 3),
+('fede 1', 1), ('fede 2', 1), ('fede 3', 1), ('fede 4', 1),
+('fede 5', 1), ('fede 6', 1), ('fede 7', 1);
+
+insert into tournament.team_in_tournament(team_id, tournament_id)
+values(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1);

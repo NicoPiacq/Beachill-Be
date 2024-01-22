@@ -15,7 +15,7 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "team_leader", nullable = false)
     private Player teamLeader;
-    private int score;
+    private Integer score;
     @OneToMany(mappedBy = "team")
     private List<TeamComponent> teamComponents;
     @OneToMany(mappedBy = "homeTeam")

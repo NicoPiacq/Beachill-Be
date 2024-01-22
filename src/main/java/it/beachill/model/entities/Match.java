@@ -17,22 +17,36 @@ public class Match {
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
     @ManyToOne
-    @JoinColumn(name = "home_team")
+    @JoinColumn(name = "home_team_id")
     private Team homeTeam;
     @ManyToOne
-    @JoinColumn(name = "away_team")
+    @JoinColumn(name = "away_team_id")
     private Team awayTeam;
     @Column(name = "field_number")
     private int fieldNumber;
     @Column(name = "start_date")
     private Timestamp startDate;
     @ManyToOne
-    @JoinColumn(name = "winner_team")
+    @JoinColumn(name = "winner_team_id")
     private Team winnerTeam;
     @OneToMany(mappedBy = "match")
     private List<SetMatch> sets;
 
     public Match() {}
+
+    public Match(int matchNumber, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
+        this.matchNumber = matchNumber;
+        this.tournament = tournament;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.fieldNumber = fieldNumber;
+    }
+
+    public Match(int matchNumber, Tournament tournament, int fieldNumber) {
+        this.matchNumber = matchNumber;
+        this.tournament = tournament;
+        this.fieldNumber = fieldNumber;
+    }
 
     public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, Team winnerTeam) {
         this.id = id;

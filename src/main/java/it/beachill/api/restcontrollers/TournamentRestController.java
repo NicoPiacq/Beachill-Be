@@ -5,12 +5,10 @@ import it.beachill.model.entities.Tournament;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/tournament")
@@ -28,5 +26,14 @@ public class TournamentRestController {
         List<Tournament> tournaments = tournamentsService.findAllTournaments();
         List<TournamentDto> result = tournaments.stream().map(TournamentDto::new).toList();
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/generate/{id}")
+    public ResponseEntity<Object> generateMatchTournament(@PathVariable Long id){
+        boolean result = tournamentsService.generateMatchTournament(id);
+        if(result){
+            return ResponseEntity.ok(true);
+        }
+        else return ResponseEntity.notFound().build();
     }
 }

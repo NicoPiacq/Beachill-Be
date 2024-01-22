@@ -9,6 +9,7 @@ public class TeamInTournament {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Integer round;
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
@@ -18,8 +19,9 @@ public class TeamInTournament {
 
     public TeamInTournament() {}
 
-    public TeamInTournament(Long id, Team team, Tournament tournament) {
+    public TeamInTournament(Long id, int round, Team team, Tournament tournament) {
         this.id = id;
+        this.round = round;
         this.team = team;
         this.tournament = tournament;
     }
@@ -30,6 +32,14 @@ public class TeamInTournament {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
     }
 
     public Team getTeam() {
