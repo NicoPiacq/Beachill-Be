@@ -91,8 +91,6 @@ public class JPATournamentsService implements TournamentsService {
         MatchType semifinal1x4 = matchTypeRepository.findById("SEMIFINALE1x4").get();
         MatchType semifinal5x8 = matchTypeRepository.findById("SEMIFINALE5x8").get();
 
-
-
         matches.add(new Match(matchNumber++, semifinal1x4, tournament, 1));
         matches.add(new Match(matchNumber++, semifinal5x8, tournament, 1));
         matches.add(new Match(matchNumber++, matchTypeRepository.findById("FINALE1x2").get(), tournament, 1));
