@@ -14,6 +14,9 @@ public class Match {
     @Column(name = "match_number")
     private int matchNumber;
     @ManyToOne
+    @JoinColumn(name = "match_type")
+    private MatchType matchType;
+    @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
     @ManyToOne
@@ -34,16 +37,18 @@ public class Match {
 
     public Match() {}
 
-    public Match(int matchNumber, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
+    public Match(int matchNumber, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
         this.matchNumber = matchNumber;
+        this.matchType = matchType;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.fieldNumber = fieldNumber;
     }
 
-    public Match(int matchNumber, Tournament tournament, int fieldNumber) {
+    public Match(int matchNumber, MatchType matchType, Tournament tournament, int fieldNumber) {
         this.matchNumber = matchNumber;
+        this.matchType = matchType;
         this.tournament = tournament;
         this.fieldNumber = fieldNumber;
     }

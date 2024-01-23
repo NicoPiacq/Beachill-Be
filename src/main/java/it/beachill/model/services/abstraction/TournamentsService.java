@@ -7,4 +7,6 @@ import java.util.List;
 public interface TournamentsService {
     List<Tournament> findAllTournaments();
     public boolean generateMatchTournament(Long tournamentId);
+
+
 }
