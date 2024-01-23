@@ -1,9 +1,6 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.model.entities.Match;
-import it.beachill.model.entities.MatchType;
-import it.beachill.model.entities.TeamInTournament;
-import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.*;
 import it.beachill.model.repositories.abstractions.MatchRepository;
 import it.beachill.model.repositories.abstractions.MatchTypeRepository;
 import it.beachill.model.repositories.abstractions.TeamInTournamentRepository;
@@ -20,7 +17,6 @@ import java.util.Random;
 
 @Service
 public class JPATournamentsService implements TournamentsService {
-
     private final TournamentRepository tournamentRepository;
     private final TeamInTournamentRepository teamInTournamentRepository;
     private final MatchRepository matchRepository;
@@ -70,70 +66,75 @@ public class JPATournamentsService implements TournamentsService {
         return false;
     }
 
-    @Transactional
-    private boolean generateMatchTournament10Short(Tournament tournament) {
+    private boolean generateMatchTournament10Long(Tournament tournament) {
+        int[][] tournamentRoundPhaseSchema = {{0, 1}, {2, 3}, {0, 4}, {1, 2}, {3, 4},
+                {0, 2}, {1, 3}, {2, 4}, {0, 3}, {1, 4}};
+
+        String[][] tournamentSecondPhaseSchema = {{"QUARTI1x8", "1"}, {"QUARTI1x8", "1"}, {"SEMIFINALE1x4", "1"},
+                {"SEMIFINALE1x4", "1"}, {"FINALE1x2", "1"}, {"FINALE3x4", "1"}, {"QUARTI1x8", "2"},
+                {"QUARTI1x8", "2"}, {"SEMIFINALE5x8", "2"}, {"SEMIFINALE5x8",  "2"}, {"FINALE9x10", "2"},
+                {"FINALE5x6", "2"}, {"FINALE7x8", "2"}};
+
         //lista dei team iscritti al torneo
         List<TeamInTournament> enrolledTeams = teamInTournamentRepository.findByTournamentId(tournament.getId());
-        //funzione che genera i due gironi
-        List<TeamInTournament> listRound1 = setRoundForNumOfRandomTeams(enrolledTeams, 1, 5);
-        List<TeamInTournament> listRound2 = setRoundForNumOfRandomTeams(enrolledTeams, 2, 5);
-        //inizializzo una variabile che utilizzo come counter dei match
-        int matchNumber = 1;
-        List<Match> matches = new ArrayList<>();
-        //funzione che genera le partite FASE A GIRONE per i due gironi diversi, nei due campi a disposizione
-        matches.addAll(generateMatchFor5TeamsRoundPhase(listRound1, 1, matchNumber));
-        matchNumber = 11;
-        matches.addAll(generateMatchFor5TeamsRoundPhase(listRound2, 2, matchNumber));
-        matchNumber = 21;
-        //genero le partite per la SECONDA FASE nei due campi a disposizione
-        //generateMatchforSecondPhase(21, 26, tournament, 1);
-        //generateMatchforSecondPhase(26, 30, tournament, 2);
-        MatchType semifinal1x4 = matchTypeRepository.findById("SEMIFINALE1x4").get();
-        MatchType semifinal5x8 = matchTypeRepository.findById("SEMIFINALE5x8").get();
 
-        matches.add(new Match(matchNumber++, semifinal1x4, tournament, 1));
-        matches.add(new Match(matchNumber++, semifinal5x8, tournament, 1));
-        matches.add(new Match(matchNumber++, matchTypeRepository.findById("FINALE1x2").get(), tournament, 1));
-        matches.add(new Match(matchNumber++, matchTypeRepository.findById("FINALE3x4").get(), tournament, 1));
-        matches.add(new Match(matchNumber++, matchTypeRepository.findById("FINALE7x8").get(), tournament, 1));
-        matches.add(new Match(matchNumber++, semifinal1x4, tournament, 2));
-        matches.add(new Match(matchNumber++, semifinal5x8, tournament, 2));
-        matches.add(new Match(matchNumber++, matchTypeRepository.findById("FINALE9x10").get(), tournament, 2));
-        matches.add(new Match(matchNumber, matchTypeRepository.findById("FINALE5x6").get(), tournament, 2));
+        //funzione che genera un girone ed elimina le partite selezionate da enrolledTeams
+        List<TeamInTournament> listRound1 = setRoundForNumOfRandomTeams(enrolledTeams, 1, 5);
+
+        //lista risultato contenente i match del torneo
+        List<Match> matches = new ArrayList<>();
+
+        matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1));
+        matches.addAll(generateRoundPhaseMatches(enrolledTeams, tournamentRoundPhaseSchema, 2, matches.size()+1));
+
+        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament));
+        matchRepository.saveAll(matches);
+        return true;
+    }
+    @Transactional
+    private boolean generateMatchTournament10Short(Tournament tournament) {
+        //schema per ordinare i match del girone
+        int[][] tournamentRoundPhaseSchema = {{0, 1}, {2, 3}, {0, 4}, {1, 2}, {3, 4},
+                {0, 2}, {1, 3}, {2, 4}, {0, 3}, {1, 4}};
+
+        //schema per ordinare i match della seconda fase
+        String[][] tournamentSecondPhaseSchema = {{"SEMIFINALE1x4", "1"}, {"SEMIFINALE5x8", "1"},
+                {"FINALE1x2", "1"}, {"FINALE3x4", "1"}, {"FINALE7x8", "1"}, {"SEMIFINALE1x4", "2"},
+                {"SEMIFINALE5x8",  "2"}, {"FINALE9x10", "2"}, {"FINALE5x6", "2"}};
+
+        //lista dei team iscritti al torneo
+        List<TeamInTournament> enrolledTeams = teamInTournamentRepository.findByTournamentId(tournament.getId());
+
+        //funzione che genera un girone ed elimina le partite selezionate da enrolledTeams
+        List<TeamInTournament> listRound1 = setRoundForNumOfRandomTeams(enrolledTeams, 1, 5);
+
+        //lista risultato contenente i match del torneo
+        List<Match> matches = new ArrayList<>();
+
+        matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1));
+        matches.addAll(generateRoundPhaseMatches(enrolledTeams, tournamentRoundPhaseSchema, 2, matches.size()+1));
+
+        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament));
         matchRepository.saveAll(matches);
         return true;
     }
 
-//    private void generateMatchforSecondPhase(int start, int end, Tournament tournament, int field) {
-//        for(int matchNumber = start; matchNumber < end; matchNumber++){
-//            createOrUpdateMatch(new Match(matchNumber, tournament, field));
-//        }
-//    }
 
-    private List<Match> generateMatchFor5TeamsRoundPhase(List<TeamInTournament> roundTeams, int field, int matchNumber){
+    private List<Match> generateRoundPhaseMatches(List<TeamInTournament> roundTeams, int[][] tournamentSchema, int field, int matchNumber){
         List<Match> matches = new ArrayList<>();
         MatchType matchType = matchTypeRepository.findById("GIRONE").get();
-
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(0).getTeam(), roundTeams.get(1).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(2).getTeam(), roundTeams.get(3).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(0).getTeam(), roundTeams.get(4).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(1).getTeam(), roundTeams.get(2).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(3).getTeam(), roundTeams.get(4).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(0).getTeam(), roundTeams.get(2).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(1).getTeam(), roundTeams.get(3).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(2).getTeam(), roundTeams.get(4).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(0).getTeam(), roundTeams.get(3).getTeam(), field));
-        matches.add(new Match(matchNumber++, matchType, roundTeams.get(0).getTournament(),
-                    roundTeams.get(1).getTeam(), roundTeams.get(4).getTeam(), field));
+        Tournament tournament = roundTeams.get(0).getTournament();
+        for(int i = 0; i < tournamentSchema.length; i++){
+            matches.add(new Match(matchNumber++, matchType, tournament, roundTeams.get(tournamentSchema[i][0]).getTeam(),
+                    roundTeams.get(tournamentSchema[i][1]).getTeam(), field));
+        }
+        return matches;
+    }
+    public List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament){
+        List<Match> matches = new ArrayList<>();
+        for(int i = 0; i < tournamentSchema.length; i++){
+            matches.add(new Match(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1])));
+        }
         return matches;
     }
 
@@ -149,11 +150,6 @@ public class JPATournamentsService implements TournamentsService {
             createOrUpdateTeamInTournament(team);
         }
         return listRound;
-    }
-
-    private boolean generateMatchTournament10Long(Tournament tournament) {
-        List<TeamInTournament> enrolledTeams = findAllTeamInTournament(tournament.getId());
-        return false;
     }
 
 }

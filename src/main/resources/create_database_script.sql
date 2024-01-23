@@ -56,7 +56,7 @@ create table tournament.tournament (
     start_date timestamp,
     end_date timestamp,
     place varchar(255),
-    tournament_type varchar(20) not null,
+    tournament_type varchar(20),
     constraint tournament_pk primary key (id),
     constraint tournament_type_fk foreign key (tournament_type) references tournament.domain_type_tournament(tournament_type_name),
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
@@ -151,12 +151,13 @@ insert into tournament.team (team_name, team_leader) values
 ('fede 5', 1), ('fede 6', 1), ('fede 7', 1);
 
 insert into tournament.team_in_tournament(team_id, tournament_id)values
-(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1);
+(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1),
+(1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2), (9, 2), (10, 2);
 
 insert into tournament.domain_match_type (type, description) values
 ('GIRONE', 'Partita di un girone wow che descrizione'),
 ('OTTAVI', 'Ottavi di Finale'),
-('QUARTI', 'Quarti di Finale'),
+('QUARTI1x8', 'Quarti di Finale primo - ottavo posto'),
 ('SEMIFINALE1x4', 'Semifinale primo - quarto posto' ),
 ('SEMIFINALE5x8', 'Semifinale quinto - ottavo posto' ),
 ('FINALE1x2', 'Finale primo - secondo posto! Sei un campione se giochi questa partita'),
