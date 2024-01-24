@@ -44,4 +44,6 @@ public class MatchType {
     public void setMatches(List<Match> matches) {
         this.matches = matches;
     }
+
+
 }

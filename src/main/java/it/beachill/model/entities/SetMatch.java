@@ -68,4 +68,6 @@ public class SetMatch {
     public void setAwayTeamScore(int awayTeamScore) {
         this.awayTeamScore = awayTeamScore;
     }
+
+
 }

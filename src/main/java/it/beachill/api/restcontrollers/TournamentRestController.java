@@ -36,4 +36,21 @@ public class TournamentRestController {
         }
         else return ResponseEntity.notFound().build();
     }
+    @PostMapping("/calculate-group-phase-standing/{id}")
+    public ResponseEntity<Object> calculateGroupStageStanding(@PathVariable Long id){
+        boolean result = tournamentsService.calculateGroupStageStanding(id);
+        if(result){
+            return ResponseEntity.ok(true);
+        }
+        else return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/add-random-result-to-group-phase-matches/{id}")
+    public ResponseEntity<Object> addRandomResultToGroupPhaseMatches(@PathVariable Long id){
+        boolean result = tournamentsService.addRandomResultToGroupPhaseMatches(id);
+        if(result){
+            return ResponseEntity.ok(true);
+        }
+        else return ResponseEntity.notFound().build();
+    }
 }

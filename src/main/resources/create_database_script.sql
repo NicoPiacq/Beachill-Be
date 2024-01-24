@@ -62,6 +62,21 @@ create table tournament.tournament (
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
 );
 
+--aggiunta importante!!!! va bene?
+--TABELLA CLASSIFICA FASE A GIRONI
+create table tournament.group_stage_standing(
+    id serial,
+    tournament_id bigint not null,
+    team_id bigint not null,
+    group_stage int,
+    standing int default 0,
+    points int default 0,
+    constraint group_stage_standing_pk primary key (id),
+    constraint group_stage_tournament_fk foreign key (tournament_id) references tournament.tournament (id),
+    constraint group_stage_team_fk foreign key (team_id) references tournament.team
+);
+
+
 --TABELLA TEAM ISCRITTI AL TORNEO
 create table tournament.team_in_tournament(
     id serial,
@@ -83,8 +98,9 @@ create table tournament.domain_match_type(
 -- TABELLA PARTITE
 create table tournament.match (
     id serial,
-    match_number int not null,
+    match_number int,
     match_type varchar(255),
+    group_stage int,
     tournament_id bigint,
     home_team_id bigint,
     away_team_id bigint,

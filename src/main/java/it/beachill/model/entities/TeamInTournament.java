@@ -57,4 +57,8 @@ public class TeamInTournament {
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
     }
+
+    public void setRound(Integer round) {
+        this.round = round;
+    }
 }

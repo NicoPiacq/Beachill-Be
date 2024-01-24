@@ -13,6 +13,8 @@ public class Match {
     private Long id;
     @Column(name = "match_number")
     private int matchNumber;
+    @Column(name = "group_stage")
+    private int groupStage;
     @ManyToOne
     @JoinColumn(name = "match_type")
     private MatchType matchType;
@@ -37,9 +39,10 @@ public class Match {
 
     public Match() {}
 
-    public Match(int matchNumber, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
+    public Match(int matchNumber, MatchType matchType, int groupStage, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;
+        this.groupStage = groupStage;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
@@ -69,6 +72,30 @@ public class Match {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getMatchNumber() {
+        return matchNumber;
+    }
+
+    public void setMatchNumber(int matchNumber) {
+        this.matchNumber = matchNumber;
+    }
+
+    public int getGroupStage() {
+        return groupStage;
+    }
+
+    public void setGroupStage(int groupStage) {
+        this.groupStage = groupStage;
+    }
+
+    public MatchType getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(MatchType matchType) {
+        this.matchType = matchType;
     }
 
     public Tournament getTournament() {
@@ -126,4 +153,6 @@ public class Match {
     public void setSets(List<SetMatch> sets) {
         this.sets = sets;
     }
+
+
 }

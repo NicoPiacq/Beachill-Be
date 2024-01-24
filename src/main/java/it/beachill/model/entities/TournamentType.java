@@ -49,4 +49,6 @@ public class TournamentType {
     public void setTournaments(List<Tournament> tournaments) {
         this.tournaments = tournaments;
     }
+
+
 }

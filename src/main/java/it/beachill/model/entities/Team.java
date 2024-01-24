@@ -17,6 +17,8 @@ public class Team {
     private Player teamLeader;
     private Integer score;
     @OneToMany(mappedBy = "team")
+    private List<GroupStageStanding> groupStageStandings;
+    @OneToMany(mappedBy = "team")
     private List<TeamComponent> teamComponents;
     @OneToMany(mappedBy = "homeTeam")
     private List<Match> matchesAsHome;
@@ -60,13 +62,6 @@ public class Team {
         this.teamLeader = teamLeader;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
 
     public List<TeamComponent> getTeamComponents() {
         return teamComponents;
@@ -107,4 +102,22 @@ public class Team {
     public void setEnrolledTournaments(List<TeamInTournament> enrolledTournaments) {
         this.enrolledTournaments = enrolledTournaments;
     }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public List<GroupStageStanding> getGroupStageStandings() {
+        return groupStageStandings;
+    }
+
+    public void setGroupStageStandings(List<GroupStageStanding> groupStageStandings) {
+        this.groupStageStandings = groupStageStandings;
+    }
+
+
 }

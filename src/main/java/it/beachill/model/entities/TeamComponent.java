@@ -47,4 +47,6 @@ public class TeamComponent {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+
 }
