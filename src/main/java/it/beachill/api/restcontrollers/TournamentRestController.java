@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tournament")
@@ -26,6 +27,17 @@ public class TournamentRestController {
         List<Tournament> tournaments = tournamentsService.findAllTournaments();
         List<TournamentDto> result = tournaments.stream().map(TournamentDto::new).toList();
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TournamentDto> getTournamentDetails(@PathVariable Long id){
+        Optional<Tournament> tournament = tournamentsService.findTournamentById(id);
+        if(tournament.isPresent()){
+            TournamentDto tournamentDto = new TournamentDto(tournament.get());
+            return ResponseEntity.ok(tournamentDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/generate/{id}")

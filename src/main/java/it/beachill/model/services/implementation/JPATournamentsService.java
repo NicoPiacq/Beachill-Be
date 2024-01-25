@@ -1,5 +1,6 @@
 package it.beachill.model.services.implementation;
 
+import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.*;
 import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.MatchsService;
@@ -50,6 +51,10 @@ public class JPATournamentsService implements TournamentsService {
     @Override
     public List<Tournament> findAllTournaments() {
         return tournamentRepository.findAll();
+    }
+
+    public Optional<Tournament> findTournamentById(Long tournamentId){
+        return tournamentRepository.findById(tournamentId);
     }
 
     public List<TeamInTournament> findAllTeamInTournament(Long tournamentId){
