@@ -31,9 +31,8 @@ public class Match {
     private int fieldNumber;
     @Column(name = "start_date")
     private Timestamp startDate;
-    @ManyToOne
-    @JoinColumn(name = "winner_team_id")
-    private Team winnerTeam;
+    @Column(name = "winner_team")
+    private Boolean winnerTeam;
     @OneToMany(mappedBy = "match")
     private List<SetMatch> sets;
 
@@ -56,7 +55,7 @@ public class Match {
         this.fieldNumber = fieldNumber;
     }
 
-    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, Team winnerTeam) {
+    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, boolean winnerTeam) {
         this.id = id;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
@@ -138,14 +137,6 @@ public class Match {
         this.startDate = startDate;
     }
 
-    public Team getWinnerTeam() {
-        return winnerTeam;
-    }
-
-    public void setWinnerTeam(Team winnerTeam) {
-        this.winnerTeam = winnerTeam;
-    }
-
     public List<SetMatch> getSets() {
         return sets;
     }
@@ -154,5 +145,11 @@ public class Match {
         this.sets = sets;
     }
 
+    public Boolean getWinnerTeam() {
+        return winnerTeam;
+    }
 
+    public void setWinnerTeam(Boolean winnerTeam) {
+        this.winnerTeam = winnerTeam;
+    }
 }

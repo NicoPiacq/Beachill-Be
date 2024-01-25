@@ -20,6 +20,10 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
     private int points;
     @Column(name = "group_stage")
     int groupStage;
+    @Column(name = "point_scored")
+    int pointScored;
+    @Column(name = "point_conceded")
+    int pointConceded;
     @OneToOne()
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
@@ -77,6 +81,11 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
                 .collect(Collectors.groupingBy(GroupStageStanding::getGroupStage));
     }
 
+    public void addPointScoredAndPointConceded(int pointScored, int pointConceded){
+        this.pointScored += pointScored;
+        this.pointConceded += pointConceded;
+    }
+
     //----------------------- GETTER E SETTER -------------------------------
 
     public Long getId() {
@@ -127,4 +136,19 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
         this.groupStage = groupStage;
     }
 
+    public int getPointScored() {
+        return pointScored;
+    }
+
+    public void setPointScored(int pointScored) {
+        this.pointScored = pointScored;
+    }
+
+    public int getPointConceded() {
+        return pointConceded;
+    }
+
+    public void setPointConceded(int pointConceded) {
+        this.pointConceded = pointConceded;
+    }
 }

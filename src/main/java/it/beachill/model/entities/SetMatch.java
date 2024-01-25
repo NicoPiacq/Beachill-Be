@@ -21,6 +21,11 @@ public class SetMatch {
 
     public SetMatch() {}
 
+    public SetMatch(Match match, int setNumber){
+        this.match = match;
+        this.setNumber = setNumber;
+    }
+
     public SetMatch(Long id, Match match, int setNumber, int homeTeamScore, int awayTeamScore) {
         this.id = id;
         this.match = match;

@@ -69,6 +69,8 @@ create table tournament.group_stage_standing(
     tournament_id bigint not null,
     team_id bigint not null,
     group_stage int,
+    point_scored int default 0,
+    point_conceded int default 0,
     standing int default 0,
     points int default 0,
     constraint group_stage_standing_pk primary key (id),
@@ -107,12 +109,11 @@ create table tournament.match (
     field_number int,
     start_date timestamp,
     --risultato_finale varchar(20),
-    winner_team_id bigint,
+    winner_team boolean, -- prima era references a team
     constraint match_pk primary key (id),
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
     constraint home_team_fk foreign key (home_team_id) references tournament.team(id),
     constraint away_team_fk foreign key (away_team_id) references tournament.team(id),
-    constraint winner_team_fk foreign key (winner_team_id) references tournament.team(id),
     constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id)
 );
 
