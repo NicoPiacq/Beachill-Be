@@ -15,7 +15,15 @@ public class EnrolledTeamDto {
 
     public EnrolledTeamDto(TeamInTournament teamInTournament) {
         this.id = teamInTournament.getId();
-        this.round = teamInTournament.getRound();
+        if(teamInTournament.getRound() != null) {
+            this.round = teamInTournament.getRound();
+        } else {
+            this.round=null;
+        }
+        
+        /*this.teacherSummary = editionModule.getTeacher() == null ?
+                new TeacherSummaryDto()
+                : new TeacherSummaryDto(editionModule.getTeacher());*/
         this.teamId = teamInTournament.getTeam().getId();
         this.teamName = teamInTournament.getTeam().getTeamName();
         this.tournamentId = teamInTournament.getTournament().getId();

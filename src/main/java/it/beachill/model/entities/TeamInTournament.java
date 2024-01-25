@@ -19,7 +19,7 @@ public class TeamInTournament {
 
     public TeamInTournament() {}
 
-    public TeamInTournament(Long id, int round, Team team, Tournament tournament) {
+    public TeamInTournament(Long id, Integer round, Team team, Tournament tournament) {
         this.id = id;
         this.round = round;
         this.team = team;
@@ -34,7 +34,7 @@ public class TeamInTournament {
         this.id = id;
     }
 
-    public int getRound() {
+    public Integer getRound() {
         return round;
     }
 
