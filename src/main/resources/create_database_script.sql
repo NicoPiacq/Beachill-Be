@@ -1,16 +1,47 @@
--- CREAZIONE SCHEMA tournament
+-- CREAZIONE SCHEMA tournament e user_util
 create schema tournament;
+create schema user_util;
+
+-- CREAZIONE TIPO: TOKEN_TYPE
+CREATE TYPE user_util.token_type AS ENUM
+    ('BEARER');
+
+CREATE CAST (character varying AS user_util.token_type) WITH INOUT AS ASSIGNMENT;
 
 -- TABELLA GIOCATORI
 create table tournament.player (
     id serial,
     nickname varchar(64) not null,
     score bigint default 500,
-    --nome varchar(255) not null,
-    --cognome varchar(255) not null,
-    --data_nascita date,
     constraint player_pk primary key (id)
-    );
+);
+
+-- TABELLA UTENTI SITO
+create table user_util._user (
+	id serial,
+	name varchar(32) not null,
+	surname varchar(32) not null,
+	email varchar(48) not null,
+	password varchar(512),
+	registration_date timestamp,
+	last_login timestamp,
+	player_id bigint unique,
+	role varchar(16),
+	constraint user_pk primary key (id),
+	constraint user_player_id_fk foreign key (player_id) references tournament.player(id)
+);
+
+-- TABELLA TOKEN
+create table user_util.token (
+	id serial,
+	token varchar(1024) unique,
+	type_token user_util.token_type,
+	revoked boolean,
+	expired boolean,
+	user_id bigint not null,
+	constraint token_pk primary key (id),
+	constraint token_user_id_fk foreign key (user_id) references user_util._user(id)
+);
 
 -- TABELLA TEAM
 create table tournament.team (
@@ -147,6 +178,13 @@ create table tournament.pizza_order_line(
     constraint pizza_order_id_fk foreign key (pizza_order_id) references tournament.pizza_order(id),
     constraint player_id_fk foreign key (player_id) references tournament.player(id)
 );
+
+--insert into user_util._user (id, name, surname, email, password, registration_date, last_login, player_id, role) values
+--(1, 'Nicola', 'Piacq', 'nicopiacq@mail.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'SUPERADMIN'),
+--(2, 'Ciro', 'Mata', 'ciromata@mail.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'USER'),
+--(3, 'Fede', 'Guai', 'fedeguai@mail.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'SUPERADMIN'),
+--(4, 'Elettra', 'Lambo', 'elettralambo@mail.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'USER'),
+--(5, 'Pino', 'Fastidio', 'pinofastidio@mail.com', null, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'ADMIN');
 
 insert into tournament.domain_type_tournament (tournament_type_name, tournament_description) values
 ('10-corto', 'Torneo composto da 10 squadre, 2 gironi da 5, seconda fase corta ...'),
