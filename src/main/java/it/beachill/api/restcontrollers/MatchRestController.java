@@ -21,7 +21,7 @@ public class MatchRestController {
         this.matchsService = matchsService;
     }
 
-    @GetMapping("/all/tournament/{TournamentId}")
+    @GetMapping("/all/tournament/{tournamentId}")
     public ResponseEntity<List<MatchDto>> getAllMatchesByTournament(@PathVariable Long tournamentId){
         List<Match> matches = matchsService.getAllMatchesByTournament(tournamentId);
         List<MatchDto> result = matches.stream().map(MatchDto::new).toList();

@@ -140,7 +140,8 @@ public class JPATournamentsService implements TournamentsService {
                     //AGGIUNTA PER LO SWAP DEI TEAM CON GLI STESSI PUNTEGGI
                     //implementato il caso di due team con lo stesso punteggio ma non generalizzato a n team con lo stesso punteggio
                     if(thereAreDuplicate && i < standingsList.size()-1){
-                        if(standingsList.get(i).getPoints() == standingsList.get(i).getPoints()){
+                        //DA RICORDARCI CHE SVILUPPIAMO SOLO IL CASO CON 2 SCORE UGUALI
+                        if(standingsList.get(i).getPoints() == standingsList.get(i+1).getPoints()){
                             double quotientPointsA = (double) standingsList.get(i).getPointScored() / standingsList.get(i).getPointConceded();
                             double quotientPointsB = (double) standingsList.get(i+1).getPointScored() / standingsList.get(i+1).getPointConceded();
                             if(quotientPointsA < quotientPointsB){
@@ -218,7 +219,7 @@ public class JPATournamentsService implements TournamentsService {
         matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1, 1, 1));
         matches.addAll(generateRoundPhaseMatches(listRound2, tournamentRoundPhaseSchema, 2, matches.size()+1, 2, 1));
 
-        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament));
+        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
         matchRepository.saveAll(matches);
         return true;
     }
@@ -247,7 +248,7 @@ public class JPATournamentsService implements TournamentsService {
         matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1, 1, 1));
         matches.addAll(generateRoundPhaseMatches(listRound2, tournamentRoundPhaseSchema, 2, matches.size()+1, 2, 1));
 
-        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament));
+        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
         matchRepository.saveAll(matches);
         return true;
     }
@@ -263,10 +264,10 @@ public class JPATournamentsService implements TournamentsService {
         }
         return matches;
     }
-    public List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament){
+    public List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
         List<Match> matches = new ArrayList<>();
         for(int i = 0; i < tournamentSchema.length; i++){
-            matches.add(new Match(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1])));
+            matches.add(matchsService.createMatchAndSets(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1]), setsNumber));
         }
         return matches;
     }

@@ -25,8 +25,8 @@ public class Tournament {
     @JoinColumn(name = "place")
     private TournamentPlace place;
 
-    @OneToOne(mappedBy = "tournament")
-    private GroupStageStanding groupStageStanding;
+    @OneToMany(mappedBy = "tournament")
+    private List<GroupStageStanding> groupStageStandingList;
     @OneToMany(mappedBy = "tournament")
     private List<Match> matches;
     @OneToMany(mappedBy = "tournament")
@@ -119,11 +119,11 @@ public class Tournament {
         this.enrolledTeams = enrolledTeams;
     }
 
-    public GroupStageStanding getGroupStageStanding() {
-        return groupStageStanding;
+    public List<GroupStageStanding> getGroupStageStandingList() {
+        return groupStageStandingList;
     }
 
-    public void setGroupStageStanding(GroupStageStanding groupStageStanding) {
-        this.groupStageStanding = groupStageStanding;
+    public void setGroupStageStandingList(List<GroupStageStanding> groupStageStandingList) {
+        this.groupStageStandingList = groupStageStandingList;
     }
 }

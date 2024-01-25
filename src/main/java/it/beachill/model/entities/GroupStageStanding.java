@@ -24,9 +24,10 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
     int pointScored;
     @Column(name = "point_conceded")
     int pointConceded;
-    @OneToOne()
+    @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
@@ -104,21 +105,8 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
         this.standing = standing;
     }
 
-    public Tournament getTournament() {
-        return tournament;
-    }
 
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
-    }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 
     public int getPoints() {
         return points;
@@ -150,5 +138,21 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
 
     public void setPointConceded(int pointConceded) {
         this.pointConceded = pointConceded;
+    }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
