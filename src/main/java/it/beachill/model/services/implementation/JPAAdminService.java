@@ -44,18 +44,34 @@ public class JPAAdminService implements AdminsService {
     }
 
     //    // --------------------------------- METODI CREATE e UPDATE -----------------------------------
+    @Override
 
     public List<Tournament> findAllTournaments() {
         return tournamentRepository.findAll();
     }
+    @Override
 
     public Optional<Tournament> findTournamentById(Long tournamentId){
         return tournamentRepository.findById(tournamentId);
     }
 
+    @Override
+    public void createTournament(Tournament tournament) {
+        tournamentRepository.save(tournament);
+    }
+
+    @Override
+    public Optional<Tournament> deleteTournament(Long id) {
+        Optional<Tournament> oc = tournamentRepository.findById(id);
+        oc.ifPresent(c -> tournamentRepository.delete(c));
+        return oc;
+    }
+
+
     public List<TeamInTournament> findAllTeamInTournament(Long tournamentId){
         return teamInTournamentRepository.findByTournamentId(tournamentId);
     }
+    @Override
 
     public boolean generateMatchTournament(Long id){
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
@@ -73,6 +89,7 @@ public class JPAAdminService implements AdminsService {
         }
         return false;
     }
+    @Override
 
     public boolean calculateGroupStageStanding(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
@@ -156,6 +173,7 @@ public class JPAAdminService implements AdminsService {
         return false;
     }
 
+    @Override
 
     public boolean addRandomResultToGroupPhaseMatches(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
@@ -190,6 +208,7 @@ public class JPAAdminService implements AdminsService {
         }
         return false;
     }
+
 
     private boolean generateMatchTournament10Long(Tournament tournament) {
         int[][] tournamentRoundPhaseSchema = {{0, 1}, {2, 3}, {0, 4}, {1, 2}, {3, 4},

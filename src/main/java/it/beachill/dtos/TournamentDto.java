@@ -28,6 +28,17 @@ public class TournamentDto {
         }
     }
 
+    public Tournament fromDto(){
+        Tournament tournament = new Tournament();
+        tournament.setTournamentName(this.tournamentName);
+        // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
+        // o magari creare un dto apposta solo per place e uno per add tournament with place)
+        // tournament.setPlace();
+        tournament.setStartDate(this.startDate);
+        tournament.setEndDate(this.endDate);
+        return tournament;
+    }
+
     public Long getId() {
         return id;
     }

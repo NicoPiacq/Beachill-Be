@@ -45,9 +45,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/admin/**").hasAnyRole(ADMIN.name(), SUPERADMIN.name())
-                                .requestMatchers(GET, "/api/admin/**").hasAnyAuthority(ADMIN_READ_TOURNAMENT.name(), SUPERADMIN_READ_TOURNAMENT.name())
-                                .requestMatchers(POST, "/api/superadmin/**").hasAnyAuthority(SUPERADMIN_READ_TOURNAMENT.name())
+//                                .requestMatchers("/api/admin/**").hasAnyRole(ADMIN.name(), SUPERADMIN.name())
+//                                .requestMatchers(GET, "/api/admin/**").hasAnyAuthority(ADMIN_READ_TOURNAMENT.name(), SUPERADMIN_READ_TOURNAMENT.name())
+//                                .requestMatchers(POST, "/api/superadmin/**").hasAnyAuthority(SUPERADMIN_READ_TOURNAMENT.name())
                                 //.requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
                                 //.requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()

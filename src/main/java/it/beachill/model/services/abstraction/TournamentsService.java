@@ -7,11 +7,6 @@ import java.util.Optional;
 
 public interface TournamentsService {
     List<Tournament> findAllTournaments();
-    public boolean generateMatchTournament(Long tournamentId);
     public Optional<Tournament> findTournamentById(Long tournamentId);
 
-
-    boolean calculateGroupStageStanding(Long id);
-
-    boolean addRandomResultToGroupPhaseMatches(Long id);
 }

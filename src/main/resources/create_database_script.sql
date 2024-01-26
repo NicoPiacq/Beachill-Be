@@ -105,7 +105,7 @@ create table tournament.group_stage_standing(
     standing int default 0,
     points int default 0,
     constraint group_stage_standing_pk primary key (id),
-    constraint group_stage_tournament_fk foreign key (tournament_id) references tournament.tournament (id),
+    constraint group_stage_tournament_fk foreign key (tournament_id) references tournament.tournament (id) on delete cascade,
     constraint group_stage_team_fk foreign key (team_id) references tournament.team
 );
 
@@ -119,7 +119,7 @@ create table tournament.team_in_tournament(
     constraint team_in_tournament_pk primary key (id),
     constraint team_in_tournament_unique unique (team_id, tournament_id),
     constraint team_in_tournament_team_fk foreign key (team_id) references tournament.team,
-    constraint team_in_tournament_tournament_fk foreign key (tournament_id) references tournament.tournament
+    constraint team_in_tournament_tournament_fk foreign key (tournament_id) references tournament.tournament on delete cascade
 );
 
 create table tournament.domain_match_type(
@@ -145,7 +145,7 @@ create table tournament.match (
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
     constraint home_team_fk foreign key (home_team_id) references tournament.team(id),
     constraint away_team_fk foreign key (away_team_id) references tournament.team(id),
-    constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id)
+    constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade
 );
 
 create table tournament.set_match(
@@ -156,7 +156,7 @@ create table tournament.set_match(
     away_team_score int,
     constraint set_match_pk primary key (id),
     constraint set_match_unique unique (match_id, set_number),
-    constraint id_match_fk foreign key (match_id) references tournament.match(id)
+    constraint id_match_fk foreign key (match_id) references tournament.match(id) on delete cascade
 );
 
 create table tournament.pizza_order(
@@ -164,7 +164,7 @@ create table tournament.pizza_order(
     tournament_id bigint not null,
     order_date timestamp,
     constraint pizza_order_pk primary key (id),
-    constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id)
+    constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade
 );
 
 create table tournament.pizza_order_line(

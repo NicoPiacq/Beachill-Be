@@ -9,11 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin
 public class AdminRestController {
     private final AdminsService adminsService;
 
@@ -52,6 +55,26 @@ public class AdminRestController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/tournament/create")
+    public ResponseEntity<TournamentDto> createTournament(@RequestBody TournamentDto courseDto) throws URISyntaxException {
+        Tournament tournament = courseDto.fromDto();
+        adminsService.createTournament(tournament);
+        TournamentDto result = new TournamentDto(tournament);
+        URI location = new URI("/api/tournament/" + result.getId());
+
+        return ResponseEntity.created(location).body(result);
+    }
+
+    @DeleteMapping("/tournament/delete/{id}")
+    public ResponseEntity<Object> deleteTournament(@PathVariable long id){
+        Optional<Tournament> result = adminsService.deleteTournament(id);
+
+        return result.stream()
+                .map(c -> ResponseEntity.noContent().build())
+                .findFirst()
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/tournament/generate/{id}")
