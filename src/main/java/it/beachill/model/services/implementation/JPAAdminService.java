@@ -75,6 +75,10 @@ public class JPAAdminService implements AdminsService {
 
     public boolean generateMatchTournament(Long id){
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
+        List<TeamInTournament> enrolledTeams = teamInTournamentRepository.findByTournamentId(id);
+        if(enrolledTeams.isEmpty()){
+            return false;
+        }
         if(tournamentOptional.isPresent()) {
             Tournament tournament = tournamentOptional.get();
             switch (tournament.getTournamentType().getTournamentTypeName()) {
@@ -290,7 +294,7 @@ public class JPAAdminService implements AdminsService {
         Random random = new Random();
         List<TeamInTournament> listRound = new ArrayList<>();
         for(int i = 0; i < num; i++){
-            int randomIndex = random.nextInt(enrolledTeams.size());
+            int randomIndex = Math.abs(random.nextInt(enrolledTeams.size()));
             TeamInTournament team = enrolledTeams.get(randomIndex);
             //aggiunta creazione righe nella tabella per la classifica fase a gironi
             createOrUpdateGroupStageStanding(new GroupStageStanding(round, tournament, team.getTeam()));
