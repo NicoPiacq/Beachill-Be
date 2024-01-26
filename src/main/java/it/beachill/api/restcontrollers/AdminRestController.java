@@ -2,6 +2,7 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.Tournament;
+import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminRestController {
-    private final TournamentsService tournamentsService;
+    private final AdminsService adminsService;
 
     @Autowired
-    public AdminRestController(TournamentsService tournamentsService){
-        this.tournamentsService = tournamentsService;
+    public AdminRestController(AdminsService adminsService){
+        this.adminsService = adminsService;
     }
 
     @GetMapping
@@ -34,16 +35,17 @@ public class AdminRestController {
     }
 
     //////////// aggiunto per prova admin iniziale //////////////////
-    @GetMapping("/all")
+    //---------------------------------- ADMIN FEAT TOURNAMENT -------------------------------------
+    @GetMapping("/tournament/all")
     public ResponseEntity<List<TournamentDto>> getAllTournaments(){
-        List<Tournament> tournaments = tournamentsService.findAllTournaments();
+        List<Tournament> tournaments = adminsService.findAllTournaments();
         List<TournamentDto> result = tournaments.stream().map(TournamentDto::new).toList();
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/tournament/{id}")
     public ResponseEntity<TournamentDto> getTournamentDetails(@PathVariable Long id){
-        Optional<Tournament> tournament = tournamentsService.findTournamentById(id);
+        Optional<Tournament> tournament = adminsService.findTournamentById(id);
         if(tournament.isPresent()){
             TournamentDto tournamentDto = new TournamentDto(tournament.get());
             return ResponseEntity.ok(tournamentDto);
@@ -52,30 +54,32 @@ public class AdminRestController {
         }
     }
 
-    @PostMapping("/generate/{id}")
+    @PostMapping("/tournament/generate/{id}")
     public ResponseEntity<Object> generateMatchTournament(@PathVariable Long id){
-        boolean result = tournamentsService.generateMatchTournament(id);
+        boolean result = adminsService.generateMatchTournament(id);
         if(result){
             return ResponseEntity.ok(true);
         }
         else return ResponseEntity.notFound().build();
     }
-    @PostMapping("/calculate-group-phase-standing/{id}")
+    @PostMapping("/tournament/calculate-group-phase-standing/{id}")
     public ResponseEntity<Object> calculateGroupStageStanding(@PathVariable Long id){
-        boolean result = tournamentsService.calculateGroupStageStanding(id);
+        boolean result = adminsService.calculateGroupStageStanding(id);
         if(result){
             return ResponseEntity.ok(true);
         }
         else return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/add-random-result-to-group-phase-matches/{id}")
+    @PostMapping("/tournament/add-random-result-to-group-phase-matches/{id}")
     public ResponseEntity<Object> addRandomResultToGroupPhaseMatches(@PathVariable Long id){
-        boolean result = tournamentsService.addRandomResultToGroupPhaseMatches(id);
+        boolean result = adminsService.addRandomResultToGroupPhaseMatches(id);
         if(result){
             return ResponseEntity.ok(true);
         }
         else return ResponseEntity.notFound().build();
     }
+
+    // ----------------------- FINE ADMIN FEAT TOURNAMENTS ----------------------------------------------
 
 }
