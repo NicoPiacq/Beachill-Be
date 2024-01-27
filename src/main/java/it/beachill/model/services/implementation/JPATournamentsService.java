@@ -17,6 +17,8 @@ public class JPATournamentsService implements TournamentsService {
     private final MatchsService matchsService;
     private final TournamentRepository tournamentRepository;
     private final TeamInTournamentRepository teamInTournamentRepository;
+    private final TournamentPlaceRepository tournamentPlaceRepository;
+    private final TournamentTypeRepository tournamentTypeRepository;
     private final MatchRepository matchRepository;
     private final MatchTypeRepository matchTypeRepository;
     private final GroupStageStandingRepository groupStageStandingRepository;
@@ -29,7 +31,8 @@ public class JPATournamentsService implements TournamentsService {
     public JPATournamentsService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
                                  MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
                                  GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                                 SetMatchRepository setMatchRepository){
+                                 SetMatchRepository setMatchRepository, TournamentPlaceRepository tournamentPlaceRepository,
+                                 TournamentTypeRepository tournamentTypeRepository){
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
@@ -37,6 +40,8 @@ public class JPATournamentsService implements TournamentsService {
         this.groupStageStandingRepository = groupStageStandingRepository;
         this.matchsService = matchsService;
         this.setMatchRepository = setMatchRepository;
+        this.tournamentPlaceRepository = tournamentPlaceRepository;
+        this.tournamentTypeRepository = tournamentTypeRepository;
     }
 
     // --------------------------------- METODI CREATE e UPDATE -----------------------------------
@@ -59,6 +64,13 @@ public class JPATournamentsService implements TournamentsService {
 
     public List<TeamInTournament> findAllTeamInTournament(Long tournamentId){
         return teamInTournamentRepository.findByTournamentId(tournamentId);
+    }
+
+    public List<TournamentPlace> findAllPlaces(){
+        return tournamentPlaceRepository.findAll();
+    }
+    public List<TournamentType> findAllTournamentsTypes(){
+        return tournamentTypeRepository.findAll();
     }
 
 
