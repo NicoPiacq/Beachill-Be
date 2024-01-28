@@ -191,7 +191,9 @@ insert into tournament.domain_type_tournament (tournament_type_name, tournament_
 ('10-lungo', 'Torneo composto da 10 squadre, 2 gironi da 5, seconda fase lunga ...');
 
 insert into tournament.domain_place_tournament (place, field_number) values
-('generation', 2);
+('generation', 2),
+('Pietra Ligure', 2),
+('Loano', 2);
 
 insert into tournament.tournament (tournament_name, place, tournament_type) values
 ('torneo prova - 10-corto', 'generation', '10-corto'),

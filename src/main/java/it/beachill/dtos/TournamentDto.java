@@ -20,9 +20,13 @@ public class TournamentDto {
         this.tournamentName = tournament.getTournamentName();
         this.startDate = tournament.getStartDate();
         this.endDate = tournament.getEndDate();
-        this.tournamentTypeName = tournament.getTournamentType().getTournamentTypeName();
+        if(tournament.getTournamentType() == null){
+            this.tournamentTypeName = "No Type";
+        } else {
+            this.tournamentTypeName = tournament.getTournamentType().getTournamentTypeName();
+        }
         if(tournament.getPlace() == null){
-            this.place = null;
+            this.place = "No Place";
         } else {
             this.place = tournament.getPlace().getPlace();
         }

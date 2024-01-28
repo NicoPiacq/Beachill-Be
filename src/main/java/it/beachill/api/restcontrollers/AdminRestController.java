@@ -58,8 +58,8 @@ public class AdminRestController {
     }
 
     @PostMapping("/tournament/create")
-    public ResponseEntity<TournamentDto> createTournament(@RequestBody TournamentDto courseDto) throws URISyntaxException {
-        Tournament tournament = courseDto.fromDto();
+    public ResponseEntity<TournamentDto> createTournament(@RequestBody TournamentDto tournamentDto) throws URISyntaxException {
+        Tournament tournament = tournamentDto.fromDto();
         adminsService.createTournament(tournament);
         TournamentDto result = new TournamentDto(tournament);
         URI location = new URI("/api/tournament/" + result.getId());
