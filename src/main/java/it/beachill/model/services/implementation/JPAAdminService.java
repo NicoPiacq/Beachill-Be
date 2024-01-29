@@ -52,7 +52,9 @@ public class JPAAdminService implements AdminsService {
     @Override
 
     public Optional<Tournament> findTournamentById(Long tournamentId){
-        return tournamentRepository.findById(tournamentId);
+        System.out.println(tournamentId);
+        Optional<Tournament> tournament = tournamentRepository.findById(tournamentId);
+        return tournament;
     }
 
     @Override

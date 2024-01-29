@@ -37,6 +37,7 @@ public class TournamentDto {
         tournament.setTournamentName(this.tournamentName);
         // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
         // o magari creare un dto apposta solo per place e uno per add tournament with place)
+        // new oggetto place
         // tournament.setPlace();
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
