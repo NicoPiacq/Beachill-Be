@@ -95,8 +95,34 @@ public class JPAAdminService implements AdminsService {
         }
         return false;
     }
-    @Override
 
+
+    private void calculateAllForSecondPhase10Long(Long id){
+
+    }
+    private void calculateGroupStageStandingAndAssignMatches(Long id, int[][] assignSchema) {
+        Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
+        if(tournamentOptional.isPresent()) {
+            List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, "GIRONE");
+            if(!calculateGroupStageStanding(id)){
+                return;
+            }
+            int numberOfGroupStage;
+            Optional<GroupStageStanding> groupStageStandingOptional = groupStageStandingRepository.findFirstByTournamentIdOrderByGroupStageDesc(id);
+            if(groupStageStandingOptional.isPresent()){
+                numberOfGroupStage =  groupStageStandingOptional.get().getGroupStage();
+            } else {
+                return;
+            }
+            for(int i = 0; i < numberOfGroupStage; i++) {
+                List<GroupStageStanding> groupStageStandingList = groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingDesc(id, i);
+
+            }
+        }
+    }
+
+
+    @Override
     public boolean calculateGroupStageStanding(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
         if(tournamentOptional.isPresent()) {
@@ -273,7 +299,10 @@ public class JPAAdminService implements AdminsService {
         return true;
     }
 
+    //DA PROVARE AD IMPLEMENTARE PER GESTIRE L' ASSEGNAZIONE DEI TEAM AI MATCH DELLA SECONDA FASE
+    private List<Match> assignTeamsToSecondPhaseMatches(List<TeamInTournament> roundTeams, int secondPhaseTournamentSchema){
 
+    }
 
     private List<Match> generateRoundPhaseMatches(List<TeamInTournament> roundTeams, int[][] tournamentSchema, int field, int matchNumber, int groupStage, int setsNumber){
         List<Match> matches = new ArrayList<>();

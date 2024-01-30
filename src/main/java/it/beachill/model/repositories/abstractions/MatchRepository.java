@@ -14,4 +14,6 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     List<Match> findByTournamentIdAndMatchTypeAndWinnerTeamIsNotNull(Long id, MatchType matchType);
 
     List<Match> findByTournamentId(Long tournamentId);
+
+    List<Match> findByTournamentIdAndMatchTypeNot(Long id, String girone);
 }
