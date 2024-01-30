@@ -14,7 +14,7 @@ public interface GroupStageStandingRepository extends JpaRepository<GroupStageSt
 
     List<GroupStageStanding>findByTournamentId(Long id);
 
-    List<GroupStageStanding> findByTournamentIdAndGroupStageEqualsOrderByStandingDesc(Long id, int groupStage);
+    List<GroupStageStanding> findByTournamentIdAndGroupStageEqualsOrderByStandingAsc(Long id, int groupStage);
 
     Optional<GroupStageStanding> findFirstByTournamentIdOrderByGroupStageDesc(Long id);
 }

@@ -203,9 +203,9 @@ insert into tournament.player (nickname) values
 ('QuaiFede'), ('Gianlu97'), ('Nick');
 
 insert into tournament.team (team_name, team_leader) values
-('fede''s team', 1), ('Gianlu''s team', 2), ('Nick''s team', 3),
-('fede 1', 1), ('fede 2', 1), ('fede 3', 1), ('fede 4', 1),
-('fede 5', 1), ('fede 6', 1), ('fede 7', 1);
+('team 1', 1), ('team 2', 2), ('team 3', 3),
+('team 4', 1), ('team 5', 1), ('team 6', 1), ('team 7', 1),
+('team 8', 1), ('team 9', 1), ('team 10', 1);
 
 insert into tournament.team_in_tournament(team_id, tournament_id)values
 (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1),

@@ -111,7 +111,7 @@ public class JPAAdminService implements AdminsService {
     public boolean calculateGroupStageStandingAndAssignMatches(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
         if(tournamentOptional.isPresent()) {
-            List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, "GIRONE");
+            List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, new MatchType("GIRONE"));
             Tournament tournament = tournamentOptional.get();
             
             if(!calculateGroupStageStanding(id)){
@@ -126,7 +126,8 @@ public class JPAAdminService implements AdminsService {
             }
             List<GroupStageStanding> groupStageStandingList = new ArrayList<>();
             for(int i = 0; i < numberOfGroupStage; i++) {
-                 groupStageStandingList.addAll(groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingDesc(id, i));
+                int groupStageId=i+1;
+                 groupStageStandingList.addAll(groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingAsc(id, groupStageId));
             }
             int[][] assignSchema= assignSchemaFromTournament(tournament);
             
