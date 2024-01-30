@@ -19,7 +19,7 @@ public class Tournament {
     @Column(name = "end_date")
     private Timestamp endDate;
     @ManyToOne
-    @JoinColumn(name = "tournament_type", nullable = false)
+    @JoinColumn(name = "tournament_type")
     private TournamentType tournamentType;
     @ManyToOne
     @JoinColumn(name = "place")

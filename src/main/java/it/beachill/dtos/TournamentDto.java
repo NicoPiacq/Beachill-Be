@@ -20,8 +20,17 @@ public class TournamentDto {
     public TournamentDto(Tournament tournament){
         this.id = tournament.getId();
         this.tournamentName = tournament.getTournamentName();
-        this.startDate = tournament.getStartDate();
-        this.endDate = tournament.getEndDate();
+        if(tournament.getStartDate() == null) {
+            this.startDate = tournament.getStartDate();
+        } else {
+            this.startDate = null;
+        }
+        if(tournament.getEndDate() == null) {
+            this.endDate = tournament.getStartDate();
+        } else {
+            this.endDate = null;
+        }
+
         if(tournament.getTournamentType() == null){
             this.tournamentTypeName = "No Type";
         } else {
@@ -40,8 +49,17 @@ public class TournamentDto {
         // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
         // o magari creare un dto apposta solo per place e uno per add tournament with place)
         // new oggetto place
-        tournament.setPlace(new TournamentPlace(this.place));
-        tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
+        if(this.place == ""){
+            tournament.setPlace(null);
+        } else {
+            tournament.setPlace(new TournamentPlace(this.place));
+        }
+        if(this.tournamentTypeName == ""){
+            tournament.setTournamentType(null);
+        } else {
+            tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
+        }
+
 
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
