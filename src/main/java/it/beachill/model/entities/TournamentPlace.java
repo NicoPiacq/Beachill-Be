@@ -22,6 +22,10 @@ public class TournamentPlace {
 
     public TournamentPlace(){}
 
+    public TournamentPlace(String place) {
+        this.place = place;
+    }
+
     public TournamentPlace(String place, String address, int fieldNumber) {
         this.place = place;
         this.address = address;

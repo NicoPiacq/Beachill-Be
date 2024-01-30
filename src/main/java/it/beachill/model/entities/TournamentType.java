@@ -21,6 +21,10 @@ public class TournamentType {
 
     public TournamentType(){}
 
+    public TournamentType(String tournamentTypeName) {
+        this.tournamentTypeName = tournamentTypeName;
+    }
+
     public TournamentType(String tournamentType, String tournamentDescription) {
         this.tournamentTypeName = tournamentType;
         this.tournamentDescription = tournamentDescription;

@@ -1,6 +1,8 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.TournamentPlace;
+import it.beachill.model.entities.TournamentType;
 
 import java.sql.Timestamp;
 
@@ -38,7 +40,9 @@ public class TournamentDto {
         // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
         // o magari creare un dto apposta solo per place e uno per add tournament with place)
         // new oggetto place
-        // tournament.setPlace();
+        tournament.setPlace(new TournamentPlace(this.place));
+        tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
+
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
         return tournament;
