@@ -16,6 +16,10 @@ public class MatchType {
 
     public MatchType() {}
 
+    public MatchType(String type) {
+        this.type = type;
+    }
+
     public MatchType(String type, String description) {
         this.type = type;
         this.description = description;

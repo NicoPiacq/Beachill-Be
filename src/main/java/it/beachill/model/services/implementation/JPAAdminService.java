@@ -273,9 +273,13 @@ public class JPAAdminService implements AdminsService {
         return true;
     }
 
+
+
     private List<Match> generateRoundPhaseMatches(List<TeamInTournament> roundTeams, int[][] tournamentSchema, int field, int matchNumber, int groupStage, int setsNumber){
         List<Match> matches = new ArrayList<>();
-        MatchType matchType = matchTypeRepository.findById("GIRONE").get();
+        //provo ad eliminare la chiamata al database con una creazione dell' elemento
+        //MatchType matchType = matchTypeRepository.findById("GIRONE").get();
+        MatchType matchType = new MatchType("GIRONE");
         Tournament tournament = roundTeams.get(0).getTournament();
         for(int i = 0; i < tournamentSchema.length; i++){
             matches.add(matchsService.createMatchAndSets(matchNumber++, matchType, groupStage, tournament, roundTeams.get(tournamentSchema[i][0]).getTeam(),
@@ -284,7 +288,7 @@ public class JPAAdminService implements AdminsService {
         return matches;
     }
 
-    public List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
+    private List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
         List<Match> matches = new ArrayList<>();
         for(int i = 0; i < tournamentSchema.length; i++){
             matches.add(matchsService.createMatchAndSets(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1]), setsNumber));
