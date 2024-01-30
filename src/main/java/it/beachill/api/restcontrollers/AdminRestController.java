@@ -102,6 +102,15 @@ public class AdminRestController {
         }
         else return ResponseEntity.notFound().build();
     }
+    
+    @PostMapping("tournament/assign-second-phase-matches/{id}")
+    public ResponseEntity<Object> assignSecondPhaseMatches(@PathVariable Long id){
+        boolean result = adminsService.calculateGroupStageStandingAndAssignMatches(id);
+        if(result){
+            return ResponseEntity.ok(true);
+        }
+        else return ResponseEntity.notFound().build();
+    }
 
     // ----------------------- FINE ADMIN FEAT TOURNAMENTS ----------------------------------------------
 

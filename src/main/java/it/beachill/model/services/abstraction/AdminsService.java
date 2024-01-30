@@ -14,5 +14,7 @@ public interface AdminsService {
     boolean generateMatchTournament(Long tournamentId);
     boolean calculateGroupStageStanding(Long id);
     boolean addRandomResultToGroupPhaseMatches(Long id);
+    
+    boolean calculateGroupStageStandingAndAssignMatches(Long id);
 
 }

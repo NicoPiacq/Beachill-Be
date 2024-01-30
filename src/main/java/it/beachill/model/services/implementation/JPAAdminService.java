@@ -97,30 +97,63 @@ public class JPAAdminService implements AdminsService {
     }
 
 
-    private void calculateAllForSecondPhase10Long(Long id){
-
+    private int[][] assignSchemaFromTournament(Tournament tournament){
+        switch (tournament.getTournamentType().getTournamentTypeName()){
+            case "10-corto":
+                return new int[][]{{0, 0}, {1, 5}, {2, 1}, {3, 6}, {4, 7},{5, 5}, {6, 0}, {7, 6}, {8, 1}, {9, 7}};
+            case "10-lungo":
+                return new int[][]{{0, 0}, {1, 1}, {2, 6}, {3, 7}, {4, 10},
+                        {5, 7}, {6, 6}, {7, 1}, {8, 0}, {9, 10}};
+            default:
+                return new int[0][];
+        }
     }
-    private void calculateGroupStageStandingAndAssignMatches(Long id, int[][] assignSchema) {
+    public boolean calculateGroupStageStandingAndAssignMatches(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
         if(tournamentOptional.isPresent()) {
             List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, "GIRONE");
+            Tournament tournament = tournamentOptional.get();
+            
             if(!calculateGroupStageStanding(id)){
-                return;
+                return false;
             }
             int numberOfGroupStage;
             Optional<GroupStageStanding> groupStageStandingOptional = groupStageStandingRepository.findFirstByTournamentIdOrderByGroupStageDesc(id);
             if(groupStageStandingOptional.isPresent()){
                 numberOfGroupStage =  groupStageStandingOptional.get().getGroupStage();
             } else {
-                return;
+                return false;
             }
+            List<GroupStageStanding> groupStageStandingList = new ArrayList<>();
             for(int i = 0; i < numberOfGroupStage; i++) {
-                List<GroupStageStanding> groupStageStandingList = groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingDesc(id, i);
-
+                 groupStageStandingList.addAll(groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingDesc(id, i));
+            }
+            int[][] assignSchema= assignSchemaFromTournament(tournament);
+            
+            List<Match> assignedMatches=assignTeamsToSecondPhaseMatches(groupStageStandingList,assignSchema,matches);
+            matchRepository.saveAll(assignedMatches);
+            return true;
+        }
+        return false;
+    }
+    //DA PROVARE AD IMPLEMENTARE PER GESTIRE L' ASSEGNAZIONE DEI TEAM AI MATCH DELLA SECONDA FASE
+    private List<Match> assignTeamsToSecondPhaseMatches(List<GroupStageStanding> roundTeams, int[][] secondPhaseTournamentSchema, List<Match> matches) {
+        for (int i = 0; i < secondPhaseTournamentSchema.length; i++) {
+            GroupStageStanding team = roundTeams.get(secondPhaseTournamentSchema[i][0]);
+            Match match = matches.get(secondPhaseTournamentSchema[i][1]);
+            if (match.getHomeTeam() != null) {
+                if(match.getAwayTeam()!= null){
+                    return new ArrayList<>();
+                } else {
+                    match.setAwayTeam(team.getTeam());
+                }
+            } else {
+                match.setHomeTeam(team.getTeam());
             }
         }
+        return matches;
     }
-
+    
 
     @Override
     public boolean calculateGroupStageStanding(Long id) {
@@ -299,10 +332,7 @@ public class JPAAdminService implements AdminsService {
         return true;
     }
 
-    //DA PROVARE AD IMPLEMENTARE PER GESTIRE L' ASSEGNAZIONE DEI TEAM AI MATCH DELLA SECONDA FASE
-    private List<Match> assignTeamsToSecondPhaseMatches(List<TeamInTournament> roundTeams, int secondPhaseTournamentSchema){
-
-    }
+    
 
     private List<Match> generateRoundPhaseMatches(List<TeamInTournament> roundTeams, int[][] tournamentSchema, int field, int matchNumber, int groupStage, int setsNumber){
         List<Match> matches = new ArrayList<>();
