@@ -48,7 +48,7 @@ create table tournament.team (
     id serial,
     team_name varchar(255) not null,
     team_leader bigint not null,
-    score int,
+    score bigint,
     constraint team_pk primary key (id),
     constraint team_name_unique unique (team_name),
     constraint team_leader_fk foreign key (team_leader) references tournament.player(id)

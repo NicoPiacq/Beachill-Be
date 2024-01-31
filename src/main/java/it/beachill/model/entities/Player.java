@@ -29,7 +29,11 @@ public class Player {
         this.nickname = nickname;
         this.score = score;
     }
-
+    
+    public Player(Long id) {
+        this.id = id;
+    }
+    
     public Long getId() {
         return id;
     }

@@ -1,13 +1,13 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Team;
+import it.beachill.model.entities.*;
 
 public class TeamDto {
     private Long id;
     private String teamName;
-
     private String teamLeader;
-    private Integer score;
+    private Long idTeamLeader;
+    private Long score;
 
     public TeamDto() {}
 
@@ -15,9 +15,26 @@ public class TeamDto {
         this.id = team.getId();
         this.teamName = team.getTeamName();
         this.teamLeader = team.getTeamLeader().getNickname();
+        this.idTeamLeader=team.getTeamLeader().getId();
         this.score = team.getScore();
     }
-
+    
+    public Team fromDto(){
+        Team team = new Team();
+        team.setTeamName(this.teamName);
+        team.setTeamLeader(new Player(this.idTeamLeader));
+        team.setScore(this.score);
+        return team;
+    }
+    
+    public Long getIdTeamLeader() {
+        return idTeamLeader;
+    }
+    
+    public void setIdTeamLeader(Long idTeamLeader) {
+        this.idTeamLeader = idTeamLeader;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -42,11 +59,11 @@ public class TeamDto {
         this.teamLeader = teamLeader;
     }
 
-    public Integer getScore() {
+    public Long getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Long score) {
         this.score = score;
     }
 }
