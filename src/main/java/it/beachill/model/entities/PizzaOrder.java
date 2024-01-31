@@ -21,6 +21,10 @@ public class PizzaOrder {
 
     public PizzaOrder() {}
 
+    public PizzaOrder(Long id){
+      this.id = id;
+     }
+
     public PizzaOrder(Long id, Tournament tournament, Timestamp orderDate) {
         this.id = id;
         this.tournament = tournament;
