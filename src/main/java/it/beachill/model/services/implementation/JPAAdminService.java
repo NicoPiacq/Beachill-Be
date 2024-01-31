@@ -64,9 +64,9 @@ public class JPAAdminService implements AdminsService {
 
     @Override
     public Optional<Tournament> deleteTournament(Long id) {
-        Optional<Tournament> oc = tournamentRepository.findById(id);
-        oc.ifPresent(c -> tournamentRepository.delete(c));
-        return oc;
+        Optional<Tournament> optionalTournament = tournamentRepository.findById(id);
+        optionalTournament.ifPresent(c -> tournamentRepository.delete(c));
+        return optionalTournament;
     }
 
 

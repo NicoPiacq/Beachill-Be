@@ -10,6 +10,7 @@ public class EnrolledTeamDto {
     private String teamName;
     private Long tournamentId;
     private String tournamentName;
+    private int status;
 
     public EnrolledTeamDto() {}
 
@@ -28,6 +29,7 @@ public class EnrolledTeamDto {
         this.teamName = teamInTournament.getTeam().getTeamName();
         this.tournamentId = teamInTournament.getTournament().getId();
         this.tournamentName = teamInTournament.getTournament().getTournamentName();
+        this.status=teamInTournament.getStatus();
     }
 
     public Long getId() {
@@ -76,5 +78,13 @@ public class EnrolledTeamDto {
 
     public void setTournamentName(String tournamentName) {
         this.tournamentName = tournamentName;
+    }
+    
+    public int getStatus() {
+        return status;
+    }
+    
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

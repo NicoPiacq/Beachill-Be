@@ -11,7 +11,6 @@ CREATE CAST (character varying AS user_util.token_type) WITH INOUT AS ASSIGNMENT
 -- TABELLA GIOCATORI
 create table tournament.player (
     id serial,
-    nickname varchar(64) not null,
     score bigint default 500,
     constraint player_pk primary key (id)
 );
@@ -59,6 +58,7 @@ create table tournament.team_component (
     id serial,
     team_id bigint not null,
     player_id bigint not null,
+    status int default 2,
     constraint team_component_pk primary key (id),
     constraint team_component_unique unique(team_id, player_id),
     constraint team_compo_team_fk foreign key (team_id) references tournament.team(id),
@@ -116,6 +116,7 @@ create table tournament.team_in_tournament(
     round int,
     team_id bigint not null,
     tournament_id bigint not null,
+    status int default 2,
     constraint team_in_tournament_pk primary key (id),
     constraint team_in_tournament_unique unique (team_id, tournament_id),
     constraint team_in_tournament_team_fk foreign key (team_id) references tournament.team,
@@ -199,8 +200,8 @@ insert into tournament.tournament (tournament_name, place, tournament_type) valu
 ('torneo prova - 10-corto', 'generation', '10-corto'),
 ('torneo prova - 10-lungo', 'generation', '10-lungo');
 
-insert into tournament.player (nickname) values
-('QuaiFede'), ('Gianlu97'), ('Nick');
+insert into tournament.player (score) values
+(400),(400),(400);
 
 insert into tournament.team (team_name, team_leader) values
 ('team 1', 1), ('team 2', 2), ('team 3', 3),

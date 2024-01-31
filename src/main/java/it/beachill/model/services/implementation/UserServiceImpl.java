@@ -3,8 +3,10 @@ package it.beachill.model.services.implementation;
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
+import it.beachill.model.entities.Player;
 import it.beachill.model.entities.Token;
 import it.beachill.model.entities.User;
+import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TokenRepository;
 import it.beachill.model.repositories.abstractions.UserRepository;
 import it.beachill.model.services.abstraction.UserService;
@@ -29,14 +31,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
+                           PasswordEncoder passwordEncoder, JwtService jwtService,
+                           AuthenticationManager authenticationManager, PlayerRepository playerRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.playerRepository = playerRepository;
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -47,6 +53,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticationResponseDto register(RegistrationDto request) {
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
+        Player newPlayer=playerRepository.save(new Player());
+        newUser.setPlayer(newPlayer);
         var savedUser = userRepository.save(newUser);
         var jwtToken = jwtService.generateToken(savedUser);
         saveUserToken(savedUser, jwtToken);

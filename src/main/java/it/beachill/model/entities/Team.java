@@ -30,7 +30,11 @@ public class Team {
     private List<TeamInTournament> enrolledTournaments;
 
     public Team() {}
-
+    
+    public Team(Long id) {
+        this.id = id;
+    }
+    
     public Team(Long id, String teamName, Player teamLeader, Long score) {
         this.id = id;
         this.teamName = teamName;

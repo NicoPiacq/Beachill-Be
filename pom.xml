@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.beachill</groupId>
 	<artifactId>Beachill</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>Beachill</name>
 	<description>Beachill application</description>
 	<properties>

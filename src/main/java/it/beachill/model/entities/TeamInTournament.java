@@ -16,6 +16,7 @@ public class TeamInTournament {
     @ManyToOne
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
+    private Integer status;
 
     public TeamInTournament() {}
 
@@ -60,5 +61,13 @@ public class TeamInTournament {
 
     public void setRound(Integer round) {
         this.round = round;
+    }
+    
+    public Integer getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

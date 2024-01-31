@@ -15,6 +15,7 @@ public class TeamComponent {
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
+    private Integer status;
 
     public TeamComponent() {}
 
@@ -52,6 +53,12 @@ public class TeamComponent {
     public void setPlayer(Player player) {
         this.player = player;
     }
-
-
+    
+    public Integer getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

@@ -31,6 +31,7 @@ public class PizzaOrderLineDto {
     pizzaOrderLine.setPizzaOrder(new PizzaOrder(pizzaOrderId));
     pizzaOrderLine.setPlayer(new Player(playerId));
     pizzaOrderLine.setQuantity(quantity);
+    return pizzaOrderLine;
   }
 
   public Long getId() {

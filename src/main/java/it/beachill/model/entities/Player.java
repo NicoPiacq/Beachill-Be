@@ -10,8 +10,6 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 64)
-    private String nickname;
     private Long score;
     @OneToMany(mappedBy = "teamLeader")
     private List<Team> teamsCaptainedBy;
@@ -24,9 +22,8 @@ public class Player {
 
     public Player() {}
 
-    public Player(Long id, String nickname, Long score) {
+    public Player(Long id, Long score) {
         this.id = id;
-        this.nickname = nickname;
         this.score = score;
     }
     
@@ -41,15 +38,7 @@ public class Player {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
+    
     public Long getScore() {
         return score;
     }

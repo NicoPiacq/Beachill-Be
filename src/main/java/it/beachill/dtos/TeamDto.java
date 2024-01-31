@@ -14,7 +14,7 @@ public class TeamDto {
     public TeamDto(Team team) {
         this.id = team.getId();
         this.teamName = team.getTeamName();
-        this.teamLeader = team.getTeamLeader().getNickname();
+//        this.teamLeader = team.getTeamLeader().getUser().getName();
         this.idTeamLeader=team.getTeamLeader().getId();
         this.score = team.getScore();
     }
