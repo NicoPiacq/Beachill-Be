@@ -23,7 +23,12 @@ public class TeamComponent {
         this.team = team;
         this.player = player;
     }
-
+    
+    public TeamComponent(Team team, Player player) {
+        this.team = team;
+        this.player = player;
+    }
+    
     public Long getId() {
         return id;
     }

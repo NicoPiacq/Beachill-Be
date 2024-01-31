@@ -36,7 +36,11 @@ public class User implements UserDetails {
     private Role role;
 
     public User() {}
-
+    
+    public User(long id) {
+        this.id = id;
+    }
+    
     public User(RegistrationDto data, String encryptedPsw) {
         this.name = data.getName();
         this.surname = data.getSurname();

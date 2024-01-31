@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/team")
@@ -58,12 +59,16 @@ public class TeamRestController {
         return ResponseEntity.created(location).body(result);
     }
     @PostMapping("/{teamId}/add-player/{id}")
-    public ResponseEntity<TeamDto> addPlayerToTeam(@PathVariable Long teamId,@PathVariable Long playerId, @RequestBody Player player) {
-        try {
-            teamsService.addPlayerToTeam(teamId, player);
-            return ResponseEntity.ok("Giocatore aggiunto al team con successo!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiunta al team");
-        }
+    public ResponseEntity<Object> addPlayerToTeam(@PathVariable Long teamId,@PathVariable Long playerId) {
+//        try {
+            
+            Optional<Team> result=teamsService.addPlayerToTeam(teamId,playerId);
+            return result.stream()
+                    .map(c -> ResponseEntity.noContent().build())
+                    .findFirst()
+                    .orElse(ResponseEntity.notFound().build());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiunta al team");
+//        }
     }
 }
