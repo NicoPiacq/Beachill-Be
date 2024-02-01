@@ -9,7 +9,8 @@ public interface TeamsService {
 	
 	List<Team> findAllTeams();
 	List<Team> findAllTeamsByTeamLeader(Long id);
-	
+
+	List<Team> findAllTeamsByPlayer(Long id);
 	Team createTeam(Team team);
 	
 	
@@ -18,5 +19,5 @@ public interface TeamsService {
 	
 	Optional<Team> deleteEnrolledPlayer(Long playerId, Long teamId);
 	
-	List<Team> findAllTeamsByPlayer(Long id);
+
 }

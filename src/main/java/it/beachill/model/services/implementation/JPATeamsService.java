@@ -41,6 +41,16 @@ public class JPATeamsService implements TeamsService {
     public List<Team> findAllTeamsByTeamLeader(Long playerId) {
         return teamRepository.findAllByTeamLeader(new Player(playerId));
     }
+
+    @Override
+    public List<Team> findAllTeamsByPlayer(Long playerId) {
+        List<TeamComponent> teams = teamComponentRepository.findByPlayerId(playerId);
+        List<Team> result=new ArrayList<>();
+        for(int i=0; i<teams.size();i++){
+            result.add(teams.get(i).getTeam());
+        }
+        return result;
+    }
     
     @Override
     public Team createTeam(Team team) {
@@ -49,10 +59,10 @@ public class JPATeamsService implements TeamsService {
         if (existingTeam.isPresent()) {
             // Il team esiste già, quindi non può essere creato di nuovo
             throw new IllegalArgumentException("Il team esiste già!");
-        } else {
-            // Il team non esiste, quindi può essere creato
-            return teamRepository.save(team);
         }
+            // Il team non esiste, l' utente è il capitano, quindi può essere creato
+        return teamRepository.save(team);
+
     }
     
     //durante la fase di creazione del team questa funzione aggiunge il capitano ai componenti del team (non ha controlli)
@@ -104,14 +114,5 @@ public class JPATeamsService implements TeamsService {
         }
         return Optional.empty();
     }
-    
-    @Override
-    public List<Team> findAllTeamsByPlayer(Long id) {
-        List<TeamComponent> teams = teamComponentRepository.findByPlayerId(id);
-        List<Team> result=new ArrayList<>();
-        for(int i=0; i<teams.size();i++){
-            result.add(teams.get(i).getTeam());
-        }
-        return result;
-    }
+
 }

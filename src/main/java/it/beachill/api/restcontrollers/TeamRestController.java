@@ -47,13 +47,21 @@ public class TeamRestController {
         return ResponseEntity.ok(result);
     }
     @GetMapping("/all-teams-captained/{id}")
-    public ResponseEntity<List<TeamDto>> getAllTeamsByTeamLeaderId(Long id){
+    public ResponseEntity<List<TeamDto>> getAllTeamsByTeamLeaderId(@AuthenticationPrincipal User user, @PathVariable Long id){
+        Player requestPlayer = user.getPlayer();
+        if(!Objects.equals(id, requestPlayer.getId())){
+            return ResponseEntity.badRequest().build();
+        }
         List<Team> teams = teamsService.findAllTeamsByTeamLeader(id);
         List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
         return ResponseEntity.ok(result);
     }
     @GetMapping("/player-enrolled-teams/{id}")
-    public ResponseEntity<List<TeamDto>> getAllTeamsByPlayerId(Long id){
+    public ResponseEntity<List<TeamDto>> getAllTeamsByPlayerId(@AuthenticationPrincipal User user, Long id){
+        Player requestPlayer = user.getPlayer();
+        if(!Objects.equals(id, requestPlayer.getId())){
+            return ResponseEntity.badRequest().build();
+        }
         List<Team> teams= teamsService.findAllTeamsByPlayer(id);
         List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
         return ResponseEntity.ok(result);
@@ -62,8 +70,12 @@ public class TeamRestController {
     //TODO:implementare assegnazione sicura del capitano alla squadra
     //FIXME:questa cosa funziona male (IO)
     @PostMapping("/create")
-    public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto teamDto) throws URISyntaxException {
+    public ResponseEntity<TeamDto> createTeam(@AuthenticationPrincipal User user, @RequestBody TeamDto teamDto) throws URISyntaxException {
         Team team = teamDto.fromDto();
+        Player requestPlayer = user.getPlayer();
+        if(!Objects.equals(team.getTeamLeader().getId(), requestPlayer.getId())){
+            return ResponseEntity.badRequest().build();
+        }
         Team savedTeam=teamsService.createTeam(team);
         teamsService.addCaptainToTeam(savedTeam.getId(),savedTeam.getTeamLeader().getId());
         
