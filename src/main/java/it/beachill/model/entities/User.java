@@ -144,11 +144,11 @@ public class User implements UserDetails {
         this.player = player;
     }
 
-    public Role getRank() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRank(Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

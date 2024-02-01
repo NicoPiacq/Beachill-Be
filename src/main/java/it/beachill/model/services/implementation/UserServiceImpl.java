@@ -52,13 +52,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthenticationResponseDto register(RegistrationDto request) {
+        Optional<User> checkUser = userRepository.findByEmail(request.getEmail());
+        if(checkUser.isPresent()) {
+            return new AuthenticationResponseDto(null, null);
+        }
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
-        Player newPlayer=playerRepository.save(new Player());
+        Player newPlayer = playerRepository.save(new Player());
         newUser.setPlayer(newPlayer);
         var savedUser = userRepository.save(newUser);
         var jwtToken = jwtService.generateToken(savedUser);
         saveUserToken(savedUser, jwtToken);
-        return new AuthenticationResponseDto(jwtToken);
+        newPlayer.setUser(savedUser);
+        return new AuthenticationResponseDto(jwtToken, savedUser);
     }
 
     @Override
@@ -67,13 +72,13 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         if(userOpt.isEmpty()) {
-            throw new UsernameNotFoundException("Utente non trovato");
+            throw new UsernameNotFoundException("EMAIL_NOT_FOUND");
         }
         User user = userOpt.get();
         String newJwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, newJwtToken);
-        return new AuthenticationResponseDto(newJwtToken);
+        return new AuthenticationResponseDto(newJwtToken, user);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new AuthenticationResponseDto(null);
+            return new AuthenticationResponseDto(null, null);
         }
         token = header.substring(7);
 
@@ -102,7 +107,7 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new AuthenticationResponseDto(null);
+            return new AuthenticationResponseDto(null, null);
         }
 
         // CHECK SE TROVA UN USER ASSOCIATO ALL'EMAIL ESTRATTA DAL TOKEN
@@ -113,7 +118,7 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new AuthenticationResponseDto(null);
+            return new AuthenticationResponseDto(null, null);
         }
 
         // CHECK SE IL TOKEN ASSOCIATO A QUELL'USER E' VALIDO/NON SCADUTO
@@ -124,13 +129,13 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new AuthenticationResponseDto(null);
+            return new AuthenticationResponseDto(null, null);
         }
 
         newToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, newToken);
-        return new AuthenticationResponseDto(newToken);
+        return new AuthenticationResponseDto(newToken, user);
     }
 
     private void revokeAllUserTokens(User user) {

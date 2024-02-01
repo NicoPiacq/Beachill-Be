@@ -6,16 +6,16 @@ public class PlayerDto {
 	private Long id;
 	private Long score;
 	private Long userId;
-	
 
-	
 	public PlayerDto() {
 	}
+
 	public PlayerDto(Player player) {
 		this.id = player.getId(); ;
 		this.score = player.getScore();
 		this.userId = player.getUser().getId();
 	}
+
 	public Player fromDto(){
 		Player player = new Player();
 		player.setScore(this.score);
@@ -39,6 +39,7 @@ public class PlayerDto {
 	public void setScore(Long score) {
 		this.score = score;
 	}
+
 	public Long getUserId() {
 		return userId;
 	}
