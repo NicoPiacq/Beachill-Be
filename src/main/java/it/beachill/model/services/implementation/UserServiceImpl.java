@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService {
         Player newPlayer = playerRepository.save(new Player());
         newUser.setPlayer(newPlayer);
         var savedUser = userRepository.save(newUser);
+        newPlayer.setUser(savedUser);
         var jwtToken = jwtService.generateToken(savedUser);
         saveUserToken(savedUser, jwtToken);
-        newPlayer.setUser(savedUser);
         return new AuthenticationResponseDto(jwtToken, savedUser);
     }
 

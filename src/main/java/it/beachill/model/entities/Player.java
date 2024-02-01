@@ -22,6 +22,10 @@ public class Player {
 
     public Player() {}
 
+    public Player(User user) {
+        this.user = user;
+    }
+
     public Player(Long id, Long score) {
         this.id = id;
         this.score = score;
