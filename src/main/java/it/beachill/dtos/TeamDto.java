@@ -5,7 +5,8 @@ import it.beachill.model.entities.*;
 public class TeamDto {
     private Long id;
     private String teamName;
-    private String teamLeader;
+    private String teamLeaderName;
+    private String teamLeaderSurname;
     private Long idTeamLeader;
     private Long score;
 
@@ -14,15 +15,16 @@ public class TeamDto {
     public TeamDto(Team team) {
         this.id = team.getId();
         this.teamName = team.getTeamName();
-//        this.teamLeader = team.getTeamLeader().getUser().getName();
+        this.teamLeaderName = team.getTeamLeader().getUser().getName();
+        this.teamLeaderSurname = team.getTeamLeader().getUser().getSurname();
         this.idTeamLeader=team.getTeamLeader().getId();
         this.score = team.getScore();
     }
     
     public Team fromDto(){
         Team team = new Team();
-        team.setTeamName(this.teamName);
         team.setTeamLeader(new Player(this.idTeamLeader));
+        team.setTeamName(this.teamName);
         team.setScore(this.score);
         return team;
     }
@@ -51,12 +53,12 @@ public class TeamDto {
         this.teamName = teamName;
     }
 
-    public String getTeamLeader() {
-        return teamLeader;
+    public String getTeamLeaderName() {
+        return teamLeaderName;
     }
 
-    public void setTeamLeader(String teamLeader) {
-        this.teamLeader = teamLeader;
+    public void setTeamLeaderName(String teamLeaderName) {
+        this.teamLeaderName = teamLeaderName;
     }
 
     public Long getScore() {
@@ -65,5 +67,13 @@ public class TeamDto {
 
     public void setScore(Long score) {
         this.score = score;
+    }
+
+    public String getTeamLeaderSurname() {
+        return teamLeaderSurname;
+    }
+
+    public void setTeamLeaderSurname(String teamLeaderSurname) {
+        this.teamLeaderSurname = teamLeaderSurname;
     }
 }

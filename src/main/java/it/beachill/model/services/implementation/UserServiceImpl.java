@@ -4,6 +4,7 @@ import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.entities.Player;
+import it.beachill.model.entities.Role;
 import it.beachill.model.entities.Token;
 import it.beachill.model.entities.User;
 import it.beachill.model.exceptions.LoginChecksFailedExceptions;
@@ -79,6 +80,9 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationChecksFailedException("EMAIL_EXISTS");
         }
 
+        //AGGIUNTA
+        request.setRole(Role.SUPERADMIN);
+        //FINE
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
         Player newPlayer = playerRepository.save((new Player()));
         newUser.setPlayer(newPlayer);

@@ -5,6 +5,7 @@ import it.beachill.dtos.TeamDto;
 import it.beachill.model.entities.Player;
 import it.beachill.model.entities.Team;
 import it.beachill.model.entities.User;
+import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.services.abstraction.TeamsService;
 import it.beachill.model.services.implementation.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,16 @@ public class TeamRestController {
         List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/all-teams-captained/{id}")
-    public ResponseEntity<List<TeamDto>> getAllTeamsByTeamLeaderId(@AuthenticationPrincipal User user, @PathVariable Long id){
+
+    @GetMapping("/captained/{id}")
+    public ResponseEntity<List<TeamDto>> getAllTeamsByTeamLeaderId(@PathVariable Long id){
+        List<Team> teams = teamsService.findAllTeamsByTeamLeader(id);
+        List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/my-captained/{id}")
+    public ResponseEntity<List<TeamDto>> manageAllTeamsByTeamLeaderId(@AuthenticationPrincipal User user, @PathVariable Long id){
         Player requestPlayer = user.getPlayer();
         if(!Objects.equals(id, requestPlayer.getId())){
             return ResponseEntity.badRequest().build();
@@ -56,8 +65,15 @@ public class TeamRestController {
         List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/player-enrolled-teams/{id}")
-    public ResponseEntity<List<TeamDto>> getAllTeamsByPlayerId(@AuthenticationPrincipal User user, Long id){
+
+    @GetMapping("/enrolled/{id}")
+    public ResponseEntity<List<TeamDto>> getAllTeamsByPlayerId(Long id){
+        List<Team> teams= teamsService.findAllTeamsByPlayer(id);
+        List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/my-enrolled/{id}")
+    public ResponseEntity<List<TeamDto>> manageAllTeamsByPlayerId(@AuthenticationPrincipal User user, Long id){
         Player requestPlayer = user.getPlayer();
         if(!Objects.equals(id, requestPlayer.getId())){
             return ResponseEntity.badRequest().build();
@@ -66,17 +82,23 @@ public class TeamRestController {
         List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
         return ResponseEntity.ok(result);
     }
-    
+
     //TODO:implementare assegnazione sicura del capitano alla squadra
     //FIXME:questa cosa funziona male (IO)
-    @PostMapping("/create")
-    public ResponseEntity<TeamDto> createTeam(@AuthenticationPrincipal User user, @RequestBody TeamDto teamDto) throws URISyntaxException {
+    @PostMapping("/")
+    public ResponseEntity<?> createTeam(@AuthenticationPrincipal User user, @RequestBody TeamDto teamDto) throws URISyntaxException {
         Team team = teamDto.fromDto();
         Player requestPlayer = user.getPlayer();
+        team.setTeamLeader(requestPlayer);
         if(!Objects.equals(team.getTeamLeader().getId(), requestPlayer.getId())){
             return ResponseEntity.badRequest().build();
         }
-        Team savedTeam=teamsService.createTeam(team);
+        Team savedTeam;
+        try {
+            savedTeam = teamsService.createTeam(team);
+        } catch (TeamCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
         teamsService.addCaptainToTeam(savedTeam.getId(),savedTeam.getTeamLeader().getId());
         
         TeamDto result = new TeamDto(team);
@@ -84,6 +106,21 @@ public class TeamRestController {
         
         return ResponseEntity.created(location).body(result);
     }
+
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<?> deleteTeam(@AuthenticationPrincipal User user, @PathVariable Long teamId) {
+        Optional<Team> result;
+        try {
+           result = teamsService.deleteTeam(teamId, user);
+        } catch (TeamCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return result.stream()
+                .map(c -> ResponseEntity.noContent().build())
+                .findFirst()
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     /*fede vuole roba sofisticata:
     - uno fa una richiesta, che deve venir accettata: od il capitano manda la richiesta al player o viceversa;
     - il team manda una richiesta di prenotazione al torneo, che l'organizzatore può accettare o rifiutare.
@@ -92,26 +129,44 @@ public class TeamRestController {
     
     // verificare se l'user è corretto, altrimenti manda unauthorized
     //
-    @PostMapping("/{teamId}/players/")
-    public ResponseEntity<?> addPlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto, @PathVariable Long teamId) {
+    @PostMapping("/{teamId}/players")
+    public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto, @PathVariable Long teamId) {
         if(!Objects.equals(teamId, teamComponentDto.getTeamId())){
             return ResponseEntity.badRequest().build();
         }
         Player player = user.getPlayer();
-        Optional<Team> teamOptional=teamsService.addPlayerToTeam(
-                teamComponentDto.getTeamId(),
-                teamComponentDto.getRecipientPlayerId(),
-                user.getId());
-        if(teamOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invio invito fallito");
+        Optional<Team> teamOptional;
+        try {
+            teamOptional = teamsService.addPlayerToTeam(
+                    teamComponentDto.getTeamId(),
+                    teamComponentDto.getRecipientPlayerId(),
+                    user.getPlayer().getId());
+        } catch(TeamCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        return ResponseEntity.ok(teamOptional.get());
+
+        //return ResponseEntity.ok(new TeamDto(teamOptional.get()));
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{teamId}/delete-player/{id}")
-    public ResponseEntity<Object> deletePlayerFromTeam(@PathVariable Long teamId, @PathVariable Long playerId){
-        Optional<Team> result = teamsService.deleteEnrolledPlayer(playerId,teamId);
-        
+    @PatchMapping("/{teamId}/player/{teamComponentId}")
+    public ResponseEntity<?> updateStatusInvitation(@AuthenticationPrincipal User user, @PathVariable Long teamId, @PathVariable Long teamComponentId, @RequestParam Integer status){
+        try {
+            teamsService.updateStatusInvitation(teamComponentId, teamId, user, status);
+        } catch (TeamCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{teamId}/player/{teamComponentId}")
+    public ResponseEntity<Object> deletePlayerFromTeam(@AuthenticationPrincipal User user, @PathVariable Long teamId, @PathVariable Long teamComponentId){
+        Optional<Team> result;
+        try {
+            result = teamsService.deleteEnrolledPlayer(teamComponentId, teamId, user);
+        } catch (TeamCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
         return result.stream()
                 .map(c -> ResponseEntity.noContent().build())
                 .findFirst()

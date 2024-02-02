@@ -2,6 +2,7 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.EnrolledTeamDto;
 import it.beachill.model.entities.*;
+import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TeamComponentRepository;
 import it.beachill.model.repositories.abstractions.TeamInTournamentRepository;
@@ -53,16 +54,28 @@ public class JPATeamsService implements TeamsService {
     }
     
     @Override
-    public Team createTeam(Team team) {
+    public Team createTeam(Team team) throws TeamCheckFailedException {
         Optional<Team> existingTeam = teamRepository.findByTeamName(team.getTeamName());
         
         if (existingTeam.isPresent()) {
             // Il team esiste già, quindi non può essere creato di nuovo
-            throw new IllegalArgumentException("Il team esiste già!");
+            throw new TeamCheckFailedException("Il team esiste già!");
         }
             // Il team non esiste, l' utente è il capitano, quindi può essere creato
         return teamRepository.save(team);
+    }
 
+    @Override
+    public Optional<Team> deleteTeam(Long teamId, User user) throws TeamCheckFailedException {
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        if(optionalTeam.isEmpty()){
+            throw new TeamCheckFailedException("Il team non è presente");
+        }
+        if(!Objects.equals(optionalTeam.get().getTeamLeader().getId(), user.getPlayer().getId())){
+            throw new TeamCheckFailedException("Non sei il capitano del team!");
+        }
+        teamRepository.delete(optionalTeam.get());
+        return optionalTeam;
     }
     
     //durante la fase di creazione del team questa funzione aggiunge il capitano ai componenti del team (non ha controlli)
@@ -80,18 +93,17 @@ public class JPATeamsService implements TeamsService {
     }
     
     @Override
-    public Optional<Team> addPlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) {
+    public Optional<Team> addPlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException {
         Optional<Team> team=teamRepository.findById(teamId);
         if(team.isEmpty()){
-            return Optional.empty();
+            throw new TeamCheckFailedException("Il team non è presente!");
         }
-        //FIXME:Questa troia bastarda non vuole cooperare. MY EYES!!!
         if(!Objects.equals(team.get().getTeamLeader().getId(), requestingPlayerId)){
-            return Optional.empty();
+            throw new TeamCheckFailedException("Non sei il capitano del team!");
         }
         Optional<Player> player=playerRepository.findById(playerToAddId);
         if(player.isEmpty()){
-            return Optional.empty();
+            throw new TeamCheckFailedException("Il player da invitare non è presente!");
         }
         
         TeamComponent teamComponent= new TeamComponent(team.get(),player.get());
@@ -101,18 +113,36 @@ public class JPATeamsService implements TeamsService {
     }
     
     @Override
-    public Optional<Team> deleteEnrolledPlayer(Long playerId, Long teamId) {
-        
+    public Optional<Team> deleteEnrolledPlayer(Long teamComponentId, Long teamId, User requestingUser) throws TeamCheckFailedException {
+
         Optional<Team> optionalTeam = teamRepository.findById(teamId);
-        Optional<Player> optionalPlayer = playerRepository.findById(playerId);
-        if (optionalTeam.isPresent() && optionalPlayer.isPresent()) {
-            Optional<TeamComponent> optionalTeamComponent = teamComponentRepository.findByPlayerIdAndTeamId(new Player(playerId), new Team(teamId));
-            if (optionalTeamComponent.isPresent()) {
-                teamComponentRepository.delete(optionalTeamComponent.get());
-                return optionalTeam;
+        Optional<TeamComponent> optionalTeamComponent = teamComponentRepository.findById(teamComponentId);
+        if (optionalTeam.isPresent() && optionalTeamComponent.isPresent()) {
+            if(!Objects.equals(optionalTeam.get().getTeamLeader().getId(), requestingUser.getPlayer().getId())){
+                throw new TeamCheckFailedException("Non sei il capitano del team!");
             }
+            teamComponentRepository.delete(optionalTeamComponent.get());
+            return optionalTeam;
+
         }
-        return Optional.empty();
+        throw new TeamCheckFailedException("Il team o il player non sono presenti!");
+    }
+
+    @Override
+    public Optional<Team> updateStatusInvitation(Long teamComponentId, Long teamId, User user, Integer status) throws TeamCheckFailedException {
+
+        Optional<Team> optionalTeam = teamRepository.findById(teamId);
+        Optional<TeamComponent> optionalTeamComponent = teamComponentRepository.findById(teamComponentId);
+        if (optionalTeam.isPresent() && optionalTeamComponent.isPresent()){
+            TeamComponent teamComponent = optionalTeamComponent.get();
+            if(Objects.equals(user.getPlayer().getId(), teamComponent.getPlayer().getId())){
+                teamComponent.setStatus(status);
+                teamComponentRepository.save(teamComponent);
+            }
+            throw new TeamCheckFailedException("Questo invito non ti appartiene!");
+        }
+
+        throw new TeamCheckFailedException("Il team o l' invito non sono presenti!");
     }
 
 }
