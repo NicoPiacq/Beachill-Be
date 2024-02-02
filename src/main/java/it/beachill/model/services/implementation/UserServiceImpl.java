@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userOpt.get();
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID_TEMP"); // In questo modo un attaccante non capisce se è sbagliata email o password.
+            throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID"); // In questo modo un attaccante non capisce se è sbagliata email o password.
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
