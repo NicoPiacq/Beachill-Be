@@ -6,6 +6,8 @@ import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.entities.Player;
 import it.beachill.model.entities.Token;
 import it.beachill.model.entities.User;
+import it.beachill.model.exceptions.LoginChecksFailedExceptions;
+import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TokenRepository;
 import it.beachill.model.repositories.abstractions.UserRepository;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -51,22 +54,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthenticationResponseDto register(RegistrationDto request) {
-        Optional<User> checkUser = userRepository.findByEmail(request.getEmail());
-        if(checkUser.isPresent()) {
-            return new AuthenticationResponseDto(null, null);
+    public AuthenticationResponseDto login(LoginDto request) throws LoginChecksFailedExceptions {
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+        if(userOpt.isEmpty()) {
+            throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID"); // Gli errori sono uguali solo per sicurezza.
         }
-        User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
-        Player newPlayer = playerRepository.save(new Player());
-        newUser.setPlayer(newPlayer);
-        var savedUser = userRepository.save(newUser);
-        newPlayer.setUser(savedUser);
-        var jwtToken = jwtService.generateToken(savedUser);
-        saveUserToken(savedUser, jwtToken);
-        return new AuthenticationResponseDto(jwtToken, savedUser);
+        User user = userOpt.get();
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID_TEMP"); // In questo modo un attaccante non capisce se è sbagliata email o password.
+        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(), request.getPassword()));
+        String newJwtToken = jwtService.generateToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, newJwtToken);
+        return new AuthenticationResponseDto(newJwtToken, user);
     }
 
-    @Override
+    public AuthenticationResponseDto register(RegistrationDto request) throws RegistrationChecksFailedException {
+
+        // TESTA SE L'UTENTE GIA' ESISTE: SE VERO, LANCIA UNA EXCEPTION CUSTOM
+        if(checkUserAlreadyRegistered(request.getEmail())) {
+            throw new RegistrationChecksFailedException("EMAIL_EXISTS");
+        }
+
+        User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
+        Player newPlayer = playerRepository.save((new Player()));
+        newUser.setPlayer(newPlayer);
+        newUser.setRegistrationDate(LocalDate.now());
+        userRepository.save(newUser);
+        newPlayer.setUser(newUser);
+        String jwtToken = jwtService.generateToken(newUser);
+        saveUserToken(newUser, jwtToken);
+        return new AuthenticationResponseDto(jwtToken, newUser);
+    }
+
+    private boolean checkUserAlreadyRegistered(String email) {
+        Optional<User> checkUser = userRepository.findByEmail(email);
+        return checkUser.isPresent();
+    }
+
+
+    /* @Override
     public AuthenticationResponseDto login(LoginDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
@@ -79,7 +109,7 @@ public class UserServiceImpl implements UserService {
         revokeAllUserTokens(user);
         saveUserToken(user, newJwtToken);
         return new AuthenticationResponseDto(newJwtToken, user);
-    }
+    } */
 
     @Override
     public AuthenticationResponseDto refreshToken(HttpServletRequest request, HttpServletResponse response) {

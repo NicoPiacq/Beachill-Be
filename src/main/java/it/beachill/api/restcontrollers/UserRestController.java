@@ -4,9 +4,12 @@ import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.entities.Role;
+import it.beachill.model.exceptions.LoginChecksFailedExceptions;
+import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.services.abstraction.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +24,26 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    //TODO: DA RISCRIVERLI TOTALMENTE - SONO TROPPO SEMPLICI
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDto> register(@RequestBody RegistrationDto request) {
-        request.setRole(Role.USER);
-        return ResponseEntity.ok(userService.register(request));
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDto request) {
+        AuthenticationResponseDto auth;
+        try {
+            auth = userService.login(request);
+        } catch (LoginChecksFailedExceptions e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(auth);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody LoginDto request) {
-        return ResponseEntity.ok(userService.login(request));
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegistrationDto request) {
+        AuthenticationResponseDto auth;
+        try {
+            auth = userService.register(request);
+        } catch (RegistrationChecksFailedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(auth);
     }
 
     @PostMapping("/refresh-token")
