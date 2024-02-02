@@ -38,6 +38,11 @@ public class JPATeamsService implements TeamsService {
     public List<Team> findAllTeams() {
         return teamRepository.findAll();
     }
+
+    @Override
+    public Optional<Team> findTeamById(Long id) {
+        return teamRepository.findById(id);
+    }
     @Override
     public List<Team> findAllTeamsByTeamLeader(Long playerId) {
         return teamRepository.findAllByTeamLeader(new Player(playerId));
@@ -77,7 +82,7 @@ public class JPATeamsService implements TeamsService {
         teamRepository.delete(optionalTeam.get());
         return optionalTeam;
     }
-    
+
     //durante la fase di creazione del team questa funzione aggiunge il capitano ai componenti del team (non ha controlli)
     @Override
     public Optional<Team> addCaptainToTeam(Long teamId, Long playerId) {

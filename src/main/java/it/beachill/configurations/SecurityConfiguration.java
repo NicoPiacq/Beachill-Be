@@ -27,7 +27,7 @@ public class SecurityConfiguration {
                                                     "/api/enrolled-team/**",
                                                     "/api/match/**",
                                                     "/api/admin/**",
-    "/api/place/**", "/api/tournament-type/**"};
+    "/api/place/**", "/api/tournament-type/**", "/api/team/**"};
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;

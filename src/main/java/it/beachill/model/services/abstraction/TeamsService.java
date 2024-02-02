@@ -25,4 +25,6 @@ public interface TeamsService {
 	Optional<Team> updateStatusInvitation(Long teamComponentId, Long teamId, User user, Integer status) throws TeamCheckFailedException;
 
 	Optional<Team> deleteTeam(Long teamId, User user) throws TeamCheckFailedException;
+
+	Optional<Team> findTeamById(Long id);
 }
