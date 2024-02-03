@@ -6,6 +6,11 @@ public class PlayerDto {
 	private Long id;
 	private Long score;
 	private Long userId;
+	///aggiunte
+	private String userName;
+	private String userSurname;
+
+	/////fine
 
 	public PlayerDto() {
 	}
@@ -14,6 +19,8 @@ public class PlayerDto {
 		this.id = player.getId(); ;
 		this.score = player.getScore();
 		this.userId = player.getUser().getId();
+		this.userName = player.getUser().getName();
+		this.userSurname = player.getUser().getSurname();
 	}
 
 	public Player fromDto(){
@@ -47,5 +54,20 @@ public class PlayerDto {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserSurname() {
+		return userSurname;
+	}
+
+	public void setUserSurname(String userSurname) {
+		this.userSurname = userSurname;
+	}
 }
