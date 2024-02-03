@@ -33,6 +33,10 @@ public class Tournament {
     private List<PizzaOrder> pizzaOrders;
     @OneToMany(mappedBy = "tournament")
     private List<TeamInTournament> enrolledTeams;
+    @ManyToOne
+    @JoinColumn(name="user")
+    private User user;
+    private Integer status;
 
 
     public Tournament() {}
@@ -125,5 +129,21 @@ public class Tournament {
 
     public void setGroupStageStandingList(List<GroupStageStanding> groupStageStandingList) {
         this.groupStageStandingList = groupStageStandingList;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    public Integer getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

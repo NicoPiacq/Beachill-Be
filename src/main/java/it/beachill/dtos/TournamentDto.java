@@ -3,6 +3,7 @@ package it.beachill.dtos;
 import it.beachill.model.entities.Tournament;
 import it.beachill.model.entities.TournamentPlace;
 import it.beachill.model.entities.TournamentType;
+import it.beachill.model.entities.User;
 
 import java.sql.Timestamp;
 
@@ -13,6 +14,8 @@ public class TournamentDto {
     private Timestamp endDate;
     private String tournamentTypeName;
     private String place;
+    private Integer status;
+    private UserDto userDto;
 
 
     public TournamentDto() {}
@@ -41,6 +44,8 @@ public class TournamentDto {
         } else {
             this.place = tournament.getPlace().getPlace();
         }
+        this.status= tournament.getStatus();
+        this.userDto= new UserDto(tournament.getUser());
     }
 
     public Tournament fromDto(){
@@ -59,8 +64,16 @@ public class TournamentDto {
         } else {
             tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
         }
-
-
+        if(this.status==null){
+            tournament.setStatus(null);
+        } else {
+            tournament.setStatus(this.status);
+        }
+        if(this.userDto==null){
+            tournament.setUser(null);
+        } else {
+            tournament.setUser(new User(this.userDto.getId()));
+        }
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
         return tournament;
@@ -112,5 +125,21 @@ public class TournamentDto {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+    
+    public Integer getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    
+    public UserDto getUserDto() {
+        return userDto;
+    }
+    
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 }

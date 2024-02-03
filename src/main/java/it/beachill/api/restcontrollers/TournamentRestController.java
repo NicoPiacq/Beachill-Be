@@ -1,10 +1,15 @@
 package it.beachill.api.restcontrollers;
 
+import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.User;
+import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +44,15 @@ public class TournamentRestController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    
+    @PostMapping("/{tournamentId}")
+    public ResponseEntity<?> enrolledTeamByTournamentId(@AuthenticationPrincipal User user, @PathVariable Long tournamentId, @RequestParam Long teamId ) {
+        try {
+            tournamentsService.enrolledTeam(user, tournamentId, teamId);
+        }
+        catch (TournamentCheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
 }

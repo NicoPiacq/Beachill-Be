@@ -88,7 +88,10 @@ create table tournament.tournament (
     end_date timestamp,
     place varchar(255),
     tournament_type varchar(20),
+    _user bigint,
+    status int,
     constraint tournament_pk primary key (id),
+    constraint tournament_user_fk foreign key (_user) references user_util._user(id),
     constraint tournament_type_fk foreign key (tournament_type) references tournament.domain_type_tournament(tournament_type_name),
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
 );

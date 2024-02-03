@@ -30,7 +30,7 @@ public class UserDto {
         this.player = new PlayerDto(user.getPlayer());
         this.role = user.getRole().toString();
     }
-
+   
     public Long getId() {
         return id;
     }

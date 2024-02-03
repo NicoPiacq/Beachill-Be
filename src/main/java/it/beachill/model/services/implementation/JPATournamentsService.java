@@ -1,27 +1,23 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.*;
+import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.MatchsService;
 import it.beachill.model.services.abstraction.TournamentsService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class JPATournamentsService implements TournamentsService {
-    private final MatchsService matchsService;
     private final TournamentRepository tournamentRepository;
     private final TeamInTournamentRepository teamInTournamentRepository;
     private final TournamentPlaceRepository tournamentPlaceRepository;
     private final TournamentTypeRepository tournamentTypeRepository;
-    private final MatchRepository matchRepository;
-    private final MatchTypeRepository matchTypeRepository;
     private final GroupStageStandingRepository groupStageStandingRepository;
+    private final TeamRepository teamRepository;
 
     //aggiunta solo per implementare la funzione di test che genera i risultati
     // casuali e quindi anche i punteggi dei set
@@ -29,16 +25,13 @@ public class JPATournamentsService implements TournamentsService {
 
     @Autowired
     public JPATournamentsService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
-                                 MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
-                                 GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
+                                 GroupStageStandingRepository groupStageStandingRepository,
                                  SetMatchRepository setMatchRepository, TournamentPlaceRepository tournamentPlaceRepository,
-                                 TournamentTypeRepository tournamentTypeRepository){
+                                 TournamentTypeRepository tournamentTypeRepository, TeamRepository teamRepository){
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
-        this.matchRepository = matchRepository;
-        this.matchTypeRepository = matchTypeRepository;
+        this.teamRepository = teamRepository;
         this.groupStageStandingRepository = groupStageStandingRepository;
-        this.matchsService = matchsService;
         this.setMatchRepository = setMatchRepository;
         this.tournamentPlaceRepository = tournamentPlaceRepository;
         this.tournamentTypeRepository = tournamentTypeRepository;
@@ -69,6 +62,27 @@ public class JPATournamentsService implements TournamentsService {
     public List<TournamentPlace> findAllPlaces(){
         return tournamentPlaceRepository.findAll();
     }
+    
+    @Override
+    public void enrolledTeam(User user, Long tournamentId, Long teamId) throws TournamentCheckFailedException {
+        Optional<Tournament> optionalTournament=tournamentRepository.findById(tournamentId);
+        Optional<Team> optionalTeam=teamRepository.findById(teamId);
+        if(optionalTeam.isEmpty()){
+            throw new TournamentCheckFailedException("Il team non è presente!");
+        }
+        if(optionalTournament.isEmpty()){
+            throw new TournamentCheckFailedException("Il torneo non è presente!");
+        }
+        if(!Objects.equals(user.getPlayer().getId(), optionalTeam.get().getTeamLeader().getId())){
+            throw new TournamentCheckFailedException("Non sei il capitano del team!");
+        }
+        TeamInTournament teamInTournament= new TeamInTournament();
+        teamInTournament.setTournament(optionalTournament.get());
+        teamInTournament.setTeam(optionalTeam.get());
+        teamInTournament.setStatus(2);
+        teamInTournamentRepository.save(teamInTournament);
+    }
+    
     public List<TournamentType> findAllTournamentsTypes(){
         return tournamentTypeRepository.findAll();
     }

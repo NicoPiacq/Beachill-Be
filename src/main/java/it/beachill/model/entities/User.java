@@ -1,6 +1,7 @@
 package it.beachill.model.entities;
 
 import it.beachill.dtos.RegistrationDto;
+import it.beachill.dtos.UserDto;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "_user", schema = "user_util")
@@ -34,6 +36,8 @@ public class User implements UserDetails {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Tournament> tournamentAdminList;
 
     public User() {}
     
@@ -48,7 +52,9 @@ public class User implements UserDetails {
         this.password = encryptedPsw;
         this.role = data.getRole();
     }
-
+    public User(UserDto userDto){
+        this.id=userDto.getId();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
@@ -150,5 +156,13 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+    
+    public List<Tournament> getTournamentAdminList() {
+        return tournamentAdminList;
+    }
+    
+    public void setTournamentAdminList(List<Tournament> tournamentAdminList) {
+        this.tournamentAdminList = tournamentAdminList;
     }
 }

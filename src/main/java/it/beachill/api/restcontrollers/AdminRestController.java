@@ -2,11 +2,13 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.User;
 import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -58,8 +60,10 @@ public class AdminRestController {
     }
 
     @PostMapping("/tournament/create")
-    public ResponseEntity<TournamentDto> createTournament(@RequestBody TournamentDto tournamentDto) throws URISyntaxException {
+    public ResponseEntity<TournamentDto> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentDto tournamentDto) throws URISyntaxException {
         Tournament tournament = tournamentDto.fromDto();
+        tournament.setStatus(1);
+        tournament.setUser(user);
         adminsService.createTournament(tournament);
         TournamentDto result = new TournamentDto(tournament);
         URI location = new URI("/api/tournament/" + result.getId());
