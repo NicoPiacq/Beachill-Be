@@ -100,10 +100,9 @@ public class TeamRestController {
         Team savedTeam;
         try {
             savedTeam = teamsService.createTeam(team);
-        } catch (TeamCheckFailedException e){
+        } catch (TeamCheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        teamsService.addCaptainToTeam(savedTeam.getId(),savedTeam.getTeamLeader().getId());
         
         TeamDto result = new TeamDto(team);
         URI location = new URI("/api/team/" + result.getId());
@@ -143,7 +142,7 @@ public class TeamRestController {
         try {
             teamOptional = teamsService.addPlayerToTeam(
                     teamComponentDto.getTeamId(),
-                    teamComponentDto.getRecipientPlayerId(),
+                    teamComponentDto.getPlayerId(),
                     user.getPlayer().getId());
         } catch(TeamCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());

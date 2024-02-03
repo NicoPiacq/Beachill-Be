@@ -31,16 +31,12 @@ public class JPAPlayersService implements PlayersService {
     }
 
     @Override
-    public List<Player> findAllPlayerByTeamId(Long id) throws PlayerChecksFailedException {
+    public List<TeamComponent> findAllPlayerByTeamId(Long id) throws PlayerChecksFailedException {
         Optional<Team> optionalTeam = teamRepository.findById(id);
         if(optionalTeam.isEmpty()){
             throw new PlayerChecksFailedException("Il team non è stato trovato!");
         }
         List<TeamComponent> teamComponents = optionalTeam.get().getTeamComponents();
-        List<Player> result = new ArrayList<>();
-        for(TeamComponent teamComponent : teamComponents){
-            result.add(teamComponent.getPlayer());
-        }
-        return result;
+        return teamComponents;
     }
 }

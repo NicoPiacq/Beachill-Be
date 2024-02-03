@@ -112,6 +112,16 @@ public class AdminRestController {
         else return ResponseEntity.notFound().build();
     }
 
+    //PORCA MADONNA
+    @PostMapping("insert-script")
+    public ResponseEntity<Object> insertScript(){
+        boolean result = adminsService.insertScript();
+        if(result){
+            return ResponseEntity.ok(true);
+        }
+        else return ResponseEntity.notFound().build();
+    }
+
     // ----------------------- FINE ADMIN FEAT TOURNAMENTS ----------------------------------------------
 
 }

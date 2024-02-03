@@ -67,7 +67,9 @@ public class JPATeamsService implements TeamsService {
             throw new TeamCheckFailedException("Il team esiste già!");
         }
             // Il team non esiste, l' utente è il capitano, quindi può essere creato
-        return teamRepository.save(team);
+        Team savedTeam = teamRepository.save(team);
+        addCaptainToTeam(savedTeam.getId(),savedTeam.getTeamLeader().getId());
+        return team;
     }
 
     @Override

@@ -17,4 +17,5 @@ public interface AdminsService {
     
     boolean calculateGroupStageStandingAndAssignMatches(Long id);
 
+    boolean insertScript();
 }

@@ -7,7 +7,9 @@ import it.beachill.model.entities.TeamComponent;
 public class TeamComponentDto {
 	private Long id;
 	private Long teamId;
-	private Long recipientPlayerId;
+	private Long PlayerId;
+	private String playerName;
+	private String playerSurname;
 	private Integer status;
 	
 	public TeamComponentDto() {
@@ -16,13 +18,15 @@ public class TeamComponentDto {
 	public TeamComponentDto(TeamComponent teamComponent) {
 		this.id=teamComponent.getId();
 		this.teamId = teamComponent.getTeam().getId();
-		this.recipientPlayerId = teamComponent.getPlayer().getId();
+		this.PlayerId = teamComponent.getPlayer().getId();
+		this.playerName = teamComponent.getPlayer().getUser().getName();
+		this.playerSurname = teamComponent.getPlayer().getUser().getSurname();
 		this.status = teamComponent.getStatus();
 	}
 	public TeamComponent fromDto() {
 		TeamComponent teamComponent = new TeamComponent();
 		teamComponent.setTeam(new Team(this.teamId));
-		teamComponent.setPlayer(new Player(this.recipientPlayerId));
+		teamComponent.setPlayer(new Player(this.PlayerId));
 		if (this.status == null) {
 			teamComponent.setStatus(2);
 		} else {
@@ -47,12 +51,12 @@ public class TeamComponentDto {
 		this.teamId = teamId;
 	}
 	
-	public Long getRecipientPlayerId() {
-		return recipientPlayerId;
+	public Long getPlayerId() {
+		return PlayerId;
 	}
 	
-	public void setRecipientPlayerId(Long recipientPlayerId) {
-		this.recipientPlayerId = recipientPlayerId;
+	public void setPlayerId(Long playerId) {
+		this.PlayerId = playerId;
 	}
 	
 	public Integer getStatus() {
@@ -61,5 +65,21 @@ public class TeamComponentDto {
 	
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+
+	public String getPlayerSurname() {
+		return playerSurname;
+	}
+
+	public void setPlayerSurname(String playerSurname) {
+		this.playerSurname = playerSurname;
 	}
 }

@@ -1,7 +1,9 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.PlayerDto;
+import it.beachill.dtos.TeamComponentDto;
 import it.beachill.model.entities.Player;
+import it.beachill.model.entities.TeamComponent;
 import it.beachill.model.exceptions.PlayerChecksFailedException;
 import it.beachill.model.services.abstraction.PlayersService;
 import it.beachill.model.services.implementation.JwtService;
@@ -26,7 +28,7 @@ public class PlayerRestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PlayerDto>> getAllTeams(){
+    public ResponseEntity<List<PlayerDto>> getAllPlayers(){
         List<Player> players = playersService.findAllPlayers();
         List<PlayerDto> result = players.stream().map(PlayerDto::new).toList();
         return ResponseEntity.ok(result);
@@ -34,13 +36,13 @@ public class PlayerRestController {
 
     @GetMapping("/enrolled/{id}")
     public ResponseEntity<?> getAllPlayerByTeamId(@PathVariable Long id){
-        List<Player> players;
+        List<TeamComponent> players;
         try {
             players = playersService.findAllPlayerByTeamId(id);
         } catch (PlayerChecksFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        List<PlayerDto> result = players.stream().map(PlayerDto::new).toList();
+        List<TeamComponentDto> result = players.stream().map(TeamComponentDto::new).toList();
         return ResponseEntity.ok(result);
     }
 }

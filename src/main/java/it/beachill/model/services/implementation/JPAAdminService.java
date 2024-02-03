@@ -1,9 +1,14 @@
 package it.beachill.model.services.implementation;
 
+import it.beachill.dtos.AuthenticationResponseDto;
+import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.entities.*;
+import it.beachill.model.exceptions.RegistrationChecksFailedException;
+import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.MatchsService;
+import it.beachill.model.services.abstraction.TeamsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +25,14 @@ public class JPAAdminService implements AdminsService {
     private final MatchTypeRepository matchTypeRepository;
     private final GroupStageStandingRepository groupStageStandingRepository;
     private final SetMatchRepository setMatchRepository;
+    private final UserServiceImpl userService;
+    private final TeamsService teamsService;
 
     @Autowired
     public JPAAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
                            MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
                            GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                           SetMatchRepository setMatchRepository) {
+                           SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
@@ -33,6 +40,8 @@ public class JPAAdminService implements AdminsService {
         this.groupStageStandingRepository = groupStageStandingRepository;
         this.matchsService = matchsService;
         this.setMatchRepository = setMatchRepository;
+        this.userService = userService;
+        this.teamsService = teamsService;
     }
 
     // --------------------------------- METODI CREATE e UPDATE -----------------------------------
@@ -137,6 +146,9 @@ public class JPAAdminService implements AdminsService {
         }
         return false;
     }
+
+
+
     //DA PROVARE AD IMPLEMENTARE PER GESTIRE L' ASSEGNAZIONE DEI TEAM AI MATCH DELLA SECONDA FASE
     private List<Match> assignTeamsToSecondPhaseMatches(List<GroupStageStanding> roundTeams, int[][] secondPhaseTournamentSchema, List<Match> matches) {
         for (int i = 0; i < secondPhaseTournamentSchema.length; i++) {
@@ -371,6 +383,23 @@ public class JPAAdminService implements AdminsService {
             createOrUpdateTeamInTournament(team);
         }
         return listRound;
+    }
+
+    @Override
+    public boolean insertScript() {
+        try {
+            int num = 10;
+            for (Integer i = 0; i < num; i++) {
+                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user", i.toString(), "user" + i + "@gmail.com", "pass", null));
+                Team team = new Team();
+                team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
+                team.setTeamName("Team " + i);
+                teamsService.createTeam(team);
+            }
+            return true;
+        }catch(RegistrationChecksFailedException | TeamCheckFailedException e){
+            return false;
+        }
     }
 
 }

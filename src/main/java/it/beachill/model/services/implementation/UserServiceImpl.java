@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationChecksFailedException("EMAIL_EXISTS");
         }
 
-        //AGGIUNTA
+        //TODO: AGGIUNTA per ridere DA CAMBIAREEEEE!!!!!
         request.setRole(Role.SUPERADMIN);
         //FINE
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
