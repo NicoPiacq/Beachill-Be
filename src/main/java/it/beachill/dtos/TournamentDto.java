@@ -24,14 +24,14 @@ public class TournamentDto {
         this.id = tournament.getId();
         this.tournamentName = tournament.getTournamentName();
         if(tournament.getStartDate() == null) {
-            this.startDate = tournament.getStartDate();
-        } else {
             this.startDate = null;
+        } else {
+            this.startDate = tournament.getStartDate();
         }
         if(tournament.getEndDate() == null) {
-            this.endDate = tournament.getStartDate();
-        } else {
             this.endDate = null;
+        } else {
+            this.endDate = tournament.getStartDate();
         }
 
         if(tournament.getTournamentType() == null){

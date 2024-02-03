@@ -199,9 +199,9 @@ insert into tournament.domain_place_tournament (place, field_number) values
 ('Pietra Ligure', 2),
 ('Loano', 2);
 
-insert into tournament.tournament (tournament_name, place, tournament_type) values
-('torneo prova - 10-corto', 'generation', '10-corto'),
-('torneo prova - 10-lungo', 'generation', '10-lungo');
+--insert into tournament.tournament (tournament_name, place, tournament_type) values
+--('torneo prova - 10-corto', 'generation', '10-corto'),
+--('torneo prova - 10-lungo', 'generation', '10-lungo');
 
 --insert into tournament.player (score) values
 --(400),(400),(400);

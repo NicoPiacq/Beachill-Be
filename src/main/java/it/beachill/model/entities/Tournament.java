@@ -34,7 +34,7 @@ public class Tournament {
     @OneToMany(mappedBy = "tournament")
     private List<TeamInTournament> enrolledTeams;
     @ManyToOne
-    @JoinColumn(name="user")
+    @JoinColumn(name="_user")
     private User user;
     private Integer status;
 
