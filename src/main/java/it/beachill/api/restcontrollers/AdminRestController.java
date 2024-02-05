@@ -1,5 +1,6 @@
 package it.beachill.api.restcontrollers;
 
+import it.beachill.dtos.TournamentAdminDto;
 import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.Tournament;
 import it.beachill.model.entities.User;
@@ -42,30 +43,30 @@ public class AdminRestController {
     //////////// aggiunto per prova admin iniziale //////////////////
     //---------------------------------- ADMIN FEAT TOURNAMENT -------------------------------------
     @GetMapping("/tournament/all")
-    public ResponseEntity<List<TournamentDto>> getAllTournaments(){
+    public ResponseEntity<List<TournamentAdminDto>> getAllTournaments(){
         List<Tournament> tournaments = adminsService.findAllTournaments();
-        List<TournamentDto> result = tournaments.stream().map(TournamentDto::new).toList();
+        List<TournamentAdminDto> result = tournaments.stream().map(TournamentAdminDto::new).toList();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/tournament/{id}")
-    public ResponseEntity<TournamentDto> getTournamentDetails(@PathVariable Long id){
+    public ResponseEntity<TournamentAdminDto> getTournamentDetails(@PathVariable Long id){
         Optional<Tournament> tournament = adminsService.findTournamentById(id);
         if(tournament.isPresent()){
-            TournamentDto tournamentDto = new TournamentDto(tournament.get());
-            return ResponseEntity.ok(tournamentDto);
+            TournamentAdminDto tournamentAdminDto = new TournamentAdminDto(tournament.get());
+            return ResponseEntity.ok(tournamentAdminDto);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/tournament/create")
-    public ResponseEntity<TournamentDto> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentDto tournamentDto) throws URISyntaxException {
+    public ResponseEntity<TournamentAdminDto> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentAdminDto tournamentDto) throws URISyntaxException {
         Tournament tournament = tournamentDto.fromDto();
         tournament.setStatus(1);
         tournament.setUser(user);
         adminsService.createTournament(tournament);
-        TournamentDto result = new TournamentDto(tournament);
+        TournamentAdminDto result = new TournamentAdminDto(tournament);
         URI location = new URI("/api/tournament/" + result.getId());
 
         return ResponseEntity.created(location).body(result);
@@ -107,7 +108,7 @@ public class AdminRestController {
         else return ResponseEntity.notFound().build();
     }
     
-    @PostMapping("tournament/assign-second-phase-matches/{id}")
+    @PostMapping("tournament/second-phase-matches/{id}")
     public ResponseEntity<Object> assignSecondPhaseMatches(@PathVariable Long id){
         boolean result = adminsService.calculateGroupStageStandingAndAssignMatches(id);
         if(result){
