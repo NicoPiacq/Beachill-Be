@@ -28,8 +28,7 @@ public class PizzaOrderLineRestController {
   pizzaService.createPizzaOrderLine(pizzaOrderLine);
   PizzaOrderLineDto result = new PizzaOrderLineDto(pizzaOrderLine);
   //da cambiare URI
-  URI location = new URI("/api/tournament/" + result.getId());
-  return ResponseEntity.created(location).body(result);
+  return ResponseEntity.ok(result);
 }
 
 
