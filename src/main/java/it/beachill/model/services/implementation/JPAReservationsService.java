@@ -29,6 +29,8 @@ public class JPAReservationsService implements ReservationsService {
         if(user.getId() != reservationDto.getUserId()){
             throw new ReservationChecksFailedException("Non sei l' utente al quale vuoi associare la prenotazione");
         }
+        List<Reservation> reservationsStartBetweenOur = reservationRepository.findByDateEqualsAndStartBetween(reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
+        List<Reservation> reservationsEndBetweenOur = reservationRepository.findByDateEqualsAndEndBetween(reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
         Reservation reservation = reservationDto.fromDto();
         this.reservationRepository.save(reservation);
     }
