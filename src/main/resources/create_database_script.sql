@@ -20,7 +20,7 @@ create table reservation.schedule_prop (
     place_id bigint,
     start_time time(0),
     end_time time(0),
-    number_day int,
+    day_number int,
     constraint schedule_prop primary key (id),
     constraint schedule_prop_place_fk foreign key (place_id) references reservation.place(id)
 );

@@ -2,6 +2,7 @@ package it.beachill.model.entities;
 
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.dtos.UserDto;
+import it.beachill.model.entities.reservation.Place;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,6 +39,8 @@ public class User implements UserDetails {
     private Role role;
     @OneToMany(mappedBy = "user")
     private List<Tournament> tournamentAdminList;
+    @OneToMany(mappedBy = "manager")
+    private List<Place> managerPlaces;
 
     public User() {}
     
@@ -164,5 +167,13 @@ public class User implements UserDetails {
     
     public void setTournamentAdminList(List<Tournament> tournamentAdminList) {
         this.tournamentAdminList = tournamentAdminList;
+    }
+
+    public List<Place> getManagerPlaces() {
+        return managerPlaces;
+    }
+
+    public void setManagerPlaces(List<Place> managerPlaces) {
+        this.managerPlaces = managerPlaces;
     }
 }

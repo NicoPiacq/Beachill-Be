@@ -146,4 +146,6 @@ public class Tournament {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+
 }
