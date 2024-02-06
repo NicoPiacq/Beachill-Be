@@ -28,6 +28,10 @@ public class Place {
     public Place() {
     }
 
+    public Place(Long id) {
+        this.id = id;
+    }
+
     public Place(Long id, String name, String address, User manager, String sport, int fieldNumber) {
         this.id = id;
         this.name = name;

@@ -70,8 +70,9 @@ create table reservation.reservation (
     id serial,
     place_id bigint,
     user_id bigint,
-    reservation_start timestamp,
-    reservation_end timestamp,
+    reservation_date date,
+    reservation_start time,
+    reservation_end time,
     constraint reservation_pk primary key (id),
     constraint reservation_place_fk foreign key (place_id) references reservation.place (id),
     constraint reservation_user_fk foreign key (user_id) references user_util._user(id)
@@ -265,3 +266,6 @@ insert into tournament.domain_match_type (type, description) values
 ('FINALE7x8', 'Finale settimo - ottavo posto'),
 ('FINALE9x10', 'Finale nono - decimo posto'),
 ('FINALE11x12', 'Finale undicesimo - dodicesimo posto');
+
+insert into reservation.reservation (reservation_date) values
+(CURRENT_DATE);

@@ -6,6 +6,7 @@ import it.beachill.model.entities.tournament.TournamentType;
 import it.beachill.model.entities.user.User;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class TournamentAdminDto {
     private Long id;
@@ -54,12 +55,12 @@ public class TournamentAdminDto {
         // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
         // o magari creare un dto apposta solo per place e uno per add tournament with place)
         // new oggetto place
-        if(this.place == ""){       //se gli passo la stringa vuota (non ha selezionato il place) allora mi mette null
+        if(Objects.equals(this.place, "")){       //se gli passo la stringa vuota (non ha selezionato il place) allora mi mette null
             tournament.setPlace(null);
         } else {
             tournament.setPlace(new TournamentPlace(this.place));
         }
-        if(this.tournamentTypeName == ""){
+        if(Objects.equals(this.tournamentTypeName, "")){
             tournament.setTournamentType(null);
         } else {
             tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
