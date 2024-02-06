@@ -1,4 +1,4 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static it.beachill.model.entities.Permission.*;
+import static it.beachill.model.entities.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {

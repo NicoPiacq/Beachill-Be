@@ -1,5 +1,6 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.tournament;
 
+import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.util.List;

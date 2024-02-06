@@ -1,7 +1,7 @@
 package it.beachill.model.services.abstraction;
 
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 
 import java.util.List;

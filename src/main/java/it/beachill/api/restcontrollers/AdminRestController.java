@@ -1,11 +1,9 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.TournamentAdminDto;
-import it.beachill.dtos.TournamentDto;
-import it.beachill.model.entities.Tournament;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.services.abstraction.AdminsService;
-import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

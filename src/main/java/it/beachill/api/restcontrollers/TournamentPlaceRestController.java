@@ -1,8 +1,7 @@
 package it.beachill.api.restcontrollers;
 
-
-import it.beachill.dtos.TournamentTypeDto;
-import it.beachill.model.entities.tournament.TournamentType;
+import it.beachill.dtos.PlaceDto;
+import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tournament-type")
+@RequestMapping("/api/tournament-place")
 @CrossOrigin
-public class TournamentTypeRestController {
+public class TournamentPlaceRestController {
     private final TournamentsService tournamentsService;
 
     @Autowired
-    public TournamentTypeRestController(TournamentsService tournamentsService){
+    public TournamentPlaceRestController(TournamentsService tournamentsService){
         this.tournamentsService = tournamentsService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<TournamentTypeDto>> getAllTournamentsTypes(){
-        List<TournamentType> tournamentsTypes = tournamentsService.findAllTournamentsTypes();
-        List<TournamentTypeDto> result = tournamentsTypes.stream().map(TournamentTypeDto::new).toList();
+    public ResponseEntity<List<PlaceDto>> getAllPlaces(){
+        List<TournamentPlace> places = tournamentsService.findAllPlaces();
+        List<PlaceDto> result = places.stream().map(PlaceDto::new).toList();
         return ResponseEntity.ok(result);
     }
-
 }

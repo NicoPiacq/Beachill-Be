@@ -1,9 +1,9 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Tournament;
-import it.beachill.model.entities.TournamentPlace;
-import it.beachill.model.entities.TournamentType;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.tournament.TournamentPlace;
+import it.beachill.model.entities.tournament.TournamentType;
+import it.beachill.model.entities.user.User;
 
 import java.sql.Timestamp;
 

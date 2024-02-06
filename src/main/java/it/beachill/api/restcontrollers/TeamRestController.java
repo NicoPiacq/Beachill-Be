@@ -2,9 +2,9 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TeamDto;
-import it.beachill.model.entities.Player;
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.services.abstraction.TeamsService;
 import it.beachill.model.services.implementation.JwtService;

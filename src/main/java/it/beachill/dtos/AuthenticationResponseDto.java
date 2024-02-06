@@ -1,8 +1,6 @@
 package it.beachill.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import it.beachill.model.entities.User;
-import org.springframework.beans.factory.annotation.Value;
+import it.beachill.model.entities.user.User;
 
 public class AuthenticationResponseDto {
 

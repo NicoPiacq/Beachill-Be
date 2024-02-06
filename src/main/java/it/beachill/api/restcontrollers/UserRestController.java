@@ -3,7 +3,6 @@ package it.beachill.api.restcontrollers;
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
-import it.beachill.model.entities.Role;
 import it.beachill.model.exceptions.LoginChecksFailedExceptions;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.services.abstraction.UserService;

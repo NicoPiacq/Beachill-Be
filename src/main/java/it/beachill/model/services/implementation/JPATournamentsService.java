@@ -1,9 +1,9 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.model.entities.*;
+import it.beachill.model.entities.tournament.*;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
-import it.beachill.model.services.abstraction.MatchsService;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

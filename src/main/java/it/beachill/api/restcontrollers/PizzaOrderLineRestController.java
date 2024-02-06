@@ -1,13 +1,12 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.PizzaOrderLineDto;
-import it.beachill.model.entities.PizzaOrderLine;
+import it.beachill.model.entities.tournament.PizzaOrderLine;
 import it.beachill.model.services.abstraction.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController

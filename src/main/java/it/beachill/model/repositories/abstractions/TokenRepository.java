@@ -1,6 +1,6 @@
 package it.beachill.model.repositories.abstractions;
 
-import it.beachill.model.entities.Token;
+import it.beachill.model.entities.user.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

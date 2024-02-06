@@ -1,6 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.TournamentType;
+import it.beachill.model.entities.tournament.TournamentType;
 
 public class TournamentTypeDto {
 

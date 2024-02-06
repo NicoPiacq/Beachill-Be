@@ -1,9 +1,9 @@
 package it.beachill.model.services.abstraction;
 
-import it.beachill.model.entities.Match;
-import it.beachill.model.entities.MatchType;
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.tournament.Match;
+import it.beachill.model.entities.tournament.MatchType;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.Tournament;
 
 import java.util.List;
 

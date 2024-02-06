@@ -1,7 +1,7 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.EnrolledTeamDto;
-import it.beachill.model.entities.TeamInTournament;
+import it.beachill.model.entities.tournament.TeamInTournament;
 import it.beachill.model.repositories.abstractions.TeamInTournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

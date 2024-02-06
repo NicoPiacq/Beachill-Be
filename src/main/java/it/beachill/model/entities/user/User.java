@@ -1,11 +1,13 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.user;
 
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.dtos.UserDto;
 import it.beachill.model.entities.reservation.Place;
+import it.beachill.model.entities.reservation.Reservation;
+import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.tournament.Tournament;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -41,6 +43,8 @@ public class User implements UserDetails {
     private List<Tournament> tournamentAdminList;
     @OneToMany(mappedBy = "manager")
     private List<Place> managerPlaces;
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations;
 
     public User() {}
     
@@ -175,5 +179,13 @@ public class User implements UserDetails {
 
     public void setManagerPlaces(List<Place> managerPlaces) {
         this.managerPlaces = managerPlaces;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

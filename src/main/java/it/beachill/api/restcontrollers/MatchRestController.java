@@ -1,8 +1,7 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.MatchDto;
-import it.beachill.model.entities.Match;
-import it.beachill.model.repositories.abstractions.MatchRepository;
+import it.beachill.model.entities.tournament.Match;
 import it.beachill.model.services.abstraction.MatchsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

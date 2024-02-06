@@ -1,7 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.TeamInTournament;
+import it.beachill.model.entities.tournament.TeamInTournament;
 
 public class EnrolledTeamDto {
     private Long id;

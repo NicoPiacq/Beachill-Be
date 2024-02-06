@@ -1,9 +1,8 @@
 package it.beachill.api.restcontrollers;
 
-import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TournamentDto;
-import it.beachill.model.entities.Tournament;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController

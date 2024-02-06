@@ -1,10 +1,8 @@
 package it.beachill.model.repositories.abstractions;
 
-import it.beachill.model.entities.GroupStageStanding;
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.tournament.GroupStageStanding;
+import it.beachill.model.entities.tournament.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

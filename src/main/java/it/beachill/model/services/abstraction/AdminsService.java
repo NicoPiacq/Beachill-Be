@@ -1,6 +1,6 @@
 package it.beachill.model.services.abstraction;
 
-import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.tournament.Tournament;
 
 import java.util.List;
 import java.util.Optional;

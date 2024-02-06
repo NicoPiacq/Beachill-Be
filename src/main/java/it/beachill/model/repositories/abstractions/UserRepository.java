@@ -1,6 +1,6 @@
 package it.beachill.model.repositories.abstractions;
 
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

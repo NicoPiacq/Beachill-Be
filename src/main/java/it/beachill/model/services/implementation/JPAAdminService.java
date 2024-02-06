@@ -2,7 +2,7 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.RegistrationDto;
-import it.beachill.model.entities.*;
+import it.beachill.model.entities.tournament.*;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;

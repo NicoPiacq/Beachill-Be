@@ -1,4 +1,4 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.tournament;
 
 import jakarta.persistence.*;
 

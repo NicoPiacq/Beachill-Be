@@ -1,8 +1,8 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.PizzaOrder;
-import it.beachill.model.entities.PizzaOrderLine;
-import it.beachill.model.entities.Player;
+import it.beachill.model.entities.tournament.PizzaOrder;
+import it.beachill.model.entities.tournament.PizzaOrderLine;
+import it.beachill.model.entities.tournament.Player;
 
 public class PizzaOrderLineDto {
   private Long id;

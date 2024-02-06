@@ -68,4 +68,5 @@ public class ScheduleProp {
     public void setDayNumber(int dayNumber) {
         this.dayNumber = dayNumber;
     }
+
 }

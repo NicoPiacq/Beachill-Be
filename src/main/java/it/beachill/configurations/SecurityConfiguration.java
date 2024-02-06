@@ -12,9 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static it.beachill.model.entities.Role.*;
-import static it.beachill.model.entities.Permission.*;
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -27,7 +24,7 @@ public class SecurityConfiguration {
                                                     "/api/enrolled-team/**",
                                                     "/api/match/**",
                                                     "/api/admin/**",
-    "/api/place/**", "/api/tournament-type/**", "/api/team/**", "/api/player/**"};
+    "/api/place/**", "/api/tournament-type/**", "/api/team/**", "/api/player/**", "/api/reservation/**"};
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;

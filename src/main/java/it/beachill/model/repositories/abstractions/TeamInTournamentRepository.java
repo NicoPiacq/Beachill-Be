@@ -1,6 +1,6 @@
 package it.beachill.model.repositories.abstractions;
 
-import it.beachill.model.entities.TeamInTournament;
+import it.beachill.model.entities.tournament.TeamInTournament;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

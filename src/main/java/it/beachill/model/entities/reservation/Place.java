@@ -1,7 +1,6 @@
 package it.beachill.model.entities.reservation;
 
-import it.beachill.model.entities.Tournament;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,6 +22,8 @@ public class Place {
 
     @OneToMany(mappedBy = "place")
     private List<ScheduleProp> schedulePropList;
+    @OneToMany(mappedBy = "place")
+    private List<Reservation> reservations;
 
     public Place() {
     }
@@ -90,5 +91,13 @@ public class Place {
 
     public void setSchedulePropList(List<ScheduleProp> schedulePropList) {
         this.schedulePropList = schedulePropList;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

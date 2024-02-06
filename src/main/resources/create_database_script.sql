@@ -3,40 +3,6 @@ create schema tournament;
 create schema user_util;
 create schema reservation;
 
-----------------------------------------------RESERVATION---------------------------------------------------
-create table reservation.place (
-    id serial,
-    name varchar,
-    address varchar,
-    manager_id bigint,
-    sport varchar,
-    field_number int,
-    constraint place_pk primary key (id),
-    constraint place_manager_fk foreign key (manager_id) references user_util._user(id)
-);
-
-create table reservation.schedule_prop (
-    id serial,
-    place_id bigint,
-    start_time time(0),
-    end_time time(0),
-    day_number int,
-    constraint schedule_prop primary key (id),
-    constraint schedule_prop_place_fk foreign key (place_id) references reservation.place(id)
-);
-
-create table reservation.reservation (
-    id serial,
-    place_id bigint,
-    user_id bigint,
-    reservation_start timestamp,
-    reservation_end timestamp,
-    constraint reservation_pk primary key (id),
-    constraint reservation_place_fk foreign key (place_id) references reservation.place (id),
-    constraint reservation_user_fk foreign key (user_id) references user_util._user(id)
-);
-
----------------------------------------------FINE RESERVATION-----------------------------------------------
 
 -- CREAZIONE TIPO: TOKEN_TYPE
 CREATE TYPE user_util.token_type AS ENUM
@@ -77,6 +43,42 @@ create table user_util.token (
 	constraint token_pk primary key (id),
 	constraint token_user_id_fk foreign key (user_id) references user_util._user(id)
 );
+
+----------------------------------------------RESERVATION---------------------------------------------------
+create table reservation.place (
+    id serial,
+    name varchar,
+    address varchar,
+    manager_id bigint,
+    sport varchar,
+    field_number int,
+    constraint place_pk primary key (id),
+    constraint place_manager_fk foreign key (manager_id) references user_util._user(id)
+);
+
+create table reservation.schedule_prop (
+    id serial,
+    place_id bigint,
+    start_time time(0),
+    end_time time(0),
+    day_number int,
+    constraint schedule_prop primary key (id),
+    constraint schedule_prop_place_fk foreign key (place_id) references reservation.place(id)
+);
+
+create table reservation.reservation (
+    id serial,
+    place_id bigint,
+    user_id bigint,
+    reservation_start timestamp,
+    reservation_end timestamp,
+    constraint reservation_pk primary key (id),
+    constraint reservation_place_fk foreign key (place_id) references reservation.place (id),
+    constraint reservation_user_fk foreign key (user_id) references user_util._user(id)
+);
+
+---------------------------------------------FINE RESERVATION-----------------------------------------------
+
 
 -- TABELLA TEAM
 create table tournament.team (

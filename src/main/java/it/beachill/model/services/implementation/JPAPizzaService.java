@@ -1,8 +1,7 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.model.entities.PizzaOrderLine;
+import it.beachill.model.entities.tournament.PizzaOrderLine;
 import it.beachill.model.repositories.abstractions.PizzaOrderLineRepository;
-import it.beachill.model.repositories.abstractions.PizzaOrderRepository;
 import it.beachill.model.services.abstraction.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

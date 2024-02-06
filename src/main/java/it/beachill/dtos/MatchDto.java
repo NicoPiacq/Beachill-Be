@@ -1,8 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Match;
-import it.beachill.model.entities.MatchType;
-import it.beachill.model.entities.Tournament;
+import it.beachill.model.entities.tournament.Match;
 
 import java.sql.Timestamp;
 

@@ -1,6 +1,6 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.tournament;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;

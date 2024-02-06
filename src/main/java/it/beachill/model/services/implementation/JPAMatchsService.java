@@ -1,12 +1,10 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.dtos.MatchDto;
-import it.beachill.model.entities.*;
+import it.beachill.model.entities.tournament.*;
 import it.beachill.model.repositories.abstractions.MatchRepository;
 import it.beachill.model.repositories.abstractions.SetMatchRepository;
 import it.beachill.model.services.abstraction.MatchsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

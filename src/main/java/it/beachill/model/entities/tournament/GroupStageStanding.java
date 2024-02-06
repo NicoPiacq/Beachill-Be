@@ -1,7 +1,6 @@
-package it.beachill.model.entities;
+package it.beachill.model.entities.tournament;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 import java.util.Map;

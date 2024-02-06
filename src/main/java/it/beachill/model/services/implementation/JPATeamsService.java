@@ -1,7 +1,10 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.dtos.EnrolledTeamDto;
-import it.beachill.model.entities.*;
+import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.TeamComponent;
+import it.beachill.model.entities.tournament.TeamInTournament;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TeamComponentRepository;

@@ -1,7 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Player;
-import it.beachill.model.entities.User;
+import it.beachill.model.entities.user.User;
 
 import java.time.LocalDate;
 

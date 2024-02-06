@@ -1,6 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.TournamentPlace;
+import it.beachill.model.entities.tournament.TournamentPlace;
 
 public class PlaceDto {
     private String place;

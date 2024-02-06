@@ -1,6 +1,7 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.*;
+import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.user.User;
 
 public class PlayerDto {
 	private Long id;

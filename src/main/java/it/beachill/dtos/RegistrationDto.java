@@ -1,6 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.Role;
+import it.beachill.model.entities.user.Role;
 
 public class RegistrationDto {
 

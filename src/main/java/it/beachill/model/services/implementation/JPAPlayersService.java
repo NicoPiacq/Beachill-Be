@@ -1,8 +1,8 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.model.entities.Player;
-import it.beachill.model.entities.Team;
-import it.beachill.model.entities.TeamComponent;
+import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.TeamComponent;
 import it.beachill.model.exceptions.PlayerChecksFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TeamRepository;
@@ -10,7 +10,6 @@ import it.beachill.model.services.abstraction.PlayersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
