@@ -2,7 +2,11 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.RegistrationDto;
+import it.beachill.model.entities.reservation.ReservationPlace;
+import it.beachill.model.entities.reservation.ScheduleProp;
+import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.tournament.*;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
@@ -12,6 +16,7 @@ import it.beachill.model.services.abstraction.TeamsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +29,8 @@ public class JPASuperAdminServiceSuper implements SuperAdminsService {
     private final MatchRepository matchRepository;
     private final MatchTypeRepository matchTypeRepository;
     private final GroupStageStandingRepository groupStageStandingRepository;
+    private final ReservationPlaceRepository reservationPlaceRepository;
+    private final SchedulePropRepository schedulePropRepository;
     private final SetMatchRepository setMatchRepository;
     private final UserServiceImpl userService;
     private final TeamsService teamsService;
@@ -32,13 +39,15 @@ public class JPASuperAdminServiceSuper implements SuperAdminsService {
     public JPASuperAdminServiceSuper(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
                                      MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
                                      GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                                     SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
+                                     ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
         this.matchTypeRepository = matchTypeRepository;
         this.groupStageStandingRepository = groupStageStandingRepository;
         this.matchsService = matchsService;
+        this.reservationPlaceRepository = reservationPlaceRepository;
+        this.schedulePropRepository = schedulePropRepository;
         this.setMatchRepository = setMatchRepository;
         this.userService = userService;
         this.teamsService = teamsService;
@@ -395,6 +404,38 @@ public class JPASuperAdminServiceSuper implements SuperAdminsService {
                 team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
                 team.setTeamName("Team " + i);
                 teamsService.createTeam(team);
+                if(i==0){
+                    ReservationPlace reservationPlace = new ReservationPlace();
+                    reservationPlace.setName("Campo di: "+authenticationResponseDto.getUser().getName());
+                    reservationPlace.setManager(new User(authenticationResponseDto.getUser().getId()));
+                    reservationPlace.setSport(new Sport("BEACHVOLLEY"));
+                    reservationPlace.setFieldNumber(i+1);
+                    ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
+                    for(int j=1;j<=7;j++){
+                        ScheduleProp scheduleProp= new ScheduleProp();
+                        scheduleProp.setPlace(reservationPlaceSaved);
+                        scheduleProp.setDayNumber(j);
+                        if(j==1) {
+                            scheduleProp.setStartTime(LocalTime.of(10,0));
+                            scheduleProp.setEndTime(LocalTime.of(12,0));
+                            scheduleProp.setDuration(60L);
+                            ScheduleProp scheduleProp1= new ScheduleProp();
+                            scheduleProp1.setPlace(reservationPlaceSaved);
+                            scheduleProp1.setDayNumber(j);
+                            scheduleProp1.setStartTime(LocalTime.of(15,0));
+                            scheduleProp1.setEndTime(LocalTime.of(20,0));
+                            scheduleProp1.setDuration(60L);
+                            schedulePropRepository.save(scheduleProp);
+                            schedulePropRepository.save(scheduleProp1);
+                        } else{
+                            scheduleProp.setStartTime(LocalTime.of(10,0));
+                            scheduleProp.setEndTime(LocalTime.of(18,0));
+                            scheduleProp.setDuration(60L);
+                            schedulePropRepository.save(scheduleProp);
+                        }
+                    }
+                    
+                }
             }
             return true;
         }catch(RegistrationChecksFailedException | TeamCheckFailedException e){

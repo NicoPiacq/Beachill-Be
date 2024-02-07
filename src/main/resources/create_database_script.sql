@@ -278,3 +278,6 @@ insert into tournament.domain_match_type (type, description) values
 
 insert into reservation.reservation (reservation_date) values
 (CURRENT_DATE);
+
+insert into reservation.domain_sport values
+('BEACHVOLLEY');
