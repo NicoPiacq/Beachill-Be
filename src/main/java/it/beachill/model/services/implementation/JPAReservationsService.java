@@ -2,6 +2,7 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.ReservationDto;
 import it.beachill.model.entities.reservation.Reservation;
+import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
@@ -34,16 +35,17 @@ public class JPAReservationsService implements ReservationsService {
             throw new ReservationChecksFailedException("Non sei l' utente al quale vuoi associare la prenotazione");
         }
 
-        Optional<Reservation> reservationOptional = reservationRepository.findByPlaceAndDateAndStartAndEnd(reservationDto.getPlaceId(),
+        Optional<Reservation> reservationOptional = reservationRepository.findByReservationPlaceAndDateAndStartAndEnd(new ReservationPlace(reservationDto.getPlaceId()),
                 reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
         if(reservationOptional.isPresent()){
             throw new ReservationChecksFailedException("Esiste già una prenotazione in questo slot!");
         }
 
-        List<ScheduleProp> schedulePropList = schedulePropRepository.findByPlaceEquals(reservationDto.getPlaceId());
+        List<ScheduleProp> schedulePropList = schedulePropRepository.findByReservationPlaceEquals(new ReservationPlace(reservationDto.getPlaceId()));
         ScheduleProp myScheduleProp = getScheduleProp(reservationDto, schedulePropList);
 
-        if(reservationDto.getEnd().until(reservationDto.getStart(), ChronoUnit.MINUTES) != myScheduleProp.getDuration()){
+
+        if(reservationDto.getStart().until(reservationDto.getEnd(), ChronoUnit.MINUTES) != myScheduleProp.getDuration()){
             throw new ReservationChecksFailedException("La durata della prenotazione non è corretta!");
         }
 
@@ -63,7 +65,7 @@ public class JPAReservationsService implements ReservationsService {
             }
         }
         if(myScheduleProp == null){
-            throw new ReservationChecksFailedException("I dettagli del campo non sono presenti");
+            throw new ReservationChecksFailedException("Non è possibile prenotare a questo orario");
         }
         return myScheduleProp;
     }

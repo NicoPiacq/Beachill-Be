@@ -8,6 +8,7 @@ import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 public interface UserService {
 
     // int è usato come segnalatore al momento

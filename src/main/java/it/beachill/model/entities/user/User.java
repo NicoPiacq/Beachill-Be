@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "admin")
     private List<Tournament> tournamentAdminList;
     @OneToMany(mappedBy = "manager")
     private List<ReservationPlace> managerReservationPlaces;

@@ -9,6 +9,7 @@ import java.util.List;
 public class Sport {
 
     @Id
+    @Column(name = "sport")
     private String sportName;
 
     @OneToMany(mappedBy = "sport")

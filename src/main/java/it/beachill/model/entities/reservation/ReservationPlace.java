@@ -22,9 +22,9 @@ public class ReservationPlace {
     @Column (name="field_number")
     private int fieldNumber;
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "reservationPlace")
     private List<ScheduleProp> schedulePropList;
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "reservationPlace")
     private List<Reservation> reservations;
 
     public ReservationPlace() {
