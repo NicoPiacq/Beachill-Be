@@ -16,6 +16,7 @@ import it.beachill.model.services.abstraction.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID"); // In questo modo un attaccante non capisce se è sbagliata email o password.
         }
+        user.setLastLogin(LocalDate.now());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(), request.getPassword()));
