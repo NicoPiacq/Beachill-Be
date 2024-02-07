@@ -16,7 +16,9 @@ public class ReservationPlace {
     @ManyToOne
     @JoinColumn(name="manager_id")
     private User manager;
-    private String sport;
+    @ManyToOne
+    @JoinColumn(name = "sport")
+    private Sport sport;
     @Column (name="field_number")
     private int fieldNumber;
 
@@ -32,7 +34,8 @@ public class ReservationPlace {
         this.id = id;
     }
 
-    public ReservationPlace(Long id, String name, String address, User manager, String sport, int fieldNumber) {
+
+    public ReservationPlace(Long id, String name, String address, User manager, Sport sport, int fieldNumber) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -73,13 +76,6 @@ public class ReservationPlace {
         this.manager = manager;
     }
 
-    public String getSport() {
-        return sport;
-    }
-
-    public void setSport(String sport) {
-        this.sport = sport;
-    }
 
     public int getFieldNumber() {
         return fieldNumber;
@@ -103,5 +99,13 @@ public class ReservationPlace {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public Sport getSport() {
+        return sport;
+    }
+
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
 }

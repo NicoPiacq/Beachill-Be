@@ -45,6 +45,12 @@ create table user_util.token (
 );
 
 ----------------------------------------------RESERVATION---------------------------------------------------
+
+create table reservation.domain_sport(
+    sport varchar(255) not null,
+    constraint domain_sport_pk primary key (sport)
+);
+
 create table reservation.place (
     id serial,
     name varchar,
@@ -53,7 +59,9 @@ create table reservation.place (
     sport varchar,
     field_number int,
     constraint place_pk primary key (id),
-    constraint place_manager_fk foreign key (manager_id) references user_util._user(id)
+    constraint place_unique unique (name, sport, field_number),
+    constraint place_manager_fk foreign key (manager_id) references user_util._user(id),
+    constraint place_sport_fk foreign key (sport) references reservation.domain_sport(sport)
 );
 
 create table reservation.schedule_prop (

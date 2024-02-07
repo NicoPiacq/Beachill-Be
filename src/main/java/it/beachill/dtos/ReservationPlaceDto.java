@@ -1,6 +1,7 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.reservation.ReservationPlace;
+import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.user.User;
 
 public class ReservationPlaceDto {
@@ -8,7 +9,7 @@ public class ReservationPlaceDto {
     private String name;
     private String address;
     private Long managerId;
-    private String sport;
+    private String sportName;
     private int fieldNumber;
 
     public ReservationPlaceDto() {
@@ -19,7 +20,7 @@ public class ReservationPlaceDto {
         this.name = reservationPlace.getName();
         this.address = reservationPlace.getAddress();
         this.managerId = reservationPlace.getManager().getId();
-        this.sport = reservationPlace.getSport();
+        this.sportName = reservationPlace.getSport().getSportName();
         this.fieldNumber = reservationPlace.getFieldNumber();
     }
 
@@ -29,7 +30,7 @@ public class ReservationPlaceDto {
         reservationPlace.setName(this.name);
         reservationPlace.setAddress(this.address);
         reservationPlace.setManager(new User(this.managerId));
-        reservationPlace.setSport(this.sport);
+        reservationPlace.setSport(new Sport(this.sportName));
         reservationPlace.setFieldNumber(this.fieldNumber);
         return reservationPlace;
     }
@@ -66,12 +67,12 @@ public class ReservationPlaceDto {
         this.managerId = managerId;
     }
 
-    public String getSport() {
-        return sport;
+    public String getSportName() {
+        return sportName;
     }
 
-    public void setSport(String sport) {
-        this.sport = sport;
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
     }
 
     public int getFieldNumber() {
