@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository <Reservation, Long> {
     List<Reservation> findByDateEquals(LocalDate date);
@@ -14,4 +15,6 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     List<Reservation> findByDateEqualsAndStartBetween(LocalDate date, LocalTime start, LocalTime end);
 
     List<Reservation> findByDateEqualsAndEndBetween(LocalDate date, LocalTime start, LocalTime end);
+
+    Optional<Reservation> findByPlaceAndDateAndStartAndEnd(Long placeId, LocalDate date, LocalTime start, LocalTime end);
 }

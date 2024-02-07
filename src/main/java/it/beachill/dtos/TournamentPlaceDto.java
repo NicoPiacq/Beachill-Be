@@ -2,19 +2,19 @@ package it.beachill.dtos;
 
 import it.beachill.model.entities.tournament.TournamentPlace;
 
-public class PlaceDto {
+public class TournamentPlaceDto {
     private String place;
     private String address;
     private int fieldNumber;
 
-    public PlaceDto() {}
+    public TournamentPlaceDto() {}
 
-    public PlaceDto(String place, String address, int fieldNumber) {
+    public TournamentPlaceDto(String place, String address, int fieldNumber) {
         this.place = place;
         this.address = address;
         this.fieldNumber = fieldNumber;
     }
-    public PlaceDto(TournamentPlace place) {
+    public TournamentPlaceDto(TournamentPlace place) {
         this.place = place.getPlace();
         this.address = place.getAddress();
     }

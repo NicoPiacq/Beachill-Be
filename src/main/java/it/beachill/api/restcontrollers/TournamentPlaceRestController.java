@@ -1,6 +1,6 @@
 package it.beachill.api.restcontrollers;
 
-import it.beachill.dtos.PlaceDto;
+import it.beachill.dtos.TournamentPlaceDto;
 import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class TournamentPlaceRestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PlaceDto>> getAllPlaces(){
+    public ResponseEntity<List<TournamentPlaceDto>> getAllPlaces(){
         List<TournamentPlace> places = tournamentsService.findAllPlaces();
-        List<PlaceDto> result = places.stream().map(PlaceDto::new).toList();
+        List<TournamentPlaceDto> result = places.stream().map(TournamentPlaceDto::new).toList();
         return ResponseEntity.ok(result);
     }
 }

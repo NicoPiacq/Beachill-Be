@@ -2,7 +2,7 @@ package it.beachill.model.entities.user;
 
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.dtos.UserDto;
-import it.beachill.model.entities.reservation.Place;
+import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.tournament.Tournament;
@@ -42,7 +42,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Tournament> tournamentAdminList;
     @OneToMany(mappedBy = "manager")
-    private List<Place> managerPlaces;
+    private List<ReservationPlace> managerReservationPlaces;
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
@@ -173,12 +173,12 @@ public class User implements UserDetails {
         this.tournamentAdminList = tournamentAdminList;
     }
 
-    public List<Place> getManagerPlaces() {
-        return managerPlaces;
+    public List<ReservationPlace> getManagerPlaces() {
+        return managerReservationPlaces;
     }
 
-    public void setManagerPlaces(List<Place> managerPlaces) {
-        this.managerPlaces = managerPlaces;
+    public void setManagerPlaces(List<ReservationPlace> managerReservationPlaces) {
+        this.managerReservationPlaces = managerReservationPlaces;
     }
 
     public List<Reservation> getReservations() {

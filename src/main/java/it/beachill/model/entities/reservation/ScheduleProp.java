@@ -10,22 +10,24 @@ public class ScheduleProp {
     private Long id;
     @ManyToOne
     @JoinColumn(name="place_id")
-    private Place place;
+    private ReservationPlace reservationPlace;
     @Column(name="start_time")
     private LocalTime startTime;
     @Column(name="end_time")
     private LocalTime endTime;
+    private Long duration;
     @Column(name="day_number")
     private int dayNumber;
 
     public ScheduleProp() {
     }
 
-    public ScheduleProp(Long id, Place place, LocalTime startTime, LocalTime endTime, int dayNumber) {
+    public ScheduleProp(Long id, ReservationPlace reservationPlace, LocalTime startTime, LocalTime endTime, Long duration, int dayNumber) {
         this.id = id;
-        this.place = place;
+        this.reservationPlace = reservationPlace;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.duration = duration;
         this.dayNumber = dayNumber;
     }
 
@@ -37,12 +39,12 @@ public class ScheduleProp {
         this.id = id;
     }
 
-    public Place getPlace() {
-        return place;
+    public ReservationPlace getPlace() {
+        return reservationPlace;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setPlace(ReservationPlace reservationPlace) {
+        this.reservationPlace = reservationPlace;
     }
 
     public LocalTime getStartTime() {
@@ -69,4 +71,11 @@ public class ScheduleProp {
         this.dayNumber = dayNumber;
     }
 
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
 }

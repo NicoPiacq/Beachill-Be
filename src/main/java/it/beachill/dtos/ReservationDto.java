@@ -1,6 +1,6 @@
 package it.beachill.dtos;
 
-import it.beachill.model.entities.reservation.Place;
+import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.user.User;
 
@@ -30,7 +30,7 @@ public class ReservationDto {
     public Reservation fromDto(){
         Reservation reservation = new Reservation();
         reservation.setId(this.id);
-        reservation.setPlace(new Place(placeId));
+        reservation.setPlace(new ReservationPlace(placeId));
         reservation.setUser(new User(userId));
         reservation.setDate(this.date);
         reservation.setStart(this.start);

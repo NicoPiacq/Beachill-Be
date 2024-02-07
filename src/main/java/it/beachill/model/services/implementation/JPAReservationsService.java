@@ -2,22 +2,26 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.ReservationDto;
 import it.beachill.model.entities.reservation.Reservation;
+import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
 import it.beachill.model.repositories.abstractions.ReservationRepository;
+import it.beachill.model.repositories.abstractions.SchedulePropRepository;
 import it.beachill.model.services.abstraction.ReservationsService;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JPAReservationsService implements ReservationsService {
 
     private final ReservationRepository reservationRepository;
-    public JPAReservationsService(ReservationRepository reservationRepository){
+    private final SchedulePropRepository schedulePropRepository;
+    public JPAReservationsService(ReservationRepository reservationRepository, SchedulePropRepository schedulePropRepository){
         this.reservationRepository = reservationRepository;
+        this.schedulePropRepository = schedulePropRepository;
     }
     @Override
     public List<Reservation> getAllReservationsPerDate(LocalDate date) {
@@ -29,9 +33,38 @@ public class JPAReservationsService implements ReservationsService {
         if(user.getId() != reservationDto.getUserId()){
             throw new ReservationChecksFailedException("Non sei l' utente al quale vuoi associare la prenotazione");
         }
-        List<Reservation> reservationsStartBetweenOur = reservationRepository.findByDateEqualsAndStartBetween(reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
-        List<Reservation> reservationsEndBetweenOur = reservationRepository.findByDateEqualsAndEndBetween(reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
+
+        Optional<Reservation> reservationOptional = reservationRepository.findByPlaceAndDateAndStartAndEnd(reservationDto.getPlaceId(),
+                reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
+        if(reservationOptional.isPresent()){
+            throw new ReservationChecksFailedException("Esiste già una prenotazione in questo slot!");
+        }
+
+        List<ScheduleProp> schedulePropList = schedulePropRepository.findByPlaceEquals(reservationDto.getPlaceId());
+        ScheduleProp myScheduleProp = getScheduleProp(reservationDto, schedulePropList);
+
+        if(reservationDto.getEnd().until(reservationDto.getStart(), ChronoUnit.MINUTES) != myScheduleProp.getDuration()){
+            throw new ReservationChecksFailedException("La durata della prenotazione non è corretta!");
+        }
+
         Reservation reservation = reservationDto.fromDto();
         this.reservationRepository.save(reservation);
+    }
+
+    private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {
+        if(schedulePropList.isEmpty()){
+            throw new ReservationChecksFailedException("Il campo selezionato non è presente!");
+        }
+        int dayNumber = reservationDto.getDate().getDayOfWeek().getValue();
+        ScheduleProp myScheduleProp = null;
+        for(ScheduleProp scheduleProp : schedulePropList){
+            if(scheduleProp.getDayNumber() == dayNumber && (!reservationDto.getStart().isBefore(scheduleProp.getStartTime()) &&  !reservationDto.getEnd().isAfter(scheduleProp.getEndTime()))){
+                myScheduleProp = scheduleProp;
+            }
+        }
+        if(myScheduleProp == null){
+            throw new ReservationChecksFailedException("I dettagli del campo non sono presenti");
+        }
+        return myScheduleProp;
     }
 }

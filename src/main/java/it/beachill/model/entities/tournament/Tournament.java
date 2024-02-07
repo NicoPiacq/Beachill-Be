@@ -35,7 +35,7 @@ public class Tournament {
     private List<TeamInTournament> enrolledTeams;
     @ManyToOne
     @JoinColumn(name="_user")
-    private User user;
+    private User admin;
     private Integer status;
 
 
@@ -131,12 +131,12 @@ public class Tournament {
         this.groupStageStandingList = groupStageStandingList;
     }
     
-    public User getUser() {
-        return user;
+    public User getAdmin() {
+        return admin;
     }
     
-    public void setUser(User user) {
-        this.user = user;
+    public void setAdmin(User admin) {
+        this.admin = admin;
     }
     
     public Integer getStatus() {

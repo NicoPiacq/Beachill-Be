@@ -4,7 +4,6 @@ import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -15,7 +14,7 @@ public class Reservation {
     private Long id;
     @ManyToOne
     @JoinColumn(name="place_id")
-    private Place place;
+    private ReservationPlace reservationPlace;
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
@@ -29,9 +28,9 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(long id, Place place, User user, LocalDate date, LocalTime start, LocalTime end) {
+    public Reservation(long id, ReservationPlace reservationPlace, User user, LocalDate date, LocalTime start, LocalTime end) {
         this.id = id;
-        this.place = place;
+        this.reservationPlace = reservationPlace;
         this.user = user;
         this.date = date;
         this.start = start;
@@ -46,12 +45,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public Place getPlace() {
-        return place;
+    public ReservationPlace getPlace() {
+        return reservationPlace;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setPlace(ReservationPlace reservationPlace) {
+        this.reservationPlace = reservationPlace;
     }
 
     public User getUser() {

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "place", schema = "reservation")
-public class Place {
+public class ReservationPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,14 +25,14 @@ public class Place {
     @OneToMany(mappedBy = "place")
     private List<Reservation> reservations;
 
-    public Place() {
+    public ReservationPlace() {
     }
 
-    public Place(Long id) {
+    public ReservationPlace(Long id) {
         this.id = id;
     }
 
-    public Place(Long id, String name, String address, User manager, String sport, int fieldNumber) {
+    public ReservationPlace(Long id, String name, String address, User manager, String sport, int fieldNumber) {
         this.id = id;
         this.name = name;
         this.address = address;

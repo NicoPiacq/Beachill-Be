@@ -6,7 +6,7 @@ import it.beachill.model.entities.tournament.*;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
-import it.beachill.model.services.abstraction.AdminsService;
+import it.beachill.model.services.abstraction.SuperAdminsService;
 import it.beachill.model.services.abstraction.MatchsService;
 import it.beachill.model.services.abstraction.TeamsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class JPAAdminService implements AdminsService {
+public class JPASuperAdminServiceSuper implements SuperAdminsService {
 
     private final MatchsService matchsService;
     private final TournamentRepository tournamentRepository;
@@ -29,10 +29,10 @@ public class JPAAdminService implements AdminsService {
     private final TeamsService teamsService;
 
     @Autowired
-    public JPAAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
-                           MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
-                           GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                           SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
+    public JPASuperAdminServiceSuper(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
+                                     MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
+                                     GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
+                                     SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
