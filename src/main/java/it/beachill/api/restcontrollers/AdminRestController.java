@@ -45,6 +45,7 @@ public class AdminRestController {
         }catch(ReservationChecksFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
+        return ResponseEntity.ok().build();
     }
 
 
