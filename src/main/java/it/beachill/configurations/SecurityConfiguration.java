@@ -19,12 +19,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/user/**",
-                                                    "/api/tournament/**",
-                                                    "/api/enrolled-team/**",
-                                                    "/api/match/**",
-                                                    "/api/admin/**", "/api/manager/**",
-    "/api/place/**", "/api/tournament-type/**", "/api/team/**", "/api/player/**", "/api/reservation/**"};
+    private static final String[] WHITE_LIST_URL = {"/api/**"};
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
