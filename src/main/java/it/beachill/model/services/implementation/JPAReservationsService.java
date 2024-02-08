@@ -61,6 +61,11 @@ public class JPAReservationsService implements ReservationsService {
         return reservationPlaceRepository.findAll();
     }
 
+    @Override
+    public List<ReservationPlace> getAllReservationPlacesGroupByName() {
+        return reservationPlaceRepository.findAllReservationPlacesGroupByName();
+    }
+
     private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {
         if(schedulePropList.isEmpty()){
             throw new ReservationChecksFailedException("Il campo selezionato non è presente!");
