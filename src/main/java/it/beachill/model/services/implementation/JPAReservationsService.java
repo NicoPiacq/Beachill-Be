@@ -6,6 +6,7 @@ import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
+import it.beachill.model.repositories.abstractions.ReservationPlaceRepository;
 import it.beachill.model.repositories.abstractions.ReservationRepository;
 import it.beachill.model.repositories.abstractions.SchedulePropRepository;
 import it.beachill.model.services.abstraction.ReservationsService;
@@ -20,9 +21,11 @@ public class JPAReservationsService implements ReservationsService {
 
     private final ReservationRepository reservationRepository;
     private final SchedulePropRepository schedulePropRepository;
-    public JPAReservationsService(ReservationRepository reservationRepository, SchedulePropRepository schedulePropRepository){
+    private final ReservationPlaceRepository reservationPlaceRepository;
+    public JPAReservationsService(ReservationRepository reservationRepository, SchedulePropRepository schedulePropRepository, ReservationPlaceRepository reservationPlaceRepository){
         this.reservationRepository = reservationRepository;
         this.schedulePropRepository = schedulePropRepository;
+        this.reservationPlaceRepository = reservationPlaceRepository;
     }
     @Override
     public List<Reservation> getAllReservationsPerDate(LocalDate date) {
@@ -51,6 +54,11 @@ public class JPAReservationsService implements ReservationsService {
 
         Reservation reservation = reservationDto.fromDto();
         this.reservationRepository.save(reservation);
+    }
+
+    @Override
+    public List<ReservationPlace> getAllReservationPlaces() {
+        return reservationPlaceRepository.findAll();
     }
 
     private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {
