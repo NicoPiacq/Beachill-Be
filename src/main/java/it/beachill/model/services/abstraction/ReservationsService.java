@@ -17,4 +17,6 @@ public interface ReservationsService {
     void createNewReservation(ReservationDto reservationDto, User user) throws ReservationChecksFailedException;
 
     List<ReservationPlace> getAllReservationPlaces();
+
+    List<ReservationPlace> getAllReservationPlacesGroupByName();
 }

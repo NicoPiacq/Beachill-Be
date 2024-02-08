@@ -25,7 +25,7 @@ public class ReservationPlaceRestController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllReservationPlaces(){
-        List<ReservationPlace> reservationPlaces = reservationsService.getAllReservationPlaces();
+        List<ReservationPlace> reservationPlaces = reservationsService.getAllReservationPlacesGroupByName();
         List<ReservationPlaceDto> result = reservationPlaces.stream().map(ReservationPlaceDto::new).toList();
         return ResponseEntity.ok(result);
     }

@@ -17,4 +17,5 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     List<Reservation> findByDateEqualsAndEndBetween(LocalDate date, LocalTime start, LocalTime end);
 
     Optional<Reservation> findByReservationPlaceAndDateAndStartAndEnd(ReservationPlace place, LocalDate date, LocalTime start, LocalTime end);
+
 }
