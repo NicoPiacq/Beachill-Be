@@ -12,4 +12,6 @@ public interface SchedulePropRepository extends JpaRepository<ScheduleProp, Long
     List<ScheduleProp> findByFieldEquals(Field field);
 
     Optional<ScheduleProp> findByFieldAndStartTimeAndEndTimeAndDayNumber(Field field, LocalTime startTime, LocalTime endTime, int dayNumber);
+
+    List<ScheduleProp> findByFieldAndDayNumber(Field field, int dayNumber);
 }
