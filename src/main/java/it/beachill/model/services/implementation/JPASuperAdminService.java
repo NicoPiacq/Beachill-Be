@@ -10,7 +10,7 @@ import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
-import it.beachill.model.services.abstraction.SuperAdminsService;
+import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.MatchsService;
 import it.beachill.model.services.abstraction.TeamsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class JPASuperAdminServiceSuper implements SuperAdminsService {
+public class JPASuperAdminService implements AdminsService {
 
     private final MatchsService matchsService;
     private final TournamentRepository tournamentRepository;
@@ -32,14 +32,14 @@ public class JPASuperAdminServiceSuper implements SuperAdminsService {
     private final ReservationPlaceRepository reservationPlaceRepository;
     private final SchedulePropRepository schedulePropRepository;
     private final SetMatchRepository setMatchRepository;
-    private final UserServiceImpl userService;
+    private final UsersServiceImpl userService;
     private final TeamsService teamsService;
 
     @Autowired
-    public JPASuperAdminServiceSuper(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
-                                     MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
-                                     GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                                     ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UserServiceImpl userService, TeamsService teamsService) {
+    public JPASuperAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
+                                MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
+                                GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
+                                ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UsersServiceImpl userService, TeamsService teamsService) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;

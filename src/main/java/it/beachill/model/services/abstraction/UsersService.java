@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-public interface UserService {
+public interface UsersService {
 
     // int è usato come segnalatore al momento
     AuthenticationResponseDto register(RegistrationDto request) throws RegistrationChecksFailedException;

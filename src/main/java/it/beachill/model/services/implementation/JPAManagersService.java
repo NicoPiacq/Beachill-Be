@@ -9,20 +9,20 @@ import it.beachill.model.exceptions.ReservationChecksFailedException;
 import it.beachill.model.repositories.abstractions.ReservationPlaceRepository;
 import it.beachill.model.repositories.abstractions.ReservationRepository;
 import it.beachill.model.repositories.abstractions.SchedulePropRepository;
-import it.beachill.model.services.abstraction.AdminsService;
+import it.beachill.model.services.abstraction.ManagersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class JPAAdminsService implements AdminsService {
+public class JPAManagersService implements ManagersService {
     private final ReservationRepository reservationRepository;
     private final ReservationPlaceRepository reservationPlaceRepository;
     private final SchedulePropRepository schedulePropRepository;
 
     @Autowired
-    public JPAAdminsService(ReservationRepository reservationRepository, ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository) {
+    public JPAManagersService(ReservationRepository reservationRepository, ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationPlaceRepository = reservationPlaceRepository;
         this.schedulePropRepository = schedulePropRepository;

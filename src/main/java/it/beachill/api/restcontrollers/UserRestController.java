@@ -5,7 +5,7 @@ import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.exceptions.LoginChecksFailedExceptions;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
-import it.beachill.model.services.abstraction.UserService;
+import it.beachill.model.services.abstraction.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class UserRestController {
 
-    private final UserService userService;
+    private final UsersService usersService;
 
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    public UserRestController(UsersService usersService) {
+        this.usersService = usersService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto request) {
         AuthenticationResponseDto auth;
         try {
-            auth = userService.login(request);
+            auth = usersService.login(request);
         } catch (LoginChecksFailedExceptions e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
@@ -38,7 +38,7 @@ public class UserRestController {
     public ResponseEntity<?> register(@RequestBody RegistrationDto request) {
         AuthenticationResponseDto auth;
         try {
-            auth = userService.register(request);
+            auth = usersService.register(request);
         } catch (RegistrationChecksFailedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
@@ -47,7 +47,7 @@ public class UserRestController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthenticationResponseDto> refresh(HttpServletRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(userService.refreshToken(request, response));
+        return ResponseEntity.ok(usersService.refreshToken(request, response));
     }
 
 }

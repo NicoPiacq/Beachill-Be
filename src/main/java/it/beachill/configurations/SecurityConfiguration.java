@@ -23,7 +23,7 @@ public class SecurityConfiguration {
                                                     "/api/tournament/**",
                                                     "/api/enrolled-team/**",
                                                     "/api/match/**",
-                                                    "/api/admin/**", "/api/super-admin/**",
+                                                    "/api/admin/**", "/api/manager/**",
     "/api/place/**", "/api/tournament-type/**", "/api/team/**", "/api/player/**", "/api/reservation/**"};
 
     private final JwtAuthenticationFilter jwtAuthFilter;

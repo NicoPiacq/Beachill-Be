@@ -1,12 +1,21 @@
 package it.beachill.model.services.abstraction;
 
-import it.beachill.dtos.SchedulePropDto;
-import it.beachill.model.entities.reservation.ReservationPlace;
-import it.beachill.model.entities.user.User;
-import it.beachill.model.exceptions.ReservationChecksFailedException;
+import it.beachill.model.entities.tournament.Tournament;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface AdminsService {
-    void createNewPlace(ReservationPlace reservationPlace) throws ReservationChecksFailedException;
 
-    void createNewScheduleProperties(User user, SchedulePropDto schedulePropDto) throws ReservationChecksFailedException;
+    List<Tournament> findAllTournaments();
+    public Optional<Tournament> findTournamentById(Long tournamentId);
+    void createTournament(Tournament tournament);
+    Optional<Tournament> deleteTournament(Long id);
+    boolean generateMatchTournament(Long tournamentId);
+    boolean calculateGroupStageStanding(Long id);
+    boolean addRandomResultToGroupPhaseMatches(Long id);
+    
+    boolean calculateGroupStageStandingAndAssignMatches(Long id);
+
+    boolean insertScript();
 }

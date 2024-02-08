@@ -12,11 +12,10 @@ import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TokenRepository;
 import it.beachill.model.repositories.abstractions.UserRepository;
-import it.beachill.model.services.abstraction.UserService;
+import it.beachill.model.services.abstraction.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +27,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl implements UsersService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -38,9 +37,9 @@ public class UserServiceImpl implements UserService {
     private final PlayerRepository playerRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
-                           PasswordEncoder passwordEncoder, JwtService jwtService,
-                           AuthenticationManager authenticationManager, PlayerRepository playerRepository) {
+    public UsersServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
+                            PasswordEncoder passwordEncoder, JwtService jwtService,
+                            AuthenticationManager authenticationManager, PlayerRepository playerRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
@@ -82,7 +81,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //TODO: AGGIUNTA per ridere DA CAMBIAREEEEE!!!!!
-        request.setRole(Role.SUPERADMIN);
+        request.setRole(Role.ADMIN);
         //FINE
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
         Player newPlayer = playerRepository.save((new Player()));
