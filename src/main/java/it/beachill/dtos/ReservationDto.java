@@ -1,5 +1,6 @@
 package it.beachill.dtos;
 
+import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.user.User;
@@ -9,7 +10,7 @@ import java.time.LocalTime;
 
 public class ReservationDto {
     private Long id;
-    private Long placeId;
+    private Long fieldId;
     private Long userId;
     private LocalDate date;
     private LocalTime start;
@@ -20,7 +21,7 @@ public class ReservationDto {
 
     public ReservationDto(Reservation reservation) {
         this.id = reservation.getId();
-        this.placeId = reservation.getPlace().getId();
+        this.fieldId = reservation.getField().getId();
         this.userId = reservation.getUser().getId();
         this.date = reservation.getDate();
         this.start = reservation.getStart();
@@ -30,7 +31,7 @@ public class ReservationDto {
     public Reservation fromDto(){
         Reservation reservation = new Reservation();
         reservation.setId(this.id);
-        reservation.setPlace(new ReservationPlace(placeId));
+        reservation.setField(new Field(this.fieldId));
         reservation.setUser(new User(userId));
         reservation.setDate(this.date);
         reservation.setStart(this.start);
@@ -46,12 +47,12 @@ public class ReservationDto {
         this.id = id;
     }
 
-    public Long getPlaceId() {
-        return placeId;
+    public Long getFieldId() {
+        return fieldId;
     }
 
-    public void setPlaceId(Long placeId) {
-        this.placeId = placeId;
+    public void setFieldId(Long fieldId) {
+        this.fieldId = fieldId;
     }
 
     public Long getUserId() {

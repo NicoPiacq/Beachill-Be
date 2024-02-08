@@ -9,6 +9,7 @@ import it.beachill.model.exceptions.ReservationChecksFailedException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationsService {
 
@@ -18,5 +19,5 @@ public interface ReservationsService {
 
     List<ReservationPlace> getAllReservationPlaces();
 
-    List<ReservationPlace> getAllReservationPlacesGroupByName();
+    Optional<ReservationPlace> getReservationPlace(Long id);
 }

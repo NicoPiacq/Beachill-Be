@@ -8,9 +8,10 @@ public class ReservationPlaceDto {
     private Long id;
     private String name;
     private String address;
+    private String city;
+    private String province;
+    private String region;
     private Long managerId;
-    private String sportName;
-    private int fieldNumber;
 
     public ReservationPlaceDto() {
     }
@@ -20,8 +21,9 @@ public class ReservationPlaceDto {
         this.name = reservationPlace.getName();
         this.address = reservationPlace.getAddress();
         this.managerId = reservationPlace.getManager().getId();
-        this.sportName = reservationPlace.getSport().getSportName();
-        this.fieldNumber = reservationPlace.getFieldNumber();
+        this.city = reservationPlace.getCity();
+        this.province = reservationPlace.getProvince();
+        this.region = reservationPlace.getRegion();
     }
 
     public ReservationPlace fromDto(){
@@ -30,8 +32,9 @@ public class ReservationPlaceDto {
         reservationPlace.setName(this.name);
         reservationPlace.setAddress(this.address);
         reservationPlace.setManager(new User(this.managerId));
-        reservationPlace.setSport(new Sport(this.sportName));
-        reservationPlace.setFieldNumber(this.fieldNumber);
+        reservationPlace.setCity(this.city);
+        reservationPlace.setRegion(this.region);
+        reservationPlace.setProvince(this.province);
         return reservationPlace;
     }
 
@@ -67,19 +70,27 @@ public class ReservationPlaceDto {
         this.managerId = managerId;
     }
 
-    public String getSportName() {
-        return sportName;
+    public String getCity() {
+        return city;
     }
 
-    public void setSportName(String sportName) {
-        this.sportName = sportName;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public int getFieldNumber() {
-        return fieldNumber;
+    public String getProvince() {
+        return province;
     }
 
-    public void setFieldNumber(int fieldNumber) {
-        this.fieldNumber = fieldNumber;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

@@ -1,6 +1,7 @@
 package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.ReservationDto;
+import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
@@ -38,13 +39,13 @@ public class JPAReservationsService implements ReservationsService {
             throw new ReservationChecksFailedException("Non sei l' utente al quale vuoi associare la prenotazione");
         }
 
-        Optional<Reservation> reservationOptional = reservationRepository.findByReservationPlaceAndDateAndStartAndEnd(new ReservationPlace(reservationDto.getPlaceId()),
+        Optional<Reservation> reservationOptional = reservationRepository.findByFieldAndDateAndStartAndEnd(new Field(reservationDto.getFieldId()),
                 reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
         if(reservationOptional.isPresent()){
             throw new ReservationChecksFailedException("Esiste già una prenotazione in questo slot!");
         }
 
-        List<ScheduleProp> schedulePropList = schedulePropRepository.findByReservationPlaceEquals(new ReservationPlace(reservationDto.getPlaceId()));
+        List<ScheduleProp> schedulePropList = schedulePropRepository.findByFieldEquals(new Field(reservationDto.getFieldId()));
         ScheduleProp myScheduleProp = getScheduleProp(reservationDto, schedulePropList);
 
 
@@ -62,8 +63,8 @@ public class JPAReservationsService implements ReservationsService {
     }
 
     @Override
-    public List<ReservationPlace> getAllReservationPlacesGroupByName() {
-        return reservationPlaceRepository.findAllReservationPlacesGroupByName();
+    public Optional<ReservationPlace> getReservationPlace(Long id) {
+        return reservationPlaceRepository.findById(id);
     }
 
     private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {

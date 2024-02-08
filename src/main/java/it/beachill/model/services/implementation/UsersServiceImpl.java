@@ -74,13 +74,10 @@ public class UsersServiceImpl implements UsersService {
     }
 
     public AuthenticationResponseDto register(RegistrationDto request) throws RegistrationChecksFailedException {
-
         // TESTA SE L'UTENTE GIA' ESISTE: SE VERO, LANCIA UNA EXCEPTION CUSTOM
         if(checkUserAlreadyRegistered(request.getEmail())) {
             throw new RegistrationChecksFailedException("EMAIL_EXISTS");
         }
-
-        //TODO: AGGIUNTA per ridere DA CAMBIAREEEEE!!!!!
         request.setRole(Role.ADMIN);
         //FINE
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));

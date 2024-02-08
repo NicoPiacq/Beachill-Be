@@ -2,6 +2,7 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.RegistrationDto;
+import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.reservation.Sport;
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class JPASuperAdminService implements AdminsService {
+public class JPAAdminService implements AdminsService {
 
     private final MatchsService matchsService;
     private final TournamentRepository tournamentRepository;
@@ -34,12 +35,13 @@ public class JPASuperAdminService implements AdminsService {
     private final SetMatchRepository setMatchRepository;
     private final UsersServiceImpl userService;
     private final TeamsService teamsService;
+    private final FieldRepository fieldRepository;
 
     @Autowired
-    public JPASuperAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
-                                MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
-                                GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                                ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UsersServiceImpl userService, TeamsService teamsService) {
+    public JPAAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
+                           MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
+                           GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
+                           ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UsersServiceImpl userService, TeamsService teamsService, FieldRepository fieldRepository) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
@@ -51,6 +53,7 @@ public class JPASuperAdminService implements AdminsService {
         this.setMatchRepository = setMatchRepository;
         this.userService = userService;
         this.teamsService = teamsService;
+        this.fieldRepository = fieldRepository;
     }
 
     // --------------------------------- METODI CREATE e UPDATE -----------------------------------
@@ -408,19 +411,21 @@ public class JPASuperAdminService implements AdminsService {
                     ReservationPlace reservationPlace = new ReservationPlace();
                     reservationPlace.setName("Campo di: "+authenticationResponseDto.getUser().getName());
                     reservationPlace.setManager(new User(authenticationResponseDto.getUser().getId()));
-                    reservationPlace.setSport(new Sport("BEACHVOLLEY"));
-                    reservationPlace.setFieldNumber(i+1);
                     ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
+                    Field field = new Field();
+                    field.setReservationPlace(reservationPlaceSaved);
+                    field.setSport(new Sport("BEACHVOLLEY"));
+                    fieldRepository.save(field);
                     for(int j=1;j<=7;j++){
                         ScheduleProp scheduleProp= new ScheduleProp();
-                        scheduleProp.setPlace(reservationPlaceSaved);
+                        scheduleProp.setField(field);
                         scheduleProp.setDayNumber(j);
                         if(j==1) {
                             scheduleProp.setStartTime(LocalTime.of(10,0));
                             scheduleProp.setEndTime(LocalTime.of(12,0));
                             scheduleProp.setDuration(60L);
                             ScheduleProp scheduleProp1= new ScheduleProp();
-                            scheduleProp1.setPlace(reservationPlaceSaved);
+                            scheduleProp1.setField(field);
                             scheduleProp1.setDayNumber(j);
                             scheduleProp1.setStartTime(LocalTime.of(15,0));
                             scheduleProp1.setEndTime(LocalTime.of(20,0));

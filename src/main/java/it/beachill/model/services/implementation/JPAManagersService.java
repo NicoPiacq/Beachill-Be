@@ -1,9 +1,9 @@
 package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.SchedulePropDto;
+import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
-import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
 import it.beachill.model.repositories.abstractions.ReservationPlaceRepository;
@@ -30,7 +30,7 @@ public class JPAManagersService implements ManagersService {
 
     @Override
     public void createNewPlace(ReservationPlace reservationPlace) throws ReservationChecksFailedException {
-        Optional<ReservationPlace> reservationPlaceOptional = reservationPlaceRepository.findByNameAndSportAndFieldNumber(reservationPlace.getName(), new Sport(reservationPlace.getSport().getSportName()), reservationPlace.getFieldNumber());
+        Optional<ReservationPlace> reservationPlaceOptional = reservationPlaceRepository.findByNameAndAddressAndCity(reservationPlace.getName(), reservationPlace.getAddress(), reservationPlace.getCity());
         if(reservationPlaceOptional.isPresent()){
             throw new ReservationChecksFailedException("Il campo che si vuole inserire è gia presente!");
         }
@@ -39,12 +39,12 @@ public class JPAManagersService implements ManagersService {
 
     @Override
     public void createNewScheduleProperties(User user, SchedulePropDto schedulePropDto) throws ReservationChecksFailedException {
-        Optional<ReservationPlace> reservationPlaceOptional = reservationPlaceRepository.findById(schedulePropDto.getPlaceId());
+        Optional<ReservationPlace> reservationPlaceOptional = reservationPlaceRepository.findById(schedulePropDto.getFieldId());
         if(reservationPlaceOptional.isEmpty()){
             throw new ReservationChecksFailedException("Il campo non è presente.");
         }
 
-        Optional<ScheduleProp> schedulePropOptional = schedulePropRepository.findByReservationPlaceAndStartTimeAndEndTimeAndDayNumber(new ReservationPlace(schedulePropDto.getPlaceId()), schedulePropDto.getStartTime(), schedulePropDto.getEndTime(), schedulePropDto.getDayNumber());
+        Optional<ScheduleProp> schedulePropOptional = schedulePropRepository.findByFieldAndStartTimeAndEndTimeAndDayNumber(new Field(schedulePropDto.getFieldId()), schedulePropDto.getStartTime(), schedulePropDto.getEndTime(), schedulePropDto.getDayNumber());
 
         if(schedulePropOptional.isPresent()){
             throw new ReservationChecksFailedException("E' già presente una prop come qulla che vuoi inserire.");

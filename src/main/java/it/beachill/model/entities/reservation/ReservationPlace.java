@@ -13,19 +13,15 @@ public class ReservationPlace {
     private Long id;
     private String name;
     private String address;
+    private String city;
+    private String province;
+    private String region;
     @ManyToOne
     @JoinColumn(name="manager_id")
     private User manager;
-    @ManyToOne
-    @JoinColumn(name = "sport")
-    private Sport sport;
-    @Column (name="field_number")
-    private int fieldNumber;
 
     @OneToMany(mappedBy = "reservationPlace")
-    private List<ScheduleProp> schedulePropList;
-    @OneToMany(mappedBy = "reservationPlace")
-    private List<Reservation> reservations;
+    private List<Field> fields;
 
     public ReservationPlace() {
     }
@@ -35,13 +31,46 @@ public class ReservationPlace {
     }
 
 
-    public ReservationPlace(Long id, String name, String address, User manager, Sport sport, int fieldNumber) {
+    public ReservationPlace(Long id, String name, String address, String city, String province, String region, User manager) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.city = city;
+        this.province = province;
+        this.region = region;
         this.manager = manager;
-        this.sport = sport;
-        this.fieldNumber = fieldNumber;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public Long getId() {
@@ -76,36 +105,4 @@ public class ReservationPlace {
         this.manager = manager;
     }
 
-
-    public int getFieldNumber() {
-        return fieldNumber;
-    }
-
-    public void setFieldNumber(int fieldNumber) {
-        this.fieldNumber = fieldNumber;
-    }
-
-    public List<ScheduleProp> getSchedulePropList() {
-        return schedulePropList;
-    }
-
-    public void setSchedulePropList(List<ScheduleProp> schedulePropList) {
-        this.schedulePropList = schedulePropList;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public Sport getSport() {
-        return sport;
-    }
-
-    public void setSport(Sport sport) {
-        this.sport = sport;
-    }
 }

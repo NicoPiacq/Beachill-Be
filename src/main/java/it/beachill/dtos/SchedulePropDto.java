@@ -1,5 +1,6 @@
 package it.beachill.dtos;
 
+import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 
@@ -7,7 +8,7 @@ import java.time.LocalTime;
 
 public class SchedulePropDto {
     private Long id;
-    private Long placeId;
+    private Long fieldId;
     private LocalTime startTime;
     private LocalTime endTime;
     private Long duration;
@@ -18,7 +19,7 @@ public class SchedulePropDto {
 
     public SchedulePropDto(ScheduleProp scheduleProp) {
         this.id = scheduleProp.getId();
-        this.placeId = scheduleProp.getPlace().getId();
+        this.fieldId = scheduleProp.getField().getId();
         this.startTime = scheduleProp.getStartTime();
         this.endTime = scheduleProp.getEndTime();
         this.duration = scheduleProp.getDuration();
@@ -28,7 +29,7 @@ public class SchedulePropDto {
     public ScheduleProp fromDto(){
         ScheduleProp scheduleProp = new ScheduleProp();
         scheduleProp.setId(this.id);
-        scheduleProp.setPlace(new ReservationPlace(this.placeId));
+        scheduleProp.setField(new Field(this.fieldId));
         scheduleProp.setStartTime(this.startTime);
         scheduleProp.setEndTime(this.endTime);
         scheduleProp.setDuration(this.duration);
@@ -44,12 +45,12 @@ public class SchedulePropDto {
         this.id = id;
     }
 
-    public Long getPlaceId() {
-        return placeId;
+    public Long getFieldId() {
+        return fieldId;
     }
 
-    public void setPlaceId(Long placeId) {
-        this.placeId = placeId;
+    public void setFieldId(Long fieldId) {
+        this.fieldId = fieldId;
     }
 
     public LocalTime getStartTime() {
