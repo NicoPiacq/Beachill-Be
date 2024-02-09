@@ -2,7 +2,9 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.ReservationPlaceDto;
 import it.beachill.dtos.SchedulePropDto;
+import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.reservation.ReservationPlace;
+import it.beachill.model.entities.tournament.Tournament;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
 import it.beachill.model.services.abstraction.ManagersService;
@@ -46,7 +48,4 @@ public class ManagerRestController {
         }
         return ResponseEntity.ok().build();
     }
-
-
-
 }

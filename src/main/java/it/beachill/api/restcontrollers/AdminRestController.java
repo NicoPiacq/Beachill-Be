@@ -6,7 +6,6 @@ import it.beachill.model.entities.user.User;
 import it.beachill.model.services.abstraction.AdminsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +61,7 @@ public class AdminRestController {
     public ResponseEntity<TournamentAdminDto> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentAdminDto tournamentDto) throws URISyntaxException {
         Tournament tournament = tournamentDto.fromDto();
         tournament.setStatus(1);
-        tournament.setAdmin(user);
+        tournament.setManager(user);
         adminsService.createTournament(tournament);
         TournamentAdminDto result = new TournamentAdminDto(tournament);
         URI location = new URI("/api/tournament/" + result.getId());

@@ -367,7 +367,7 @@ public class JPAAdminService implements AdminsService {
         Tournament tournament = roundTeams.get(0).getTournament();
         for(int i = 0; i < tournamentSchema.length; i++){
             matches.add(matchsService.createMatchAndSets(matchNumber++, matchType, groupStage, tournament, roundTeams.get(tournamentSchema[i][0]).getTeam(),
-                    roundTeams.get(tournamentSchema[i][1]).getTeam(), field, setsNumber));
+                    roundTeams.get(tournamentSchema[i][1]).getTeam(), field, setsNumber, tournament.getManager()));
         }
         return matches;
     }
@@ -375,7 +375,7 @@ public class JPAAdminService implements AdminsService {
     private List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
         List<Match> matches = new ArrayList<>();
         for(int i = 0; i < tournamentSchema.length; i++){
-            matches.add(matchsService.createMatchAndSets(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1]), setsNumber));
+            matches.add(matchsService.createMatchAndSets(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1]), setsNumber, tournament.getManager()));
         }
         return matches;
     }

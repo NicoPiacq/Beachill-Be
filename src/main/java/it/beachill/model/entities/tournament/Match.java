@@ -1,5 +1,6 @@
 package it.beachill.model.entities.tournament;
 
+import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -33,12 +34,18 @@ public class Match {
     private Timestamp startDate;
     @Column(name = "winner_team")
     private Boolean winnerTeam;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User matchAdmin;
     @OneToMany(mappedBy = "match")
     private List<SetMatch> sets;
-
     public Match() {}
-
-    public Match(int matchNumber, MatchType matchType, int groupStage, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber) {
+    
+    public Match(Long id) {
+        this.id = id;
+    }
+    
+    public Match(int matchNumber, MatchType matchType, int groupStage, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, User matchAdmin) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;
         this.groupStage = groupStage;
@@ -46,13 +53,15 @@ public class Match {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.fieldNumber = fieldNumber;
+        this.matchAdmin= matchAdmin;
     }
 
-    public Match(int matchNumber, MatchType matchType, Tournament tournament, int fieldNumber) {
+    public Match(int matchNumber, MatchType matchType, Tournament tournament, int fieldNumber, User matchAdmin) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;
         this.tournament = tournament;
         this.fieldNumber = fieldNumber;
+        this.matchAdmin= matchAdmin;
     }
 
     public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, boolean winnerTeam) {
@@ -64,7 +73,22 @@ public class Match {
         this.startDate = startDate;
         this.winnerTeam = winnerTeam;
     }
-
+    
+    public Match(Long id, int matchNumber, int groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, Boolean winnerTeam, User matchAdmin) {
+        this.id = id;
+        this.matchNumber = matchNumber;
+        this.groupStage = groupStage;
+        this.matchType = matchType;
+        this.tournament = tournament;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.fieldNumber = fieldNumber;
+        this.startDate = startDate;
+        this.winnerTeam = winnerTeam;
+        this.matchAdmin = matchAdmin;
+    }
+    
+    
     public Long getId() {
         return id;
     }
@@ -151,5 +175,13 @@ public class Match {
 
     public void setWinnerTeam(Boolean winnerTeam) {
         this.winnerTeam = winnerTeam;
+    }
+    
+    public User getMatchAdmin() {
+        return matchAdmin;
+    }
+    
+    public void setMatchAdmin(User matchAdmin) {
+        this.matchAdmin = matchAdmin;
     }
 }

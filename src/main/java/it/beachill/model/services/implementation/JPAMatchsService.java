@@ -1,6 +1,9 @@
 package it.beachill.model.services.implementation;
 
+import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.tournament.*;
+import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.repositories.abstractions.MatchRepository;
 import it.beachill.model.repositories.abstractions.SetMatchRepository;
 import it.beachill.model.services.abstraction.MatchsService;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class JPAMatchsService implements MatchsService {
@@ -24,11 +29,23 @@ public class JPAMatchsService implements MatchsService {
     public List<Match> getAllMatchesByTournament(Long tournamentId){
         return matchRepository.findByTournamentId(tournamentId);
     }
-
+    
+    @Override
+    public void setMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException {
+        if(!Objects.equals(setMatchId, setMatchDto.getMatchId())){
+            throw new CheckFailedException("I dati del set non sono coerenti");
+        }
+        Optional<SetMatch> setMatchOptional =setMatchRepository.findById(setMatchId);
+        if(setMatchOptional.isEmpty()){
+            throw new CheckFailedException("Il set che vuoi modificare non esiste");
+        }
+        setMatchRepository.save(setMatchDto.fromDto());
+    }
+    
     public Match createMatchAndSets(int matchNumber, MatchType matchType, int groupStage,
                                     Tournament tournament, Team homeTeam, Team awayTeam,
-                                    int fieldNumber, int setsnumber){
-        Match match = new Match(matchNumber, matchType, groupStage, tournament, homeTeam, awayTeam, fieldNumber);
+                                    int fieldNumber, int setsnumber, User matchAdmin){
+        Match match = new Match(matchNumber, matchType, groupStage, tournament, homeTeam, awayTeam, fieldNumber,matchAdmin);
         matchRepository.save(match);
         List<SetMatch> matchSets = new ArrayList<>();
         for(int i = 0; i < setsnumber; i++){
@@ -39,8 +56,8 @@ public class JPAMatchsService implements MatchsService {
     }
 
     public Match createMatchAndSets(int matchNumber, MatchType matchType, Tournament tournament,
-                                    int fieldNumber, int setsnumber){
-        Match match = new Match(matchNumber, matchType, tournament, fieldNumber);
+                                    int fieldNumber, int setsnumber, User matchAdmin){
+        Match match = new Match(matchNumber, matchType, tournament, fieldNumber, matchAdmin);
         matchRepository.save(match);
         List<SetMatch> matchSets = new ArrayList<>();
         for(int i = 0; i < setsnumber; i++){

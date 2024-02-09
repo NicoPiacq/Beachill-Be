@@ -4,6 +4,7 @@ import it.beachill.dtos.RegistrationDto;
 import it.beachill.dtos.UserDto;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.Reservation;
+import it.beachill.model.entities.tournament.Match;
 import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.tournament.Tournament;
 import jakarta.persistence.*;
@@ -45,6 +46,8 @@ public class User implements UserDetails {
     private List<ReservationPlace> managerReservationPlaces;
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
+    @OneToMany(mappedBy = "matchAdmin")
+    private List<Match> matchesAdminBy;
 
     public User() {}
     
@@ -187,5 +190,21 @@ public class User implements UserDetails {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+    
+    public List<ReservationPlace> getManagerReservationPlaces() {
+        return managerReservationPlaces;
+    }
+    
+    public void setManagerReservationPlaces(List<ReservationPlace> managerReservationPlaces) {
+        this.managerReservationPlaces = managerReservationPlaces;
+    }
+    
+    public List<Match> getMatchesAdminBy() {
+        return matchesAdminBy;
+    }
+    
+    public void setMatchesAdminBy(List<Match> matchesAdminBy) {
+        this.matchesAdminBy = matchesAdminBy;
     }
 }

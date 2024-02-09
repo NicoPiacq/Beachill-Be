@@ -200,13 +200,15 @@ create table tournament.match (
     away_team_id bigint,
     field_number int,
     start_date timestamp,
+    user_id bigint,
     --risultato_finale varchar(20),
     winner_team boolean, -- prima era references a team
     constraint match_pk primary key (id),
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
-    constraint home_team_fk foreign key (home_team_id) references tournament.team(id),
-    constraint away_team_fk foreign key (away_team_id) references tournament.team(id),
-    constraint tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade
+    constraint match_home_team_fk foreign key (home_team_id) references tournament.team(id),
+    constraint match_away_team_fk foreign key (away_team_id) references tournament.team(id),
+    constraint match_tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade,
+    constraint match_user_fk foreign key (user_id) references user_util._user(id)
 );
 
 create table tournament.set_match(

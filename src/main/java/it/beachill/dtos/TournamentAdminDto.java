@@ -46,7 +46,7 @@ public class TournamentAdminDto {
             this.place = tournament.getPlace().getPlace();
         }
         this.status= tournament.getStatus();
-        this.userDto= new UserDto(tournament.getAdmin());
+        this.userDto= new UserDto(tournament.getManager());
     }
 
     public Tournament fromDto(){
@@ -71,9 +71,9 @@ public class TournamentAdminDto {
             tournament.setStatus(this.status);
         }
         if(this.userDto==null){
-            tournament.setAdmin(null);
+            tournament.setManager(null);
         } else {
-            tournament.setAdmin(new User(this.userDto.getId()));
+            tournament.setManager(new User(this.userDto.getId()));
         }
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
