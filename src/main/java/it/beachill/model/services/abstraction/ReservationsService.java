@@ -1,6 +1,7 @@
 package it.beachill.model.services.abstraction;
 
 import it.beachill.dtos.ReservationDto;
+import it.beachill.dtos.ReservationSlotsDto;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.user.User;
@@ -20,4 +21,6 @@ public interface ReservationsService {
     List<ReservationPlace> getAllReservationPlaces();
 
     Optional<ReservationPlace> getReservationPlace(Long id);
+
+    List<ReservationSlotsDto> getAllSlotsPerDate(Long fieldId, LocalDate date);
 }

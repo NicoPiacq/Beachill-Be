@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,5 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
 
     Optional<Reservation> findByFieldAndDateAndStartAndEnd(Field field, LocalDate date, LocalTime start, LocalTime end);
 
+    List<Reservation> findByFieldAndDate(Field field, LocalDate date);
 }

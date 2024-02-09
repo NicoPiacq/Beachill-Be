@@ -1,6 +1,7 @@
 package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.ReservationDto;
+import it.beachill.dtos.ReservationSlotsDto;
 import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.reservation.ReservationPlace;
@@ -13,7 +14,10 @@ import it.beachill.model.repositories.abstractions.SchedulePropRepository;
 import it.beachill.model.services.abstraction.ReservationsService;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +27,13 @@ public class JPAReservationsService implements ReservationsService {
     private final ReservationRepository reservationRepository;
     private final SchedulePropRepository schedulePropRepository;
     private final ReservationPlaceRepository reservationPlaceRepository;
+
     public JPAReservationsService(ReservationRepository reservationRepository, SchedulePropRepository schedulePropRepository, ReservationPlaceRepository reservationPlaceRepository){
         this.reservationRepository = reservationRepository;
         this.schedulePropRepository = schedulePropRepository;
         this.reservationPlaceRepository = reservationPlaceRepository;
     }
+
     @Override
     public List<Reservation> getAllReservationsPerDate(LocalDate date) {
         return reservationRepository.findByDateEquals(date);
@@ -65,6 +71,35 @@ public class JPAReservationsService implements ReservationsService {
     @Override
     public Optional<ReservationPlace> getReservationPlace(Long id) {
         return reservationPlaceRepository.findById(id);
+    }
+
+    @Override
+    public List<ReservationSlotsDto> getAllSlotsPerDate(Long fieldId, LocalDate date) {
+        List<ScheduleProp> props = schedulePropRepository.findByFieldAndDayNumber(new Field(fieldId), date.getDayOfWeek().getValue());
+        List<Reservation> reservationList = reservationRepository.findByFieldAndDate(new Field(fieldId), date);
+        List<ReservationSlotsDto> slots = new ArrayList<>();
+
+        for(ScheduleProp p : props) {
+            for(LocalTime i = p.getStartTime(); i.isBefore(p.getEndTime()); i = i.plusMinutes(p.getDuration())) {
+                boolean isInsert = false;
+                for(int j = 0; j < reservationList.size(); j++) {
+                    if(reservationList.get(j).getStart() == i && reservationList.get(j).getEnd() == i.plusMinutes(p.getDuration())) {
+                        ReservationSlotsDto dto = new ReservationSlotsDto(fieldId, i, i.plusMinutes(p.getDuration()), true, date);
+                        dto.setUserId(reservationList.get(j).getId());
+                        dto.setUserName(reservationList.get(j).getUser().getName());
+                        dto.setUserSurname(reservationList.get(j).getUser().getSurname());
+                        slots.add(dto);
+                        reservationList.remove(j);
+                        isInsert = true;
+                        break;
+                    }
+                }
+                if(!isInsert) {
+                    slots.add(new ReservationSlotsDto(fieldId, i, i.plusMinutes(p.getDuration()), false, date));
+                }
+            }
+        }
+        return slots;
     }
 
     private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {
