@@ -9,8 +9,8 @@ public class ScheduleProp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="place_id")
-    private ReservationPlace reservationPlace;
+    @JoinColumn(name="id_field")
+    private Field field;
     @Column(name="start_time")
     private LocalTime startTime;
     @Column(name="end_time")
@@ -22,9 +22,9 @@ public class ScheduleProp {
     public ScheduleProp() {
     }
 
-    public ScheduleProp(Long id, ReservationPlace reservationPlace, LocalTime startTime, LocalTime endTime, Long duration, int dayNumber) {
+    public ScheduleProp(Long id, Field field, LocalTime startTime, LocalTime endTime, Long duration, int dayNumber) {
         this.id = id;
-        this.reservationPlace = reservationPlace;
+        this.field = field;
         this.startTime = startTime;
         this.endTime = endTime;
         this.duration = duration;
@@ -39,12 +39,12 @@ public class ScheduleProp {
         this.id = id;
     }
 
-    public ReservationPlace getPlace() {
-        return reservationPlace;
+    public Field getField() {
+        return field;
     }
 
-    public void setPlace(ReservationPlace reservationPlace) {
-        this.reservationPlace = reservationPlace;
+    public void setField(Field field) {
+        this.field = field;
     }
 
     public LocalTime getStartTime() {

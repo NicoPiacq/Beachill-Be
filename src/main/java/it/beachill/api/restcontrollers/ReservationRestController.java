@@ -1,20 +1,21 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.ReservationDto;
+import it.beachill.dtos.ReservationSlotsDto;
+import it.beachill.dtos.SchedulePropDto;
 import it.beachill.model.entities.reservation.Reservation;
+import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.ReservationChecksFailedException;
+import it.beachill.model.services.abstraction.FieldService;
 import it.beachill.model.services.abstraction.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -22,15 +23,24 @@ import java.util.List;
 @CrossOrigin
 public class ReservationRestController {
     private final ReservationsService reservationsService;
+    private final FieldService fieldService;
+
     @Autowired
-    public ReservationRestController(ReservationsService reservationsService){
+    public ReservationRestController(ReservationsService reservationsService, FieldService fieldService){
         this.reservationsService = reservationsService;
+        this.fieldService = fieldService;
     }
 
     @GetMapping("")
     public ResponseEntity<?> getAllReservationsPerDate(@RequestParam LocalDate date){
         List< Reservation> reservationList = this.reservationsService.getAllReservationsPerDate(date);
         return ResponseEntity.ok(reservationList);
+    }
+
+    @GetMapping("/reservation-details")
+    public ResponseEntity<?> getFieldProperties(@RequestParam Long fieldId, @RequestParam LocalDate date) {
+        List<ReservationSlotsDto> slots = reservationsService.getAllSlotsPerDate(fieldId, date);
+        return ResponseEntity.ok(slots);
     }
 
     @PostMapping("")

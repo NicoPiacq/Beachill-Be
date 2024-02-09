@@ -13,7 +13,7 @@ public class Sport {
     private String sportName;
 
     @OneToMany(mappedBy = "sport")
-    private List<ReservationPlace> places;
+    private List<Field> fields;
 
     public Sport() {
     }
@@ -30,11 +30,11 @@ public class Sport {
         this.sportName = sportName;
     }
 
-    public List<ReservationPlace> getPlaces() {
-        return places;
+    public List<Field> getFields() {
+        return fields;
     }
 
-    public void setPlaces(List<ReservationPlace> places) {
-        this.places = places;
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 }

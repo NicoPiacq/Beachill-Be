@@ -13,8 +13,8 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="place_id")
-    private ReservationPlace reservationPlace;
+    @JoinColumn(name="id_field")
+    private Field field;
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
@@ -28,9 +28,9 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(long id, ReservationPlace reservationPlace, User user, LocalDate date, LocalTime start, LocalTime end) {
+    public Reservation(long id, Field field, User user, LocalDate date, LocalTime start, LocalTime end) {
         this.id = id;
-        this.reservationPlace = reservationPlace;
+        this.field = field;
         this.user = user;
         this.date = date;
         this.start = start;
@@ -45,12 +45,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public ReservationPlace getPlace() {
-        return reservationPlace;
+    public Field getField() {
+        return field;
     }
 
-    public void setPlace(ReservationPlace reservationPlace) {
-        this.reservationPlace = reservationPlace;
+    public void setField(Field field) {
+        this.field = field;
     }
 
     public User getUser() {

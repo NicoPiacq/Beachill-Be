@@ -55,35 +55,44 @@ create table reservation.place (
     id serial,
     name varchar,
     address varchar,
+    city varchar,
+    province varchar,
+    region varchar,
     manager_id bigint,
-    sport varchar,
-    field_number int,
     constraint place_pk primary key (id),
-    constraint place_unique unique (name, sport, field_number),
-    constraint place_manager_fk foreign key (manager_id) references user_util._user(id),
-    constraint place_sport_fk foreign key (sport) references reservation.domain_sport(sport)
+    constraint place_unique unique (name, address, city),
+    constraint place_manager_fk foreign key (manager_id) references user_util._user(id)
+);
+
+create table reservation.field(
+    id serial,
+    id_place bigint,
+    sport varchar,
+    constraint field_pk primary key (id),
+    constraint field_place_fk foreign key (id_place) references reservation.place(id),
+    constraint field_sport_fk foreign key (sport) references reservation.domain_sport(sport)
 );
 
 create table reservation.schedule_prop (
     id serial,
-    place_id bigint,
+    id_field bigint,
     start_time time(0),
     end_time time(0),
     duration bigint,
     day_number int,
     constraint schedule_prop_pk primary key (id),
-    constraint schedule_prop_place_fk foreign key (place_id) references reservation.place(id)
+    constraint schedule_prop_field_fk foreign key (id_field) references reservation.field(id)
 );
 
 create table reservation.reservation (
     id serial,
-    place_id bigint,
+    id_field bigint,
     user_id bigint,
     reservation_date date,
     reservation_start time,
     reservation_end time,
     constraint reservation_pk primary key (id),
-    constraint reservation_place_fk foreign key (place_id) references reservation.place (id),
+    constraint reservation_field_fk foreign key (id_field) references reservation.field(id),
     constraint reservation_user_fk foreign key (user_id) references user_util._user(id)
 );
 
