@@ -40,8 +40,8 @@ public class User implements UserDetails {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "admin")
-    private List<Tournament> tournamentAdminList;
+    @OneToMany(mappedBy = "manager")
+    private List<Tournament> tournamentsManagerList;
     @OneToMany(mappedBy = "manager")
     private List<ReservationPlace> managerReservationPlaces;
     @OneToMany(mappedBy = "user")
@@ -168,12 +168,12 @@ public class User implements UserDetails {
         this.role = role;
     }
     
-    public List<Tournament> getTournamentAdminList() {
-        return tournamentAdminList;
+    public List<Tournament> getTournamentsManagerList() {
+        return tournamentsManagerList;
     }
     
-    public void setTournamentAdminList(List<Tournament> tournamentAdminList) {
-        this.tournamentAdminList = tournamentAdminList;
+    public void setTournamentsManagerList(List<Tournament> tournamentsManagerList) {
+        this.tournamentsManagerList = tournamentsManagerList;
     }
 
     public List<ReservationPlace> getManagerPlaces() {
