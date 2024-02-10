@@ -53,7 +53,8 @@ public class JPATeamsService implements TeamsService {
 
     @Override
     public List<Team> findAllTeamsByPlayer(Long playerId) {
-        List<TeamComponent> teams = teamComponentRepository.findByPlayerId(playerId);
+        int status = 1;
+        List<TeamComponent> teams = teamComponentRepository.findByPlayerIdAndStatus(playerId, status);
         List<Team> result=new ArrayList<>();
         for(int i=0; i<teams.size();i++){
             result.add(teams.get(i).getTeam());

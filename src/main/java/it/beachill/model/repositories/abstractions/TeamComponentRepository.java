@@ -12,4 +12,6 @@ public interface TeamComponentRepository extends JpaRepository<TeamComponent, Lo
 	Optional<TeamComponent> findByPlayerIdAndTeamId(Player player, Team team);
 	
 	List<TeamComponent> findByPlayerId(Long id);
+
+    List<TeamComponent> findByPlayerIdAndStatus(Long playerId, int status);
 }
