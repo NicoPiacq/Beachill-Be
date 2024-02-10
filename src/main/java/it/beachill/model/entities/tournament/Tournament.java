@@ -24,6 +24,9 @@ public class Tournament {
     @ManyToOne
     @JoinColumn(name = "place")
     private TournamentPlace place;
+    @ManyToOne
+    @JoinColumn(name = "tournament_level")
+    private TournamentLevel tournamentLevel;
 
     @OneToMany(mappedBy = "tournament")
     private List<GroupStageStanding> groupStageStandingList;
@@ -147,5 +150,11 @@ public class Tournament {
         this.status = status;
     }
 
+    public TournamentLevel getTournamentLevel() {
+        return tournamentLevel;
+    }
 
+    public void setTournamentLevel(TournamentLevel tournamentLevel) {
+        this.tournamentLevel = tournamentLevel;
+    }
 }

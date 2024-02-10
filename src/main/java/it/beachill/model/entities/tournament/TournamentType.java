@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "domain_type_tournament", schema = "tournament")
 public class TournamentType {
     @Id
-    @Column(name = "tournament_type_name", length = 20)
+    @Column(name = "tournament_type_name")
     private String tournamentTypeName;
 
     @Column(name = "tournament_description")

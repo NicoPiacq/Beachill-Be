@@ -132,9 +132,15 @@ create table tournament.domain_place_tournament(
 
 -- TABELLA DOMINIO DEI TIPI DI TORNEO
 create table tournament.domain_type_tournament(
-    tournament_type_name varchar(20) not null, --DA CAMBIARE NOME FA SCHIFOOOOO
+    tournament_type_name varchar not null,
     tournament_description varchar(255),
     constraint domain_type_tournament_pk primary key (tournament_type_name)
+);
+
+-- TABELLA DOMINIO DEI LIVELLI DEL TORNEO
+create table tournament.domain_tournament_level(
+    tournament_level_name varchar not null,
+    constraint domain_tournament_level_pk primary key (tournament_level_name)
 );
 
 -- TABELLA TORNEO
@@ -144,12 +150,14 @@ create table tournament.tournament (
     start_date timestamp,
     end_date timestamp,
     place varchar(255),
-    tournament_type varchar(20),
+    tournament_type varchar,
+    tournament_level varchar,
     _user bigint,
     status int,
     constraint tournament_pk primary key (id),
     constraint tournament_user_fk foreign key (_user) references user_util._user(id),
     constraint tournament_type_fk foreign key (tournament_type) references tournament.domain_type_tournament(tournament_type_name),
+    constraint tournament_level_fk foreign key (tournament_level) references tournament.domain_tournament_level(tournament_level_name),
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
 );
 
