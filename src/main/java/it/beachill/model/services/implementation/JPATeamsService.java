@@ -46,6 +46,12 @@ public class JPATeamsService implements TeamsService {
     public Optional<Team> findTeamById(Long id) {
         return teamRepository.findById(id);
     }
+
+    @Override
+    public List<TeamComponent> getAllInvite(User user) {
+        return teamComponentRepository.findByPlayerIdAndStatus(user.getPlayer().getId(), 2);
+    }
+
     @Override
     public List<Team> findAllTeamsByTeamLeader(Long playerId) {
         return teamRepository.findAllByTeamLeader(new Player(playerId));

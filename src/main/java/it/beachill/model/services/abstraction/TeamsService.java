@@ -1,6 +1,7 @@
 package it.beachill.model.services.abstraction;
 
 import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.TeamComponent;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 
@@ -27,4 +28,6 @@ public interface TeamsService {
 	Optional<Team> deleteTeam(Long teamId, User user) throws TeamCheckFailedException;
 
 	Optional<Team> findTeamById(Long id);
+
+	List<TeamComponent> getAllInvite(User user);
 }

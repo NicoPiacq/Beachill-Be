@@ -4,6 +4,7 @@ import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TeamDto;
 import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.TeamComponent;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.services.abstraction.TeamsService;
@@ -123,25 +124,24 @@ public class TeamRestController {
                 .findFirst()
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    @GetMapping("/invite")
+    public ResponseEntity<?> getAllInvite(@AuthenticationPrincipal User user){
+        List<TeamComponent> teamComponentList = teamsService.getAllInvite(user);
+        List<TeamComponentDto> result = teamComponentList.stream().map(TeamComponentDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
 
-    /*fede vuole roba sofisticata:
-    - uno fa una richiesta, che deve venir accettata: od il capitano manda la richiesta al player o viceversa;
-    - il team manda una richiesta di prenotazione al torneo, che l'organizzatore può accettare o rifiutare.
-    
-    */
-    
-    // verificare se l'user è corretto, altrimenti manda unauthorized
-    //
     @PostMapping("/{id}/players")
     public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto, @PathVariable Long id) {
-        if(!Objects.equals(id, teamComponentDto.getTeamId())){
+        if(!Objects.equals(id, teamComponentDto.getTeamDto().getId())){
             return ResponseEntity.badRequest().build();
         }
         Player player = user.getPlayer();
         Optional<Team> teamOptional;
         try {
             teamOptional = teamsService.addPlayerToTeam(
-                    teamComponentDto.getTeamId(),
+                    teamComponentDto.getTeamDto().getId(),
                     teamComponentDto.getPlayerId(),
                     user.getPlayer().getId());
         } catch(TeamCheckFailedException e){

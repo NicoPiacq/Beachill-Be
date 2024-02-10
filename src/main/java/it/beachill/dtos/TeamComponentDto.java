@@ -6,7 +6,7 @@ import it.beachill.model.entities.tournament.TeamComponent;
 
 public class TeamComponentDto {
 	private Long id;
-	private Long teamId;
+	private TeamDto teamDto;
 	private Long PlayerId;
 	private String playerName;
 	private String playerSurname;
@@ -17,7 +17,7 @@ public class TeamComponentDto {
 	
 	public TeamComponentDto(TeamComponent teamComponent) {
 		this.id=teamComponent.getId();
-		this.teamId = teamComponent.getTeam().getId();
+		this.teamDto = new TeamDto(teamComponent.getTeam());
 		this.PlayerId = teamComponent.getPlayer().getId();
 		this.playerName = teamComponent.getPlayer().getUser().getName();
 		this.playerSurname = teamComponent.getPlayer().getUser().getSurname();
@@ -25,7 +25,7 @@ public class TeamComponentDto {
 	}
 	public TeamComponent fromDto() {
 		TeamComponent teamComponent = new TeamComponent();
-		teamComponent.setTeam(new Team(this.teamId));
+		teamComponent.setTeam(new Team(this.teamDto.getId()));
 		teamComponent.setPlayer(new Player(this.PlayerId));
 		if (this.status == null) {
 			teamComponent.setStatus(2);
@@ -43,13 +43,7 @@ public class TeamComponentDto {
 		this.id = id;
 	}
 	
-	public Long getTeamId() {
-		return teamId;
-	}
-	
-	public void setTeamId(Long teamId) {
-		this.teamId = teamId;
-	}
+
 	
 	public Long getPlayerId() {
 		return PlayerId;
@@ -81,5 +75,13 @@ public class TeamComponentDto {
 
 	public void setPlayerSurname(String playerSurname) {
 		this.playerSurname = playerSurname;
+	}
+
+	public TeamDto getTeamDto() {
+		return teamDto;
+	}
+
+	public void setTeamDto(TeamDto teamDto) {
+		this.teamDto = teamDto;
 	}
 }
