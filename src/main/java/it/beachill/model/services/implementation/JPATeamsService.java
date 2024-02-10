@@ -155,10 +155,10 @@ public class JPATeamsService implements TeamsService {
             if(Objects.equals(user.getPlayer().getId(), teamComponent.getPlayer().getId())){
                 teamComponent.setStatus(status);
                 teamComponentRepository.save(teamComponent);
+                return optionalTeam;
             }
             throw new TeamCheckFailedException("Questo invito non ti appartiene!");
         }
-
         throw new TeamCheckFailedException("Il team o l' invito non sono presenti!");
     }
 

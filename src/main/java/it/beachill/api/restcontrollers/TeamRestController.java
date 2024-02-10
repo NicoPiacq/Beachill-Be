@@ -1,5 +1,6 @@
 package it.beachill.api.restcontrollers;
 
+import it.beachill.dtos.InvitationResponse;
 import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TeamDto;
 import it.beachill.model.entities.tournament.Player;
@@ -124,20 +125,9 @@ public class TeamRestController {
                 .findFirst()
                 .orElse(ResponseEntity.notFound().build());
     }
-    
-    @GetMapping("/invite")
-    public ResponseEntity<?> getAllInvite(@AuthenticationPrincipal User user){
-        List<TeamComponent> teamComponentList = teamsService.getAllInvite(user);
-        List<TeamComponentDto> result = teamComponentList.stream().map(TeamComponentDto::new).toList();
-        return ResponseEntity.ok(result);
-    }
 
-    @PostMapping("/{id}/players")
-    public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto, @PathVariable Long id) {
-        if(!Objects.equals(id, teamComponentDto.getTeamDto().getId())){
-            return ResponseEntity.badRequest().build();
-        }
-        Player player = user.getPlayer();
+    @PostMapping("/invite")
+    public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto) {
         Optional<Team> teamOptional;
         try {
             teamOptional = teamsService.addPlayerToTeam(
@@ -147,15 +137,20 @@ public class TeamRestController {
         } catch(TeamCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-
-        //return ResponseEntity.ok(new TeamDto(teamOptional.get()));
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{teamId}/player/{teamComponentId}")
-    public ResponseEntity<?> updateStatusInvitation(@AuthenticationPrincipal User user, @PathVariable Long teamId, @PathVariable Long teamComponentId, @RequestParam Integer status){
+    @GetMapping("/invite")
+    public ResponseEntity<?> getAllInvite(@AuthenticationPrincipal User user){
+        List<TeamComponent> teamComponentList = teamsService.getAllInvite(user);
+        List<TeamComponentDto> result = teamComponentList.stream().map(TeamComponentDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/invite")
+    public ResponseEntity<?> updateStatusInvitation(@AuthenticationPrincipal User user, @RequestBody InvitationResponse invitationResponse){
         try {
-            teamsService.updateStatusInvitation(teamComponentId, teamId, user, status);
+            teamsService.updateStatusInvitation(invitationResponse.getTeamComponentId(), invitationResponse.getTeamId(), user, invitationResponse.getStatus());
         } catch (TeamCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
