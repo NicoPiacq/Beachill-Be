@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 public class ReservationDto {
     private Long id;
-    private Long fieldId;
+    private FieldDto fieldDto;
     private Long userId;
     private LocalDate date;
     private LocalTime start;
@@ -21,7 +21,7 @@ public class ReservationDto {
 
     public ReservationDto(Reservation reservation) {
         this.id = reservation.getId();
-        this.fieldId = reservation.getField().getId();
+        this.fieldDto = new FieldDto(reservation.getField());
         this.userId = reservation.getUser().getId();
         this.date = reservation.getDate();
         this.start = reservation.getStart();
@@ -31,7 +31,7 @@ public class ReservationDto {
     public Reservation fromDto(){
         Reservation reservation = new Reservation();
         reservation.setId(this.id);
-        reservation.setField(new Field(this.fieldId));
+        reservation.setField(this.fieldDto.fromDto());
         reservation.setUser(new User(userId));
         reservation.setDate(this.date);
         reservation.setStart(this.start);
@@ -47,12 +47,12 @@ public class ReservationDto {
         this.id = id;
     }
 
-    public Long getFieldId() {
-        return fieldId;
+    public FieldDto getFieldDto() {
+        return fieldDto;
     }
 
-    public void setFieldId(Long fieldId) {
-        this.fieldId = fieldId;
+    public void setFieldDto(FieldDto fieldDto) {
+        this.fieldDto = fieldDto;
     }
 
     public Long getUserId() {

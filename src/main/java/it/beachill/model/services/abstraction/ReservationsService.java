@@ -23,4 +23,6 @@ public interface ReservationsService {
     Optional<ReservationPlace> getReservationPlace(Long id);
 
     List<ReservationSlotsDto> getAllSlotsPerDate(Long fieldId, LocalDate date);
+
+    List<Reservation> getAllReservationByUser(User user);
 }

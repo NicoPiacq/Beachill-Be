@@ -45,13 +45,13 @@ public class JPAReservationsService implements ReservationsService {
             throw new ReservationChecksFailedException("Non sei l' utente al quale vuoi associare la prenotazione");
         }
 
-        Optional<Reservation> reservationOptional = reservationRepository.findByFieldAndDateAndStartAndEnd(new Field(reservationDto.getFieldId()),
+        Optional<Reservation> reservationOptional = reservationRepository.findByFieldAndDateAndStartAndEnd(new Field(reservationDto.getFieldDto().getId()),
                 reservationDto.getDate(), reservationDto.getStart(), reservationDto.getEnd());
         if(reservationOptional.isPresent()){
             throw new ReservationChecksFailedException("Esiste già una prenotazione in questo slot!");
         }
 
-        List<ScheduleProp> schedulePropList = schedulePropRepository.findByFieldEquals(new Field(reservationDto.getFieldId()));
+        List<ScheduleProp> schedulePropList = schedulePropRepository.findByFieldEquals(new Field(reservationDto.getFieldDto().getId()));
         ScheduleProp myScheduleProp = getScheduleProp(reservationDto, schedulePropList);
 
 
@@ -100,6 +100,11 @@ public class JPAReservationsService implements ReservationsService {
             }
         }
         return slots;
+    }
+
+    @Override
+    public List<Reservation> getAllReservationByUser(User user) {
+        return reservationRepository.findByUser(user);
     }
 
     private static ScheduleProp getScheduleProp(ReservationDto reservationDto, List<ScheduleProp> schedulePropList) throws ReservationChecksFailedException {

@@ -1,5 +1,6 @@
 package it.beachill.api.restcontrollers;
 
+import it.beachill.dtos.PlayerDto;
 import it.beachill.dtos.ReservationDto;
 import it.beachill.dtos.ReservationSlotsDto;
 import it.beachill.dtos.SchedulePropDto;
@@ -31,9 +32,10 @@ public class ReservationRestController {
         this.fieldService = fieldService;
     }
 
-    @GetMapping("")
+    @GetMapping("/all/date")
     public ResponseEntity<?> getAllReservationsPerDate(@RequestParam LocalDate date){
-        List< Reservation> reservationList = this.reservationsService.getAllReservationsPerDate(date);
+        List<Reservation> reservationList = this.reservationsService.getAllReservationsPerDate(date);
+        List<ReservationDto> reservationDtoList = reservationList.stream().map(ReservationDto::new).toList();
         return ResponseEntity.ok(reservationList);
     }
 
@@ -41,6 +43,13 @@ public class ReservationRestController {
     public ResponseEntity<?> getFieldProperties(@RequestParam Long fieldId, @RequestParam LocalDate date) {
         List<ReservationSlotsDto> slots = reservationsService.getAllSlotsPerDate(fieldId, date);
         return ResponseEntity.ok(slots);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllReservationByUser(@AuthenticationPrincipal User user){
+        List<Reservation> reservations = reservationsService.getAllReservationByUser(user);
+        List<ReservationDto> reservationDtoList = reservations.stream().map(ReservationDto::new).toList();
+        return ResponseEntity.ok(reservationDtoList);
     }
 
     @PostMapping("")
