@@ -1,9 +1,6 @@
 package it.beachill.api.restcontrollers;
 
-import it.beachill.dtos.PlayerDto;
-import it.beachill.dtos.ReservationDto;
-import it.beachill.dtos.ReservationSlotsDto;
-import it.beachill.dtos.SchedulePropDto;
+import it.beachill.dtos.*;
 import it.beachill.model.entities.reservation.Reservation;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.user.User;
@@ -53,9 +50,9 @@ public class ReservationRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createNewReservation(@RequestBody ReservationDto reservationDto, @AuthenticationPrincipal User user){
+    public ResponseEntity<?> createNewReservation(@RequestBody ReservationRequestDto reservationRequestDto, @AuthenticationPrincipal User user){
         try{
-            this.reservationsService.createNewReservation(reservationDto, user);
+            this.reservationsService.createNewReservation(reservationRequestDto, user);
         }
         catch(ReservationChecksFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
