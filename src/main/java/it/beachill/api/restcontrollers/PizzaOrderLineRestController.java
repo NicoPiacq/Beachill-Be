@@ -21,12 +21,11 @@ public class PizzaOrderLineRestController {
     this.pizzasService = pizzasService;
   }
 
-@PostMapping("/create")
+@PostMapping("")
   public ResponseEntity<PizzaOrderLineDto> createPizzaOrderLine(@RequestBody PizzaOrderLineDto pizzaOrderLineDto) throws URISyntaxException {
   PizzaOrderLine pizzaOrderLine = pizzaOrderLineDto.fromDto();
   pizzasService.createPizzaOrderLine(pizzaOrderLine);
   PizzaOrderLineDto result = new PizzaOrderLineDto(pizzaOrderLine);
-  //da cambiare URI
   return ResponseEntity.ok(result);
 }
 

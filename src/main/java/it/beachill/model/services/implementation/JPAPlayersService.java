@@ -35,7 +35,6 @@ public class JPAPlayersService implements PlayersService {
         if(optionalTeam.isEmpty()){
             throw new PlayerChecksFailedException("Il team non è stato trovato!");
         }
-        List<TeamComponent> teamComponents = optionalTeam.get().getTeamComponents();
-        return teamComponents;
+        return optionalTeam.get().getTeamComponents();
     }
 }

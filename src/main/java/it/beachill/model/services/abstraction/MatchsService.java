@@ -1,10 +1,7 @@
 package it.beachill.model.services.abstraction;
 
 import it.beachill.dtos.SetMatchDto;
-import it.beachill.model.entities.tournament.Match;
-import it.beachill.model.entities.tournament.MatchType;
-import it.beachill.model.entities.tournament.Team;
-import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 
@@ -20,5 +17,7 @@ public interface MatchsService {
 
     List<Match> getAllMatchesByTournament(Long tournamentId);
     
-    void setMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException;
+    void updateMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException;
+
+    List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException;
 }

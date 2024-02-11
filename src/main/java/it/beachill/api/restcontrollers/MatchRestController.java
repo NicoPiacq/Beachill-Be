@@ -3,6 +3,7 @@ package it.beachill.api.restcontrollers;
 import it.beachill.dtos.MatchDto;
 import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.tournament.Match;
+import it.beachill.model.entities.tournament.SetMatch;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.services.abstraction.MatchsService;
@@ -32,12 +33,22 @@ public class MatchRestController {
         List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
         return ResponseEntity.ok(result);
     }
-    
-    @PatchMapping("/sets/{setMatchId}")
-    public ResponseEntity<?> setMatchSetsResultWhereTeamsAreEnrolledInTheTournamentWithTheirTeamComponentsOrderByGroupStageDescEggsactlySorryWePutItInTheWrongController
-            (@AuthenticationPrincipal User user, @PathVariable Long setMatchId, @RequestBody SetMatchDto setMatchDto) {
+
+    @GetMapping("/{setMatchId}/set")
+    public ResponseEntity<?> getAllSetsByMatchId(@PathVariable Long setMatchId){
+        List<SetMatch> setMatchList;
         try {
-            matchsService.setMatchSetResult(user, setMatchId, setMatchDto);
+           setMatchList = matchsService.getAllSetsByMatchId(setMatchId);
+        } catch (CheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok(setMatchList);
+    }
+    
+    @PatchMapping("/{setMatchId}/set")
+    public ResponseEntity<?> updateMatchSetResult(@AuthenticationPrincipal User user, @PathVariable Long setMatchId, @RequestBody SetMatchDto setMatchDto) {
+        try {
+            matchsService.updateMatchSetResult(user, setMatchId, setMatchDto);
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

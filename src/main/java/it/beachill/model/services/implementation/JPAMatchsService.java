@@ -31,7 +31,7 @@ public class JPAMatchsService implements MatchsService {
     }
     
     @Override
-    public void setMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException {
+    public void updateMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException {
         if(!Objects.equals(setMatchId, setMatchDto.getMatchId())){
             throw new CheckFailedException("I dati del set non sono coerenti");
         }
@@ -41,7 +41,17 @@ public class JPAMatchsService implements MatchsService {
         }
         setMatchRepository.save(setMatchDto.fromDto());
     }
-    
+
+    @Override
+    public List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException {
+        Optional<Match> matchOptional = matchRepository.findById(setMatchId);
+        if(matchOptional.isEmpty()){
+            throw new CheckFailedException("Il match selezionato non esiste.");
+        }
+        return setMatchRepository.findByMatchId(setMatchId);
+    }
+
+    //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)
     public Match createMatchAndSets(int matchNumber, MatchType matchType, int groupStage,
                                     Tournament tournament, Team homeTeam, Team awayTeam,
                                     int fieldNumber, int setsnumber, User matchAdmin){
@@ -55,6 +65,7 @@ public class JPAMatchsService implements MatchsService {
         return match;
     }
 
+    //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (SECONDA FASE)
     public Match createMatchAndSets(int matchNumber, MatchType matchType, Tournament tournament,
                                     int fieldNumber, int setsnumber, User matchAdmin){
         Match match = new Match(matchNumber, matchType, tournament, fieldNumber, matchAdmin);
