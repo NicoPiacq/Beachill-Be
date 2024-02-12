@@ -5,9 +5,7 @@ import it.beachill.model.entities.user.User;
 
 public class PlayerDto {
 	private Long id;
-	private Long score;
 	private Long userId;
-	///aggiunte
 	private String userName;
 	private String userSurname;
 
@@ -18,7 +16,6 @@ public class PlayerDto {
 
 	public PlayerDto(Player player) {
 		this.id = player.getId(); ;
-		this.score = player.getScore();
 		this.userId = player.getUser().getId();
 		this.userName = player.getUser().getName();
 		this.userSurname = player.getUser().getSurname();
@@ -26,7 +23,6 @@ public class PlayerDto {
 
 	public Player fromDto(){
 		Player player = new Player();
-		player.setScore(this.score);
 		player.setUser(new User(this.userId));
 		return player;
 	}
@@ -38,14 +34,6 @@ public class PlayerDto {
 	
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public Long getScore() {
-		return score;
-	}
-	
-	public void setScore(Long score) {
-		this.score = score;
 	}
 
 	public Long getUserId() {

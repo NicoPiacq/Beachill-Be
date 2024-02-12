@@ -84,4 +84,6 @@ public class Player {
     public void setScoreList(List<Score> scoreList) {
         this.scoreList = scoreList;
     }
+
+
 }
