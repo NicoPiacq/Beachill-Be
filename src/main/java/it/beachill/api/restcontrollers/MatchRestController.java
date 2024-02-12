@@ -52,7 +52,17 @@ public class MatchRestController {
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        
+        return ResponseEntity.ok().build();
+    }
+
+    //Da implementare una funzione che controlli i risultati dei set di un match ed assegni il giusto vincitore al match
+    @PatchMapping("/{matchId}")
+    public ResponseEntity<?> checkSetResultAndUpdateMatch(@AuthenticationPrincipal User user, @PathVariable Long matchId){
+        try{
+            matchsService.checkSetResultAndUpdateMatch(user, matchId);
+        } catch (CheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
         return ResponseEntity.ok().build();
     }
 }

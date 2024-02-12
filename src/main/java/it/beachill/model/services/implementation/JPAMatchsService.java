@@ -35,9 +35,16 @@ public class JPAMatchsService implements MatchsService {
         if(!Objects.equals(setMatchId, setMatchDto.getMatchId())){
             throw new CheckFailedException("I dati del set non sono coerenti");
         }
-        Optional<SetMatch> setMatchOptional =setMatchRepository.findById(setMatchId);
+        Optional<SetMatch> setMatchOptional = setMatchRepository.findById(setMatchId);
         if(setMatchOptional.isEmpty()){
             throw new CheckFailedException("Il set che vuoi modificare non esiste");
+        }
+        Optional<Match> match = matchRepository.findById(setMatchId);
+        if(match.isEmpty()){
+            throw new CheckFailedException("Il match associato al set non esiste");
+        }
+        if(match.get().getMatchAdmin().getId() != user.getId()){
+            throw new CheckFailedException("Non sei l' admin del match.");
         }
         setMatchRepository.save(setMatchDto.fromDto());
     }
@@ -49,6 +56,23 @@ public class JPAMatchsService implements MatchsService {
             throw new CheckFailedException("Il match selezionato non esiste.");
         }
         return setMatchRepository.findByMatchId(setMatchId);
+    }
+
+    @Override
+    public void checkSetResultAndUpdateMatch(User user, Long matchId) throws CheckFailedException {
+        Optional<Match> matchOptional = matchRepository.findById(matchId);
+        if(matchOptional.isEmpty()){
+            throw new CheckFailedException("Il match non esiste.");
+        }
+        if(matchOptional.get().getMatchAdmin().getId() != user.getId()){
+            throw new CheckFailedException("Non sei l' admin del macth.");
+        }
+        List<SetMatch> setMatchList = setMatchRepository.findByMatchId(matchId);
+        if(setMatchList.isEmpty()){
+            throw new CheckFailedException("Non esistono set per questo match.");
+        }
+        ///// da continuare deve controllare tutti i set vedere chi ha vinto ed aggiornarlo all' interno del match
+
     }
 
     //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)

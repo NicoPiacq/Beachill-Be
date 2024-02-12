@@ -20,4 +20,6 @@ public interface MatchsService {
     void updateMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException;
 
     List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException;
+
+    void checkSetResultAndUpdateMatch(User user, Long matchId) throws CheckFailedException;
 }

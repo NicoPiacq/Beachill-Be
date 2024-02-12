@@ -1,1 +1,16 @@
-- Gestione dei team: proviamo a finirla!!
+cose da implementare daje forza!!
+
+- Aggiungere il ruolo superAdmin per la gestione degli admin e dei manager
+    con la possibilità di fare qualsiasi cosa all' interno dell' applicazione.
+
+- Aggiungere i livelli dei tornei nel dto e lato frontend
+
+- Finire l' implementazione della gestione della fase finale dei tornei
+
+- Iniziare l' implementazione degli score (ripensarla lato db e tutto)
+
+- Finire di implementare le varie funzionalità per un admin di gestione dei tornei
+
+- Gestione degli ordini della pizza sia lato frontend che backend
+
+- Gestione set e match sia fuori da un torneo che all' interno di un torneo
