@@ -91,7 +91,7 @@ public class TeamRestController {
 
     //TODO:implementare assegnazione sicura del capitano alla squadra
     //FIXME:questa cosa funziona male (IO)
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createTeam(@AuthenticationPrincipal User user, @RequestBody TeamDto teamDto) throws URISyntaxException {
         Team team = teamDto.fromDto();
         Player requestPlayer = user.getPlayer();
