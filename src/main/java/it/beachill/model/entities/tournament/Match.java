@@ -13,9 +13,9 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "match_number")
-    private int matchNumber;
+    private Integer matchNumber;
     @Column(name = "group_stage")
-    private int groupStage;
+    private Integer groupStage;
     @ManyToOne
     @JoinColumn(name = "match_type")
     private MatchType matchType;
@@ -29,7 +29,7 @@ public class Match {
     @JoinColumn(name = "away_team_id")
     private Team awayTeam;
     @Column(name = "field_number")
-    private int fieldNumber;
+    private Integer fieldNumber;
     @Column(name = "start_date")
     private Timestamp startDate;
     @Column(name = "winner_team")
@@ -45,7 +45,7 @@ public class Match {
         this.id = id;
     }
     
-    public Match(int matchNumber, MatchType matchType, int groupStage, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, User matchAdmin) {
+    public Match(Integer matchNumber, MatchType matchType, Integer groupStage, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, User matchAdmin) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;
         this.groupStage = groupStage;
@@ -56,7 +56,7 @@ public class Match {
         this.matchAdmin= matchAdmin;
     }
 
-    public Match(int matchNumber, MatchType matchType, Tournament tournament, int fieldNumber, User matchAdmin) {
+    public Match(Integer matchNumber, MatchType matchType, Tournament tournament, Integer fieldNumber, User matchAdmin) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;
         this.tournament = tournament;
@@ -64,7 +64,7 @@ public class Match {
         this.matchAdmin= matchAdmin;
     }
 
-    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, boolean winnerTeam) {
+    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, boolean winnerTeam) {
         this.id = id;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
@@ -74,7 +74,7 @@ public class Match {
         this.winnerTeam = winnerTeam;
     }
     
-    public Match(Long id, int matchNumber, int groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, int fieldNumber, Timestamp startDate, Boolean winnerTeam, User matchAdmin) {
+    public Match(Long id, Integer matchNumber, Integer groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Boolean winnerTeam, User matchAdmin) {
         this.id = id;
         this.matchNumber = matchNumber;
         this.groupStage = groupStage;
@@ -97,7 +97,7 @@ public class Match {
         this.id = id;
     }
 
-    public int getMatchNumber() {
+    public Integer getMatchNumber() {
         return matchNumber;
     }
 
@@ -105,11 +105,15 @@ public class Match {
         this.matchNumber = matchNumber;
     }
 
-    public int getGroupStage() {
+    public void setFieldNumber(Integer fieldNumber) {
+        this.fieldNumber = fieldNumber;
+    }
+
+    public Integer getGroupStage() {
         return groupStage;
     }
 
-    public void setGroupStage(int groupStage) {
+    public void setGroupStage(Integer groupStage) {
         this.groupStage = groupStage;
     }
 
@@ -145,13 +149,10 @@ public class Match {
         this.awayTeam = awayTeam;
     }
 
-    public int getFieldNumber() {
+    public Integer getFieldNumber() {
         return fieldNumber;
     }
 
-    public void setFieldNumber(int fieldNumber) {
-        this.fieldNumber = fieldNumber;
-    }
 
     public Timestamp getStartDate() {
         return startDate;
@@ -183,5 +184,9 @@ public class Match {
     
     public void setMatchAdmin(User matchAdmin) {
         this.matchAdmin = matchAdmin;
+    }
+
+    public void setMatchNumber(Integer matchNumber) {
+        this.matchNumber = matchNumber;
     }
 }
