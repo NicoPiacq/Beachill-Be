@@ -406,7 +406,7 @@ public class JPAAdminService implements AdminsService {
                 AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user" + i, "user" + i, "user" + i + "@gmail.com", "pass", null));
                 Team team = new Team();
                 team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
-                team.setTeamName("Team " + i+1);
+                team.setTeamName("Team " + i);
                 teamsService.createTeam(team);
 //                if(i > 0){
 //                    teamsService.invitePlayerToTeam(team.getId(), i-1,  )
@@ -416,7 +416,7 @@ public class JPAAdminService implements AdminsService {
 
             // CREA MANAGER E PLACE
             for(int i = 1; i < 3; i++){
-            if(i==0) {
+
                 AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("Manager" + i, "Manager" + i, "Manager" + i + "@gmail.com", "pass", null));
                 ReservationPlace reservationPlace = new ReservationPlace();
                 reservationPlace.setName("Campo di: " + authenticationResponseDto.getUser().getName());
@@ -428,8 +428,9 @@ public class JPAAdminService implements AdminsService {
                     field.setReservationPlace(reservationPlaceSaved);
                     if(k == 2){
                         field.setSport(new Sport("PADEL"));
+                    } else {
+                        field.setSport(new Sport("BEACHVOLLEY"));
                     }
-                    field.setSport(new Sport("BEACHVOLLEY"));
                     fieldRepository.save(field);
                     for (int j = 1; j <= 7; j++) {
                         if(j==7){
@@ -458,7 +459,6 @@ public class JPAAdminService implements AdminsService {
                         }
                     }
                 }
-            }
 
             }
             return true;

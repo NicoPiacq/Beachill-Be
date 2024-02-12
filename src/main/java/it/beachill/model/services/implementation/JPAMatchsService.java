@@ -120,7 +120,7 @@ public class JPAMatchsService implements MatchsService {
 
     private void updatePlayersScore(Match match){
 
-//        //ABBIAMO TOLTO LO SCORE DAL PLAYER DATO CHE ADESSO è ALL' INTERNO DELLA TABELLA SCORE E GIUSTAMENTE QUA MURE :(
+//        //ABBIAMO TOLTO LO SCORE DAL PLAYER DATO CHE ADESSO è ALL' INTERNO DELLA TABELLA SCORE E GIUSTAMENTE QUA MUORE :(
 //        double homeAvarageScore = match.getHomeTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
 //                .mapToDouble(Player::getScore).average().orElse(0);
 //        double awayAvarageScore = match.getAwayTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
