@@ -35,7 +35,7 @@ public class MatchRestController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("team/{teamId}")
+    @GetMapping("/team/{teamId}")
     public ResponseEntity<?> getAllMatchesByTeam(@PathVariable Long teamId){
         List<Match> matches = matchsService.getAllMatchesByTeam(teamId);
         List<MatchDto> result = matches.stream().map(MatchDto::new).toList();

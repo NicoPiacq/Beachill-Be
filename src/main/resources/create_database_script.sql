@@ -283,6 +283,7 @@ insert into tournament.domain_place_tournament (place, field_number) values
 --(1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2), (9, 2), (10, 2);
 
 insert into tournament.domain_match_type (type, description) values
+('PRIVATO', "Partita privata tra due squadre"),
 ('GIRONE', 'Partita di un girone wow che descrizione'),
 ('OTTAVI', 'Ottavi di Finale'),
 ('QUARTI1x8', 'Quarti di Finale primo - ottavo posto'),
