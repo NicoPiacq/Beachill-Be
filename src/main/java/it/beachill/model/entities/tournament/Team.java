@@ -15,7 +15,6 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "team_leader", nullable = false)
     private Player teamLeader;
-    private Long score;
     @OneToMany(mappedBy = "team")
     private List<GroupStageStanding> groupStageStandings;
     @OneToMany(mappedBy = "team")
@@ -35,11 +34,11 @@ public class Team {
         this.id = id;
     }
     
-    public Team(Long id, String teamName, Player teamLeader, Long score) {
+    public Team(Long id, String teamName, Player teamLeader) {
         this.id = id;
         this.teamName = teamName;
         this.teamLeader = teamLeader;
-        this.score = score;
+
     }
 
     public Long getId() {
@@ -105,14 +104,6 @@ public class Team {
 
     public void setEnrolledTournaments(List<TeamInTournament> enrolledTournaments) {
         this.enrolledTournaments = enrolledTournaments;
-    }
-
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
     }
 
     public List<GroupStageStanding> getGroupStageStandings() {

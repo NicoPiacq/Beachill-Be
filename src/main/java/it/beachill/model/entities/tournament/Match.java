@@ -32,8 +32,9 @@ public class Match {
     private Integer fieldNumber;
     @Column(name = "start_date")
     private Timestamp startDate;
-    @Column(name = "winner_team")
-    private Boolean winnerTeam;
+    @ManyToOne
+    @JoinColumn(name = "winner_team_id")
+    private Team winnerTeam;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User matchAdmin;
@@ -64,7 +65,7 @@ public class Match {
         this.matchAdmin= matchAdmin;
     }
 
-    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, boolean winnerTeam) {
+    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Team winnerTeam) {
         this.id = id;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
@@ -74,7 +75,7 @@ public class Match {
         this.winnerTeam = winnerTeam;
     }
     
-    public Match(Long id, Integer matchNumber, Integer groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Boolean winnerTeam, User matchAdmin) {
+    public Match(Long id, Integer matchNumber, Integer groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Team winnerTeam, User matchAdmin) {
         this.id = id;
         this.matchNumber = matchNumber;
         this.groupStage = groupStage;
@@ -170,13 +171,7 @@ public class Match {
         this.sets = sets;
     }
 
-    public Boolean getWinnerTeam() {
-        return winnerTeam;
-    }
 
-    public void setWinnerTeam(Boolean winnerTeam) {
-        this.winnerTeam = winnerTeam;
-    }
     
     public User getMatchAdmin() {
         return matchAdmin;
@@ -188,5 +183,13 @@ public class Match {
 
     public void setMatchNumber(Integer matchNumber) {
         this.matchNumber = matchNumber;
+    }
+
+    public Team getWinnerTeam() {
+        return winnerTeam;
+    }
+
+    public void setWinnerTeam(Team winnerTeam) {
+        this.winnerTeam = winnerTeam;
     }
 }

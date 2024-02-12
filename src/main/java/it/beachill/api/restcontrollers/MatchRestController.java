@@ -7,7 +7,6 @@ import it.beachill.model.entities.tournament.SetMatch;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.services.abstraction.MatchsService;
-import org.apache.catalina.mbeans.SparseUserDatabaseMBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +75,7 @@ public class MatchRestController {
     @PatchMapping("/{matchId}")
     public ResponseEntity<?> checkSetResultAndUpdateMatch(@AuthenticationPrincipal User user, @PathVariable Long matchId){
         try{
-            matchsService.checkSetResultAndUpdateMatch(user, matchId);
+            matchsService.updateMatchResult(user, matchId);
         } catch (CheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

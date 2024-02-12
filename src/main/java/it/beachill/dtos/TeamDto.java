@@ -9,7 +9,6 @@ public class TeamDto {
     private String teamLeaderName;
     private String teamLeaderSurname;
     private Long idTeamLeader;
-    private Long score;
 
     public TeamDto() {}
 
@@ -19,14 +18,12 @@ public class TeamDto {
         this.teamLeaderName = team.getTeamLeader().getUser().getName();
         this.teamLeaderSurname = team.getTeamLeader().getUser().getSurname();
         this.idTeamLeader=team.getTeamLeader().getId();
-        this.score = team.getScore();
     }
     
     public Team fromDto(){
         Team team = new Team();
         team.setTeamLeader(new Player(this.idTeamLeader));
         team.setTeamName(this.teamName);
-        team.setScore(this.score);
         return team;
     }
     
@@ -62,13 +59,6 @@ public class TeamDto {
         this.teamLeaderName = teamLeaderName;
     }
 
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
-    }
 
     public String getTeamLeaderSurname() {
         return teamLeaderSurname;

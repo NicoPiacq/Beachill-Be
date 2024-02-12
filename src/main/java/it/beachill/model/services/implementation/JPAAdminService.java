@@ -194,7 +194,7 @@ public class JPAAdminService implements AdminsService {
 
                 for(int i = 0; i < groupStageStandingList.size(); i++){
                     if(groupStageStandingList.get(i).getTeam().getId().equals(homeTeam.getId())) {
-                        if (match.getWinnerTeam()) { //vince il team casa
+                        if (match.getWinnerTeam().equals(homeTeam)) { //vince il team casa
                             groupStageStandingList.get(i).addWinPoints();
                         }
                         List<SetMatch> setsMatch = setMatchRepository.findByMatchId(match.getId());
@@ -203,7 +203,7 @@ public class JPAAdminService implements AdminsService {
                         }
                     }
                     if(groupStageStandingList.get(i).getTeam().getId().equals(awayTeam.getId())) {
-                        if (!match.getWinnerTeam()) {
+                        if (match.getWinnerTeam().equals(awayTeam)) {
                             groupStageStandingList.get(i).addWinPoints();
                         }
                         List<SetMatch> setsMatch = setMatchRepository.findByMatchId(match.getId());
@@ -276,7 +276,7 @@ public class JPAAdminService implements AdminsService {
                 List<SetMatch> setsMatch;
                 if(random.nextBoolean()) {
                     Match match = matches.get(i);
-                    match.setWinnerTeam(true);
+                    match.setWinnerTeam(match.getHomeTeam());
                     setsMatch = setMatchRepository.findByMatchId(match.getId());
                     for(SetMatch setMatch : setsMatch){
                         setMatch.setHomeTeamScore(21);
@@ -284,7 +284,7 @@ public class JPAAdminService implements AdminsService {
                     }
                 } else {
                     Match match = matches.get(i);
-                    matches.get(i).setWinnerTeam(false);
+                    matches.get(i).setWinnerTeam(match.getAwayTeam());
                     setsMatch = setMatchRepository.findByMatchId(match.getId());
                     for(SetMatch setMatch : setsMatch){
                         setMatch.setHomeTeamScore(random.nextInt(19));
@@ -400,47 +400,66 @@ public class JPAAdminService implements AdminsService {
     @Override
     public boolean insertScript() {
         try {
+            //CREA NUM user e quindi player
             int num = 10;
-            for (Integer i = 0; i < num; i++) {
-                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user", i.toString(), "user" + i + "@gmail.com", "pass", null));
+            for (int i = 1; i <= num; i++) {
+                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user" + i, "user" + i, "user" + i + "@gmail.com", "pass", null));
                 Team team = new Team();
                 team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
-                team.setTeamName("Team " + i);
+                team.setTeamName("Team " + i+1);
                 teamsService.createTeam(team);
-                if(i==0){
-                    ReservationPlace reservationPlace = new ReservationPlace();
-                    reservationPlace.setName("Campo di: "+authenticationResponseDto.getUser().getName());
-                    reservationPlace.setManager(new User(authenticationResponseDto.getUser().getId()));
-                    ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
+//                if(i > 0){
+//                    teamsService.invitePlayerToTeam(team.getId(), i-1,  )
+//                }
+            }
+
+
+            // CREA MANAGER E PLACE
+            for(int i = 1; i < 3; i++){
+            if(i==0) {
+                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("Manager" + i, "Manager" + i, "Manager" + i + "@gmail.com", "pass", null));
+                ReservationPlace reservationPlace = new ReservationPlace();
+                reservationPlace.setName("Campo di: " + authenticationResponseDto.getUser().getName());
+                reservationPlace.setManager(new User(authenticationResponseDto.getUser().getId()));
+                ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
+
+                for(int k = 0; k < 3; k++) {
                     Field field = new Field();
                     field.setReservationPlace(reservationPlaceSaved);
+                    if(k == 2){
+                        field.setSport(new Sport("PADEL"));
+                    }
                     field.setSport(new Sport("BEACHVOLLEY"));
                     fieldRepository.save(field);
-                    for(int j=1;j<=7;j++){
-                        ScheduleProp scheduleProp= new ScheduleProp();
+                    for (int j = 1; j <= 7; j++) {
+                        if(j==7){
+                            continue;
+                        }
+                        ScheduleProp scheduleProp = new ScheduleProp();
                         scheduleProp.setField(field);
                         scheduleProp.setDayNumber(j);
-                        if(j==1) {
-                            scheduleProp.setStartTime(LocalTime.of(10,0));
-                            scheduleProp.setEndTime(LocalTime.of(12,0));
+                        if (j == 1) {
+                            scheduleProp.setStartTime(LocalTime.of(10, 0));
+                            scheduleProp.setEndTime(LocalTime.of(12, 0));
                             scheduleProp.setDuration(60L);
-                            ScheduleProp scheduleProp1= new ScheduleProp();
+                            ScheduleProp scheduleProp1 = new ScheduleProp();
                             scheduleProp1.setField(field);
                             scheduleProp1.setDayNumber(j);
-                            scheduleProp1.setStartTime(LocalTime.of(15,0));
-                            scheduleProp1.setEndTime(LocalTime.of(20,0));
+                            scheduleProp1.setStartTime(LocalTime.of(15, 0));
+                            scheduleProp1.setEndTime(LocalTime.of(20, 0));
                             scheduleProp1.setDuration(60L);
                             schedulePropRepository.save(scheduleProp);
                             schedulePropRepository.save(scheduleProp1);
-                        } else{
-                            scheduleProp.setStartTime(LocalTime.of(10,0));
-                            scheduleProp.setEndTime(LocalTime.of(18,0));
+                        } else {
+                            scheduleProp.setStartTime(LocalTime.of(10, 0));
+                            scheduleProp.setEndTime(LocalTime.of(18, 0));
                             scheduleProp.setDuration(60L);
                             schedulePropRepository.save(scheduleProp);
                         }
                     }
-                    
                 }
+            }
+
             }
             return true;
         }catch(RegistrationChecksFailedException | TeamCheckFailedException e){

@@ -130,7 +130,7 @@ public class TeamRestController {
     public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto) {
         Optional<Team> teamOptional;
         try {
-            teamOptional = teamsService.addPlayerToTeam(
+            teamOptional = teamsService.invitePlayerToTeam(
                     teamComponentDto.getTeamDto().getId(),
                     teamComponentDto.getPlayerId(),
                     user.getPlayer().getId());

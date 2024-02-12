@@ -78,6 +78,7 @@ public class UsersServiceImpl implements UsersService {
         if(checkUserAlreadyRegistered(request.getEmail())) {
             throw new RegistrationChecksFailedException("EMAIL_EXISTS");
         }
+        //DA CAMBIARE!!!!
         request.setRole(Role.ADMIN);
         //FINE
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));

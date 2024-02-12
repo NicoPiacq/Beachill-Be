@@ -5,25 +5,34 @@ import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.repositories.abstractions.MatchRepository;
+import it.beachill.model.repositories.abstractions.ScoreRepository;
+import it.beachill.model.repositories.abstractions.ScoreTypeRepository;
 import it.beachill.model.repositories.abstractions.SetMatchRepository;
 import it.beachill.model.services.abstraction.MatchsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JPAMatchsService implements MatchsService {
+
+    public static final String DEFAULT_SCORE_TYPE = "GENERALE";
+    public static final String BASE_SCORE_TYPE = "BASE";
+    public static final String INTERMEDIATE_SCORE_TYPE = "INTERMEDIO";
+    public static final String ADVANCE_SCORE_TYPE = "AVANZATO";
+
     private final MatchRepository matchRepository;
     private final SetMatchRepository setMatchRepository;
+    private final ScoreTypeRepository scoreTypeRepository;
+    private final ScoreRepository scoreRepository;
 
     @Autowired
-    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository) {
+    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository) {
         this.matchRepository = matchRepository;
         this.setMatchRepository = setMatchRepository;
+        this.scoreTypeRepository = scoreTypeRepository;
+        this.scoreRepository = scoreRepository;
     }
 
     public List<Match> getAllMatchesByTournament(Long tournamentId){
@@ -59,7 +68,7 @@ public class JPAMatchsService implements MatchsService {
     }
 
     @Override
-    public void checkSetResultAndUpdateMatch(User user, Long matchId) throws CheckFailedException {
+    public void updateMatchResult(User user, Long matchId) throws CheckFailedException {
         Optional<Match> matchOptional = matchRepository.findById(matchId);
         if(matchOptional.isEmpty()){
             throw new CheckFailedException("Il match non esiste.");
@@ -71,7 +80,82 @@ public class JPAMatchsService implements MatchsService {
         if(setMatchList.isEmpty()){
             throw new CheckFailedException("Non esistono set per questo match.");
         }
-        ///// da continuare deve controllare tutti i set vedere chi ha vinto ed aggiornarlo all' interno del match
+
+        int homeTeamSetWins = 0;
+        int awayTeamSetWins = 0;
+        float homeTeamPointsScored = 0;
+        float awayTeamPointsScored = 0;
+        for(SetMatch setMatch : setMatchList){
+            if(setMatch.getHomeTeamScore() > setMatch.getAwayTeamScore()){
+                homeTeamSetWins++;
+            } else {
+                awayTeamSetWins++;
+            }
+            homeTeamPointsScored += setMatch.getHomeTeamScore();
+            awayTeamPointsScored += setMatch.getAwayTeamScore();
+        }
+        if(homeTeamSetWins > awayTeamSetWins){
+            Match match = matchOptional.get();
+            match.setWinnerTeam(match.getHomeTeam());
+            matchRepository.save(match);
+        } else if(awayTeamSetWins > homeTeamSetWins){
+            Match match = matchOptional.get();
+            match.setWinnerTeam(match.getAwayTeam());
+            matchRepository.save(match);
+        }else {
+            if(homeTeamPointsScored > awayTeamPointsScored){
+                Match match = matchOptional.get();
+                match.setWinnerTeam(match.getHomeTeam());
+                matchRepository.save(match);
+            }
+            else if(awayTeamPointsScored > homeTeamPointsScored){
+                Match match = matchOptional.get();
+                match.setWinnerTeam(match.getAwayTeam());
+                matchRepository.save(match);
+            } else{
+                throw new CheckFailedException("Il numero di set vinti e punti fatti-subiti sono uguali, aggiungi un set o tira una monetina.");
+            }
+        }
+    }
+
+    private void updatePlayersScore(Match match){
+        double homeAvarageScore = match.getHomeTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
+                .mapToDouble(Player::getScore).average().orElse(0);
+        double awayAvarageScore = match.getAwayTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
+                .mapToDouble(Player::getScore).average().orElse(0);
+        //controllare il tipo del match
+        String scoreTypeString;
+        if(match.getTournament() != null) {
+            scoreTypeString = match.getTournament().getTournamentLevel().getLevelName();
+        } else{
+            scoreTypeString = match.getMatchType().getType();
+        }
+
+        ScoreType scoreType = scoreTypeRepository.findById(scoreTypeString).get();
+
+        match.getWinnerTeam().getTeamComponents().stream().map(TeamComponent::getPlayer).forEach(p -> {
+                    Optional<Score> scoreOptional = scoreRepository.findByPlayerAndScoreType(p, scoreType);
+                    if(scoreOptional.isEmpty()){
+                        scoreRepository.save(new Score(scoreType, p));
+                    }
+                });
+
+//        ScoreType scoreType;
+//        switch (matchLevel){
+//            case BASE_SCORE_TYPE:
+//                scoreType = scoreTypeRepository.findById(BASE_SCORE_TYPE).get();
+//                break;
+//            case "INTERMEDIO":
+//                scoreType = scoreTypeRepository.findById(INTERMEDIATE_SCORE_TYPE).get();
+//                break;
+//            case "AVANZATO":
+//                scoreType = scoreTypeRepository.findById(ADVANCE_SCORE_TYPE).get();
+//                break;
+//            case "GENERALE":
+//                scoreType = scoreTypeRepository.findById(DEFAULT_SCORE_TYPE).get();
+//                break;
+//        }
+
 
     }
 

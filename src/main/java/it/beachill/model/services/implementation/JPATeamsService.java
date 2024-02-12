@@ -79,7 +79,7 @@ public class JPATeamsService implements TeamsService {
             // Il team non esiste, l' utente è il capitano, quindi può essere creato
         Team savedTeam = teamRepository.save(team);
         addCaptainToTeam(savedTeam.getId(),savedTeam.getTeamLeader().getId());
-        return team;
+        return savedTeam;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class JPATeamsService implements TeamsService {
     }
     
     @Override
-    public Optional<Team> addPlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException {
+    public Optional<Team> invitePlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException {
         Optional<Team> team=teamRepository.findById(teamId);
         if(team.isEmpty()){
             throw new TeamCheckFailedException("Il team non è presente!");

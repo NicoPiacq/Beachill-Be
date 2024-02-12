@@ -18,6 +18,8 @@ public class Player {
     private List<TeamComponent> teams;
     @OneToMany(mappedBy = "player")
     private List<PizzaOrderLine> pizzaOrderLines;
+    @OneToMany(mappedBy = "player")
+    List<Score> scoreList;
     @OneToOne(mappedBy = "player")
     private User user;
 
@@ -82,5 +84,13 @@ public class Player {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Score> getScoreList() {
+        return scoreList;
+    }
+
+    public void setScoreList(List<Score> scoreList) {
+        this.scoreList = scoreList;
     }
 }

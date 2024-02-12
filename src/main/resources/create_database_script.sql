@@ -11,18 +11,17 @@ CREATE TYPE user_util.token_type AS ENUM
 CREATE CAST (character varying AS user_util.token_type) WITH INOUT AS ASSIGNMENT;
 
 --TABELLA DOMINIO TIPO SCORE
-create table tournament.domain_score(
+create table tournament.domain_type_score(
     name varchar,
     description varchar,
+    base_win_score int default 100,
     constraint domain_score_pk primary key(name)
 );
-
-
 
 -- TABELLA GIOCATORI
 create table tournament.player (
     id serial,
-    score bigint default 500,
+    --score bigint default 500,
     constraint player_pk primary key (id)
 );
 
@@ -30,10 +29,11 @@ create table tournament.player (
 create table tournament.score (
     id serial,
     score_type varchar,
-    score bigint,
+    score bigint default 1000,
     player_id bigint,
     constraint score_pk primary key(id),
-    constraint score_player_fk
+    constraint score_type_fk foreign key (score_type) references tournament.domain_type_score(name),
+    constraint score_player_fk foreign key (player_id) references tournament.player(id)
 );
 
 -- TABELLA UTENTI SITO
@@ -123,7 +123,6 @@ create table tournament.team (
     id serial,
     team_name varchar(255) not null,
     team_leader bigint not null,
-    score bigint,
     constraint team_pk primary key (id),
     constraint team_name_unique unique (team_name),
     constraint team_leader_fk foreign key (team_leader) references tournament.player(id)
@@ -227,12 +226,12 @@ create table tournament.match (
     field_number int,
     start_date timestamp,
     user_id bigint,
-    --risultato_finale varchar(20),
-    winner_team boolean, -- prima era references a team
+    winner_team_id bigint,
     constraint match_pk primary key (id),
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
     constraint match_home_team_fk foreign key (home_team_id) references tournament.team(id),
     constraint match_away_team_fk foreign key (away_team_id) references tournament.team(id),
+    constraint match_winner_team_fk foreign key (winner_team_id) references tournament.team(id),
     constraint match_tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade,
     constraint match_user_fk foreign key (user_id) references user_util._user(id)
 );
@@ -301,7 +300,7 @@ insert into tournament.domain_place_tournament (place, field_number) values
 --(1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2), (9, 2), (10, 2);
 
 insert into tournament.domain_match_type (type, description) values
-('PRIVATO', "Partita privata tra due squadre"),
+('PRIVATO', 'Partita privata tra due squadre'),
 ('GIRONE', 'Partita di un girone wow che descrizione'),
 ('OTTAVI', 'Ottavi di Finale'),
 ('QUARTI1x8', 'Quarti di Finale primo - ottavo posto'),
@@ -318,4 +317,16 @@ insert into reservation.reservation (reservation_date) values
 (CURRENT_DATE);
 
 insert into reservation.domain_sport values
+('PADEL'),
 ('BEACHVOLLEY');
+
+insert into tournament.domain_tournament_level (tournament_level_name) values
+('BASE'),
+('INTERMEDIO'),
+('AVANZATO');
+
+insert into tournament.domain_type_score(name) values
+('BASE'),
+('INTERMEDIO'),
+('AVANZATO'),
+('PRIVATO');

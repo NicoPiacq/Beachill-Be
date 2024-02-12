@@ -17,7 +17,7 @@ public class MatchDto {
     private String awayTeamName;
     private Integer fieldNumber;
     private Timestamp startDate;
-    private Boolean winnerTeam;
+    private Long winnerTeamId;
 
     public MatchDto() {}
 
@@ -52,7 +52,7 @@ public class MatchDto {
         }
         this.matchType = match.getMatchType().getType();
         this.startDate = match.getStartDate();
-        this.winnerTeam = match.getWinnerTeam();
+        this.winnerTeamId = match.getWinnerTeam().getId();
     }
 
     public Long getId() {
@@ -151,11 +151,11 @@ public class MatchDto {
         this.startDate = startDate;
     }
 
-    public Boolean getWinnerTeam() {
-        return winnerTeam;
+    public Long getWinnerTeamId() {
+        return winnerTeamId;
     }
 
-    public void setWinnerTeam(Boolean winnerTeam) {
-        this.winnerTeam = winnerTeam;
+    public void setWinnerTeamId(Long winnerTeamId) {
+        this.winnerTeamId = winnerTeamId;
     }
 }

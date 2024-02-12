@@ -18,7 +18,7 @@ public interface TeamsService {
 	
 	
 	Optional<Team> addCaptainToTeam(Long teamId, Long playerId);
-	Optional<Team> addPlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException;
+	Optional<Team> invitePlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException;
 	
 	Optional<Team> deleteEnrolledPlayer(Long teamComponentId, Long teamId, User requestingUser) throws TeamCheckFailedException;
 
