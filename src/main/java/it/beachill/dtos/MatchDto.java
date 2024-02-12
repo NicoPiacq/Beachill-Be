@@ -6,8 +6,8 @@ import java.sql.Timestamp;
 
 public class MatchDto {
     private Long id;
-    private int matchNumber;
-    private int groupStage;
+    private Integer matchNumber;
+    private Integer groupStage;
     private String matchType;
     private Long tournamentId;
     private String tournamentName;
@@ -15,7 +15,7 @@ public class MatchDto {
     private String homeTeamName;
     private Long awayTeamId;
     private String awayTeamName;
-    private int fieldNumber;
+    private Integer fieldNumber;
     private Timestamp startDate;
     private Boolean winnerTeam;
 
@@ -56,19 +56,19 @@ public class MatchDto {
         this.id = id;
     }
 
-    public int getMatchNumber() {
+    public Integer getMatchNumber() {
         return matchNumber;
     }
 
-    public void setMatchNumber(int matchNumber) {
+    public void setMatchNumber(Integer matchNumber) {
         this.matchNumber = matchNumber;
     }
 
-    public int getGroupStage() {
+    public Integer getGroupStage() {
         return groupStage;
     }
 
-    public void setGroupStage(int groupStage) {
+    public void setGroupStage(Integer groupStage) {
         this.groupStage = groupStage;
     }
 
@@ -128,11 +128,11 @@ public class MatchDto {
         this.awayTeamName = awayTeamName;
     }
 
-    public int getFieldNumber() {
+    public Integer getFieldNumber() {
         return fieldNumber;
     }
 
-    public void setFieldNumber(int fieldNumber) {
+    public void setFieldNumber(Integer fieldNumber) {
         this.fieldNumber = fieldNumber;
     }
 
