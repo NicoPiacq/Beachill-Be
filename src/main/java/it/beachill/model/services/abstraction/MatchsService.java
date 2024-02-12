@@ -22,4 +22,8 @@ public interface MatchsService {
     List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException;
 
     void checkSetResultAndUpdateMatch(User user, Long matchId) throws CheckFailedException;
+
+    List<Match> getAllMatchesByAdmin(User user);
+
+    List<Match> getAllMatchesByTeam(Long teamId);
 }

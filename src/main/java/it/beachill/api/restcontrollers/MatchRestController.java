@@ -7,6 +7,7 @@ import it.beachill.model.entities.tournament.SetMatch;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.services.abstraction.MatchsService;
+import org.apache.catalina.mbeans.SparseUserDatabaseMBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,22 @@ public class MatchRestController {
     public MatchRestController(MatchsService matchsService) {
         this.matchsService = matchsService;
     }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllMatchesByAdmin(@AuthenticationPrincipal User user){
+        List<Match> matches = matchsService.getAllMatchesByAdmin(user);
+        List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("team/{teamId}")
+    public ResponseEntity<?> getAllMatchesByTeam(@PathVariable Long teamId){
+        List<Match> matches = matchsService.getAllMatchesByTeam(teamId);
+        List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
+
     
     @GetMapping("/all/tournament/{tournamentId}")
     public ResponseEntity<List<MatchDto>> getAllMatchesByTournament(@PathVariable Long tournamentId) {
@@ -34,11 +51,11 @@ public class MatchRestController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{setMatchId}/set")
-    public ResponseEntity<?> getAllSetsByMatchId(@PathVariable Long setMatchId){
+    @GetMapping("/{matchId}/set")
+    public ResponseEntity<?> getAllSetsByMatchId(@PathVariable Long matchId){
         List<SetMatch> setMatchList;
         try {
-           setMatchList = matchsService.getAllSetsByMatchId(setMatchId);
+           setMatchList = matchsService.getAllSetsByMatchId(matchId);
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

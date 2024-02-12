@@ -50,12 +50,12 @@ public class JPAMatchsService implements MatchsService {
     }
 
     @Override
-    public List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException {
-        Optional<Match> matchOptional = matchRepository.findById(setMatchId);
+    public List<SetMatch> getAllSetsByMatchId(Long matchId) throws CheckFailedException {
+        Optional<Match> matchOptional = matchRepository.findById(matchId);
         if(matchOptional.isEmpty()){
             throw new CheckFailedException("Il match selezionato non esiste.");
         }
-        return setMatchRepository.findByMatchId(setMatchId);
+        return setMatchRepository.findByMatchId(matchId);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class JPAMatchsService implements MatchsService {
             throw new CheckFailedException("Il match non esiste.");
         }
         if(matchOptional.get().getMatchAdmin().getId() != user.getId()){
-            throw new CheckFailedException("Non sei l' admin del macth.");
+            throw new CheckFailedException("Non sei l' admin del match.");
         }
         List<SetMatch> setMatchList = setMatchRepository.findByMatchId(matchId);
         if(setMatchList.isEmpty()){
@@ -73,6 +73,16 @@ public class JPAMatchsService implements MatchsService {
         }
         ///// da continuare deve controllare tutti i set vedere chi ha vinto ed aggiornarlo all' interno del match
 
+    }
+
+    @Override
+    public List<Match> getAllMatchesByAdmin(User user) {
+        return matchRepository.findByMatchAdmin(user);
+    }
+
+    @Override
+    public List<Match> getAllMatchesByTeam(Long teamId) {
+        return matchRepository.findByHomeTeamOrAwayTeam(new Team(teamId), new Team(teamId));
     }
 
     //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)
