@@ -11,7 +11,6 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long score;
     @OneToMany(mappedBy = "teamLeader")
     private List<Team> teamsCaptainedBy;
     @OneToMany(mappedBy = "player")
@@ -31,7 +30,6 @@ public class Player {
 
     public Player(Long id, Long score) {
         this.id = id;
-        this.score = score;
     }
     
     public Player(Long id) {
@@ -45,14 +43,7 @@ public class Player {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    public Long getScore() {
-        return score;
-    }
 
-    public void setScore(Long score) {
-        this.score = score;
-    }
 
     public List<Team> getTeamsCaptainedBy() {
         return teamsCaptainedBy;
