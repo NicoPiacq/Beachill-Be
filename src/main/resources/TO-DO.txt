@@ -7,10 +7,12 @@ cose da implementare daje forza!!
 
 - Finire l' implementazione della gestione della fase finale dei tornei
 
-- Iniziare l' implementazione degli score (ripensarla lato db e tutto)
+- Iniziare e finire l' implementazione degli score (ripensarla lato db e tutto)
 
 - Finire di implementare le varie funzionalità per un admin di gestione dei tornei
 
 - Gestione degli ordini della pizza sia lato frontend che backend
 
 - Gestione set e match sia fuori da un torneo che all' interno di un torneo
+
+- DA CAMBIARE LA DATA DEL MATCH SIA DB CHE BACKEND CHE FRONTEND

@@ -26,14 +26,12 @@ public class MatchDto {
         if(match.getTournament() != null) {
             this.matchNumber = match.getMatchNumber();
             this.groupStage = match.getGroupStage();
-            this.matchType = match.getMatchType().getType();
             this.tournamentId = match.getTournament().getId();
             this.tournamentName = match.getTournament().getTournamentName();
             this.fieldNumber = match.getFieldNumber();
         }else{
             this.matchNumber = null;
             this.groupStage = null;
-            this.matchType = null;
             this.tournamentId = null;
             this.tournamentName = null;
             this.fieldNumber = null;
@@ -52,6 +50,7 @@ public class MatchDto {
             this.awayTeamId = null;
             this.awayTeamName = null;
         }
+        this.matchType = match.getMatchType().getType();
         this.startDate = match.getStartDate();
         this.winnerTeam = match.getWinnerTeam();
     }

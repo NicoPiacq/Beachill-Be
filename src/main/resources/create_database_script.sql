@@ -10,11 +10,30 @@ CREATE TYPE user_util.token_type AS ENUM
 
 CREATE CAST (character varying AS user_util.token_type) WITH INOUT AS ASSIGNMENT;
 
+--TABELLA DOMINIO TIPO SCORE
+create table tournament.domain_score(
+    name varchar,
+    description varchar,
+    constraint domain_score_pk primary key(name)
+);
+
+
+
 -- TABELLA GIOCATORI
 create table tournament.player (
     id serial,
     score bigint default 500,
     constraint player_pk primary key (id)
+);
+
+--TABELLA SCORE
+create table tournament.score (
+    id serial,
+    score_type varchar,
+    score bigint,
+    player_id bigint,
+    constraint score_pk primary key(id),
+    constraint score_player_fk
 );
 
 -- TABELLA UTENTI SITO
@@ -161,7 +180,6 @@ create table tournament.tournament (
     constraint tournament_place_fk foreign key (place) references tournament.domain_place_tournament(place)
 );
 
---aggiunta importante!!!! va bene?
 --TABELLA CLASSIFICA FASE A GIRONI
 create table tournament.group_stage_standing(
     id serial,
