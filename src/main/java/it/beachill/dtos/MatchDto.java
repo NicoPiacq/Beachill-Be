@@ -23,11 +23,21 @@ public class MatchDto {
 
     public MatchDto(Match match) {
         this.id = match.getId();
-        this.matchNumber = match.getMatchNumber();
-        this.groupStage = match.getGroupStage();
-        this.matchType = match.getMatchType().getType();
-        this.tournamentId = match.getTournament().getId();
-        this.tournamentName = match.getTournament().getTournamentName();
+        if(match.getTournament() != null) {
+            this.matchNumber = match.getMatchNumber();
+            this.groupStage = match.getGroupStage();
+            this.matchType = match.getMatchType().getType();
+            this.tournamentId = match.getTournament().getId();
+            this.tournamentName = match.getTournament().getTournamentName();
+            this.fieldNumber = match.getFieldNumber();
+        }else{
+            this.matchNumber = null;
+            this.groupStage = null;
+            this.matchType = null;
+            this.tournamentId = null;
+            this.tournamentName = null;
+            this.fieldNumber = null;
+        }
         if(match.getHomeTeam() != null){
             this.homeTeamId = match.getHomeTeam().getId();
             this.homeTeamName = match.getHomeTeam().getTeamName();
@@ -42,8 +52,6 @@ public class MatchDto {
             this.awayTeamId = null;
             this.awayTeamName = null;
         }
-
-        this.fieldNumber = match.getFieldNumber();
         this.startDate = match.getStartDate();
         this.winnerTeam = match.getWinnerTeam();
     }
