@@ -119,26 +119,28 @@ public class JPAMatchsService implements MatchsService {
     }
 
     private void updatePlayersScore(Match match){
-        double homeAvarageScore = match.getHomeTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
-                .mapToDouble(Player::getScore).average().orElse(0);
-        double awayAvarageScore = match.getAwayTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
-                .mapToDouble(Player::getScore).average().orElse(0);
-        //controllare il tipo del match
-        String scoreTypeString;
-        if(match.getTournament() != null) {
-            scoreTypeString = match.getTournament().getTournamentLevel().getLevelName();
-        } else{
-            scoreTypeString = match.getMatchType().getType();
-        }
 
-        ScoreType scoreType = scoreTypeRepository.findById(scoreTypeString).get();
-
-        match.getWinnerTeam().getTeamComponents().stream().map(TeamComponent::getPlayer).forEach(p -> {
-                    Optional<Score> scoreOptional = scoreRepository.findByPlayerAndScoreType(p, scoreType);
-                    if(scoreOptional.isEmpty()){
-                        scoreRepository.save(new Score(scoreType, p));
-                    }
-                });
+//        //ABBIAMO TOLTO LO SCORE DAL PLAYER DATO CHE ADESSO è ALL' INTERNO DELLA TABELLA SCORE E GIUSTAMENTE QUA MURE :(
+//        double homeAvarageScore = match.getHomeTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
+//                .mapToDouble(Player::getScore).average().orElse(0);
+//        double awayAvarageScore = match.getAwayTeam().getTeamComponents().stream().map(TeamComponent::getPlayer)
+//                .mapToDouble(Player::getScore).average().orElse(0);
+//        //controllare il tipo del match
+//        String scoreTypeString;
+//        if(match.getTournament() != null) {
+//            scoreTypeString = match.getTournament().getTournamentLevel().getLevelName();
+//        } else{
+//            scoreTypeString = match.getMatchType().getType();
+//        }
+//
+//        ScoreType scoreType = scoreTypeRepository.findById(scoreTypeString).get();
+//
+//        match.getWinnerTeam().getTeamComponents().stream().map(TeamComponent::getPlayer).forEach(p -> {
+//                    Optional<Score> scoreOptional = scoreRepository.findByPlayerAndScoreType(p, scoreType);
+//                    if(scoreOptional.isEmpty()){
+//                        scoreRepository.save(new Score(scoreType, p));
+//                    }
+//                });
 
 //        ScoreType scoreType;
 //        switch (matchLevel){
