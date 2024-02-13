@@ -2,14 +2,18 @@ package it.beachill.model.services.implementation;
 
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.RegistrationDto;
+import it.beachill.dtos.TournamentAdminDto;
+import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
+import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.MatchsService;
@@ -72,53 +76,66 @@ public class JPAAdminService implements AdminsService {
     }
     @Override
 
-    public Optional<Tournament> findTournamentById(Long tournamentId){
-        System.out.println(tournamentId);
-        Optional<Tournament> tournament = tournamentRepository.findById(tournamentId);
-        return tournament;
+    public Tournament findTournamentById(Long tournamentId) throws TournamentCheckFailedException {
+        Optional<Tournament> tournamentOptional = tournamentRepository.findById(tournamentId);
+        if(tournamentOptional.isEmpty()){
+            throw new TournamentCheckFailedException("Il torneo non esiste");
+        }
+        return tournamentOptional.get();
     }
 
     @Override
-    public void createTournament(Tournament tournament) {
-        tournamentRepository.save(tournament);
+    public void createTournament(User user, TournamentAdminDto tournamentAdminDto) throws TournamentCheckFailedException {
+        if(user.getId().equals(tournamentAdminDto.getUserDto().getId())){
+            throw new TournamentCheckFailedException("I dati dell'utente non sono corretti");
+        }
+        tournamentRepository.save(tournamentAdminDto.fromDto());
     }
 
     @Override
-    public Optional<Tournament> deleteTournament(Long id) {
-        Optional<Tournament> optionalTournament = tournamentRepository.findById(id);
-        optionalTournament.ifPresent(c -> tournamentRepository.delete(c));
-        return optionalTournament;
+    public void deleteTournament(User user,Long id) throws TournamentCheckFailedException {
+        Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
+        if(tournamentOptional.isEmpty()){
+            throw new TournamentCheckFailedException("Il torneo non esiste");
+        }
+        if(user.getId().equals(tournamentOptional.get().getManager().getId())){
+            throw new TournamentCheckFailedException("Non sei l'admin del torneo");
+        }
+        tournamentRepository.delete(tournamentOptional.get());
     }
 
 
     public List<TeamInTournament> findAllTeamInTournament(Long tournamentId){
         return teamInTournamentRepository.findByTournamentId(tournamentId);
     }
+    
     @Override
-
-    public boolean generateMatchTournament(Long id){
+    public void generateMatchTournament(User user,Long id) throws TournamentCheckFailedException {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
+        if(tournamentOptional.isEmpty()){
+            throw new TournamentCheckFailedException("Il torneo non esiste");
+        }
+        if(user.getId().equals(tournamentOptional.get().getManager().getId())){
+            throw new TournamentCheckFailedException("Non sei l'admin del torneo");
+        }
         List<TeamInTournament> enrolledTeams = teamInTournamentRepository.findByTournamentId(id);
         if(enrolledTeams.isEmpty()){
-            return false;
+            throw new TournamentCheckFailedException("Non ci sono team iscritti al torneo");
         }
-        if(tournamentOptional.isPresent()) {
-            Tournament tournament = tournamentOptional.get();
-            switch (tournament.getTournamentType().getTournamentTypeName()) {
-                case "10-corto":
-                    return generateMatchTournament10Short(tournament);
-                case "10-lungo":
-                    return generateMatchTournament10Long(tournament);
-                default:
-                    System.out.println("Tipo torneo non valido");
-                    break;
-            }
+        
+        Tournament tournament = tournamentOptional.get();
+        switch (tournament.getTournamentType().getTournamentTypeName()) {
+            case "10-corto":
+                generateMatchTournament10Short(tournament);
+            case "10-lungo":
+                generateMatchTournament10Long(tournament);
+            default:
+                throw new TournamentCheckFailedException("Tipo di torneo non valido");
         }
-        return false;
     }
 
 
-    private int[][] assignSchemaFromTournament(Tournament tournament){
+    public int[][] assignSchemaFromTournament(Tournament tournament){
         switch (tournament.getTournamentType().getTournamentTypeName()){
             case "10-corto":
                 return new int[][]{{0, 0}, {1, 5}, {2, 1}, {3, 6}, {4, 7},{5, 5}, {6, 0}, {7, 6}, {8, 1}, {9, 7}};
@@ -129,40 +146,41 @@ public class JPAAdminService implements AdminsService {
                 return new int[0][];
         }
     }
-    public boolean calculateGroupStageStandingAndAssignMatches(Long id) {
+    public void calculateGroupStageStandingAndAssignMatches(User user,Long id) throws TournamentCheckFailedException {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
-        if(tournamentOptional.isPresent()) {
-            List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, new MatchType("GIRONE"));
-            Tournament tournament = tournamentOptional.get();
-            
-            if(!calculateGroupStageStanding(id)){
-                return false;
-            }
-            int numberOfGroupStage;
-            Optional<GroupStageStanding> groupStageStandingOptional = groupStageStandingRepository.findFirstByTournamentIdOrderByGroupStageDesc(id);
-            if(groupStageStandingOptional.isPresent()){
-                numberOfGroupStage =  groupStageStandingOptional.get().getGroupStage();
-            } else {
-                return false;
-            }
-            List<GroupStageStanding> groupStageStandingList = new ArrayList<>();
-            for(int i = 0; i < numberOfGroupStage; i++) {
-                int groupStageId=i+1;
-                 groupStageStandingList.addAll(groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingAsc(id, groupStageId));
-            }
-            int[][] assignSchema= assignSchemaFromTournament(tournament);
-            
-            List<Match> assignedMatches=assignTeamsToSecondPhaseMatches(groupStageStandingList,assignSchema,matches);
-            matchRepository.saveAll(assignedMatches);
-            return true;
+        if(tournamentOptional.isEmpty()){
+            throw new TournamentCheckFailedException("Il torneo non esiste");
         }
-        return false;
+        if(user.getId().equals(tournamentOptional.get().getManager().getId())){
+            throw new TournamentCheckFailedException("Non sei l'admin del torneo");
+        }
+        List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, new MatchType("GIRONE"));
+        Tournament tournament = tournamentOptional.get();
+        if(!calculateGroupStageStanding(id)){
+            throw new TournamentCheckFailedException("Errore nella creazione della classifica");
+        }
+        int numberOfGroupStage;
+        Optional<GroupStageStanding> groupStageStandingOptional = groupStageStandingRepository.findFirstByTournamentIdOrderByGroupStageDesc(id);
+        if(groupStageStandingOptional.isPresent()){
+            numberOfGroupStage =  groupStageStandingOptional.get().getGroupStage();
+        } else {
+            throw new TournamentCheckFailedException("Non esiste la tabella della classifica");
+        }
+        List<GroupStageStanding> groupStageStandingList = new ArrayList<>();
+        for(int i = 0; i < numberOfGroupStage; i++) {
+            int groupStageId=i+1;
+             groupStageStandingList.addAll(groupStageStandingRepository.findByTournamentIdAndGroupStageEqualsOrderByStandingAsc(id, groupStageId));
+        }
+        int[][] assignSchema= assignSchemaFromTournament(tournament);
+        
+        List<Match> assignedMatches=assignTeamsToSecondPhaseMatches(groupStageStandingList,assignSchema,matches);
+        matchRepository.saveAll(assignedMatches);
     }
 
 
 
     //DA PROVARE AD IMPLEMENTARE PER GESTIRE L' ASSEGNAZIONE DEI TEAM AI MATCH DELLA SECONDA FASE
-    private List<Match> assignTeamsToSecondPhaseMatches(List<GroupStageStanding> roundTeams, int[][] secondPhaseTournamentSchema, List<Match> matches) {
+    public List<Match> assignTeamsToSecondPhaseMatches(List<GroupStageStanding> roundTeams, int[][] secondPhaseTournamentSchema, List<Match> matches) {
         for (int i = 0; i < secondPhaseTournamentSchema.length; i++) {
             GroupStageStanding team = roundTeams.get(secondPhaseTournamentSchema[i][0]);
             Match match = matches.get(secondPhaseTournamentSchema[i][1]);
@@ -180,7 +198,7 @@ public class JPAAdminService implements AdminsService {
     }
     
 
-    @Override
+    
     public boolean calculateGroupStageStanding(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
         if(tournamentOptional.isPresent()) {
@@ -300,7 +318,7 @@ public class JPAAdminService implements AdminsService {
     }
 
 
-    private boolean generateMatchTournament10Long(Tournament tournament) {
+    public boolean generateMatchTournament10Long(Tournament tournament) {
         int[][] tournamentRoundPhaseSchema = {{0, 1}, {2, 3}, {0, 4}, {1, 2}, {3, 4},
                 {0, 2}, {1, 3}, {2, 4}, {0, 3}, {1, 4}};
 
@@ -328,7 +346,7 @@ public class JPAAdminService implements AdminsService {
         return true;
     }
 
-    private boolean generateMatchTournament10Short(Tournament tournament) {
+    public boolean generateMatchTournament10Short(Tournament tournament) {
         //schema per ordinare i match del girone
         int[][] tournamentRoundPhaseSchema = {{0, 1}, {2, 3}, {0, 4}, {1, 2}, {3, 4},
                 {0, 2}, {1, 3}, {2, 4}, {0, 3}, {1, 4}};

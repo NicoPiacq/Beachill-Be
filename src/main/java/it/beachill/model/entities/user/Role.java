@@ -33,11 +33,28 @@ public enum Role {
                     ADMIN_UPDATE_TOURNAMENT,
                     ADMIN_READ_TOURNAMENT
             )
-            );
+            ),
+    SUPERADMIN(
+            Set.of(
+                    MANAGER_CREATE_TOURNAMENT,
+                    MANAGER_DELETE_TOURNAMENT,
+                    MANAGER_UPDATE_TOURNAMENT,
+                    MANAGER_READ_TOURNAMENT,
+                    ADMIN_CREATE_TOURNAMENT,
+                    ADMIN_DELETE_TOURNAMENT,
+                    ADMIN_UPDATE_TOURNAMENT,
+                    ADMIN_READ_TOURNAMENT,
+                    SUPERADMIN_CREATE_TOURNAMENT,
+                    SUPERADMIN_DELETE_TOURNAMENT,
+                    SUPERADMIN_UPDATE_TOURNAMENT,
+                    SUPERADMIN_READ_TOURNAMENT
+            )
+    )
+    ;
 
     @Getter
     private final Set<Permission> permissions;
-
+    
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities = getPermissions()
                 .stream()

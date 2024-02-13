@@ -1,10 +1,14 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.TournamentAdminDto;
+import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.tournament.Tournament;
 import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
+import it.beachill.model.exceptions.TournamentCheckFailedException;
 import it.beachill.model.services.abstraction.AdminsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,60 +44,61 @@ public class AdminRestController {
     //////////// aggiunto per prova admin iniziale //////////////////
     //---------------------------------- ADMIN FEAT TOURNAMENT -------------------------------------
     @GetMapping("/tournament/all")
-    public ResponseEntity<List<TournamentAdminDto>> getAllTournaments(){
+    public ResponseEntity<?> getAllTournaments(){
         List<Tournament> tournaments = adminsService.findAllTournaments();
         List<TournamentAdminDto> result = tournaments.stream().map(TournamentAdminDto::new).toList();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/tournament/{id}")
-    public ResponseEntity<TournamentAdminDto> getTournamentDetails(@PathVariable Long id){
-        Optional<Tournament> tournament = adminsService.findTournamentById(id);
-        if(tournament.isPresent()){
-            TournamentAdminDto tournamentAdminDto = new TournamentAdminDto(tournament.get());
-            return ResponseEntity.ok(tournamentAdminDto);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getTournamentDetails(@PathVariable Long id){
+        Tournament tournament;
+        try{
+            tournament= adminsService.findTournamentById(id);
+        } catch(TournamentCheckFailedException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
+        return ResponseEntity.ok(new TournamentDto(tournament));
     }
 
-    @PostMapping("/tournament/create")
-    public ResponseEntity<TournamentAdminDto> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentAdminDto tournamentDto) throws URISyntaxException {
-        Tournament tournament = tournamentDto.fromDto();
-        tournament.setStatus(1);
-        tournament.setManager(user);
-        adminsService.createTournament(tournament);
-        TournamentAdminDto result = new TournamentAdminDto(tournament);
-        URI location = new URI("/api/tournament/" + result.getId());
-
-        return ResponseEntity.created(location).body(result);
-    }
-
-    @DeleteMapping("/tournament/delete/{id}")
-    public ResponseEntity<Object> deleteTournament(@PathVariable long id){
-        Optional<Tournament> result = adminsService.deleteTournament(id);
-
-        return result.stream()
-                .map(c -> ResponseEntity.noContent().build())
-                .findFirst()
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/tournament/generate/{id}")
-    public ResponseEntity<Object> generateMatchTournament(@PathVariable Long id){
-        boolean result = adminsService.generateMatchTournament(id);
-        if(result){
-            return ResponseEntity.ok(true);
+    @PostMapping("/tournament")
+    public ResponseEntity<?> createTournament(@AuthenticationPrincipal User user,@RequestBody TournamentAdminDto tournamentAdminDto) throws URISyntaxException {
+        try {
+            adminsService.createTournament(user,tournamentAdminDto);
+        } catch (TournamentCheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        else return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
-    @PostMapping("/tournament/calculate-group-phase-standing/{id}")
-    public ResponseEntity<Object> calculateGroupStageStanding(@PathVariable Long id){
-        boolean result = adminsService.calculateGroupStageStanding(id);
-        if(result){
-            return ResponseEntity.ok(true);
+
+    @DeleteMapping("/tournament/{id}")
+    public ResponseEntity<?> deleteTournament(@AuthenticationPrincipal User user, @PathVariable Long id){
+        try {
+            adminsService.deleteTournament(user,id);
+        } catch (TournamentCheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        else return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/tournament/match/{id}")
+    public ResponseEntity<?> generateMatchTournament(@AuthenticationPrincipal User user,@PathVariable Long id){
+        try {
+            adminsService.generateMatchTournament(user,id);
+        } catch (TournamentCheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+    
+    @PostMapping("/tournament/group-phase-standing/{id}")
+    public ResponseEntity<Object> calculateGroupStageStanding(@AuthenticationPrincipal User user,@PathVariable Long id){
+        try {
+            adminsService.calculateGroupStageStandingAndAssignMatches(user,id);
+        } catch (TournamentCheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/tournament/add-random-result-to-group-phase-matches/{id}")
@@ -104,17 +109,7 @@ public class AdminRestController {
         }
         else return ResponseEntity.notFound().build();
     }
-    
-    @PostMapping("tournament/second-phase-matches/{id}")
-    public ResponseEntity<Object> assignSecondPhaseMatches(@PathVariable Long id){
-        boolean result = adminsService.calculateGroupStageStandingAndAssignMatches(id);
-        if(result){
-            return ResponseEntity.ok(true);
-        }
-        else return ResponseEntity.notFound().build();
-    }
 
-    //PORCA MADONNA
     @PostMapping("insert-script")
     public ResponseEntity<Object> insertScript(){
         boolean result = adminsService.insertScript();

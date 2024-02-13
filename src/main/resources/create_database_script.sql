@@ -33,7 +33,7 @@ create table tournament.score (
     player_id bigint,
     constraint score_pk primary key(id),
     constraint score_type_fk foreign key (score_type) references tournament.domain_type_score(name),
-    constraint score_player_fk foreign key (player_id) references tournament.player(id)
+    constraint score_player_fk foreign key (player_id) references tournament.player(id) ON DELETE CASCADE
 );
 
 -- TABELLA UTENTI SITO
@@ -48,7 +48,7 @@ create table user_util._user (
 	player_id bigint unique,
 	role varchar(16),
 	constraint user_pk primary key (id),
-	constraint user_player_id_fk foreign key (player_id) references tournament.player(id)
+	constraint user_player_id_fk foreign key (player_id) references tournament.player(id) ON DELETE CASCADE
 );
 
 -- TABELLA TOKEN
@@ -125,7 +125,7 @@ create table tournament.team (
     team_leader bigint not null,
     constraint team_pk primary key (id),
     constraint team_name_unique unique (team_name),
-    constraint team_leader_fk foreign key (team_leader) references tournament.player(id)
+    constraint team_leader_fk foreign key (team_leader) references tournament.player(id) ON DELETE CASCADE
 );
 
 --TABELLA RELAZIONE GIOCATORI-TEAM
@@ -137,7 +137,7 @@ create table tournament.team_component (
     constraint team_component_pk primary key (id),
     constraint team_component_unique unique(team_id, player_id),
     constraint team_compo_team_fk foreign key (team_id) references tournament.team(id),
-    constraint team_compo_player_fk foreign key (player_id) references tournament.player(id)
+    constraint team_compo_player_fk foreign key (player_id) references tournament.player(id) ON DELETE CASCADE
 );
 
 -- TABELLA DOMINIO DEI LUOGHI DOVE SI SVOLGONO I TORNEI
@@ -264,7 +264,7 @@ create table tournament.pizza_order_line(
     quantity int,
     constraint pizza_order_line_pk primary key (id),
     constraint pizza_order_id_fk foreign key (pizza_order_id) references tournament.pizza_order(id),
-    constraint player_id_fk foreign key (player_id) references tournament.player(id)
+    constraint player_id_fk foreign key (player_id) references tournament.player(id) ON DELETE CASCADE
 );
 
 --insert into user_util._user (id, name, surname, email, password, registration_date, last_login, player_id, role) values
