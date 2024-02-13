@@ -503,7 +503,7 @@ public class JPAAdminService implements AdminsService {
                 team.setTeamName("Team " + i);
                 teamsService.createTeam(team);
                 User user =  new User(authenticationResponseDto.getUser().getId());
-                //user.setPlayer(team.getTeamLeader());
+                user.setPlayer(team.getTeamLeader());
                 tournamentsService.enrolledTeam(user, tournament1.getId(), team.getId());
                 tournamentsService.enrolledTeam(user, tournament2.getId(), team.getId());
 //                if(i > 0){
