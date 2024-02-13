@@ -131,8 +131,10 @@ public class JPAAdminService implements AdminsService {
         switch (tournament.getTournamentType().getTournamentTypeName()) {
             case "10-corto":
                 generateMatchTournament10Short(tournament);
+                break;
             case "10-lungo":
                 generateMatchTournament10Long(tournament);
+                break;
             default:
                 throw new TournamentCheckFailedException("Tipo di torneo non valido");
         }
@@ -382,8 +384,6 @@ public class JPAAdminService implements AdminsService {
 
     private List<Match> generateRoundPhaseMatches(List<TeamInTournament> roundTeams, int[][] tournamentSchema, int field, int matchNumber, int groupStage, int setsNumber){
         List<Match> matches = new ArrayList<>();
-        //provo ad eliminare la chiamata al database con una creazione dell' elemento
-        //MatchType matchType = matchTypeRepository.findById("GIRONE").get();
         MatchType matchType = new MatchType("GIRONE");
         Tournament tournament = roundTeams.get(0).getTournament();
         for(int i = 0; i < tournamentSchema.length; i++){
@@ -479,7 +479,7 @@ public class JPAAdminService implements AdminsService {
                     tournament1.setPlace(new TournamentPlace("generation"));
                     tournament1.setTournamentLevel(new TournamentLevel("BASE"));
                     tournament1.setManager(user);
-                    tournament1.setStatus(0);
+                    tournament1.setStatus(1);
                     tournament2 = new Tournament();
                     tournament2.setTournamentName("Prova " + (i + 2) + "Intermedio 10 lungo");
                     tournament2.setStartDate(LocalDate.now());
@@ -488,7 +488,7 @@ public class JPAAdminService implements AdminsService {
                     tournament2.setPlace(new TournamentPlace("generation"));
                     tournament2.setTournamentLevel(new TournamentLevel("INTERMEDIO"));
                     tournament2.setManager(user);
-                    tournament2.setStatus(0);
+                    tournament2.setStatus(1);
                 }
                 tournamentRepository.save(tournament1);
                 tournamentRepository.save(tournament2);

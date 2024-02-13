@@ -1,6 +1,7 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.tournament.TournamentLevel;
 import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.entities.tournament.TournamentType;
 
@@ -14,6 +15,8 @@ public class TournamentDto {
     private LocalDate endDate;
     private String tournamentTypeName;
     private String place;
+    private Integer status;
+    private String levelName;
 
 
     public TournamentDto() {}
@@ -42,6 +45,10 @@ public class TournamentDto {
         } else {
             this.place = tournament.getPlace().getPlace();
         }
+        if(tournament.getTournamentLevel() != null){
+            this.levelName = tournament.getTournamentLevel().getLevelName();
+        }
+        this.status= tournament.getStatus();
     }
 
     public Tournament fromDto(){
@@ -60,8 +67,12 @@ public class TournamentDto {
         } else {
             tournament.setTournamentType(new TournamentType(this.tournamentTypeName));
         }
+        if(status != null){
+            tournament.setStatus(this.status);
+        }
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
+        tournament.setTournamentLevel(new TournamentLevel(this.levelName));
         return tournament;
     }
 
@@ -113,4 +124,19 @@ public class TournamentDto {
         this.place = place;
     }
 
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }
