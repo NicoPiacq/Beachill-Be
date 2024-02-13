@@ -161,4 +161,5 @@ public class Tournament {
     public void setTournamentLevel(TournamentLevel tournamentLevel) {
         this.tournamentLevel = tournamentLevel;
     }
+
 }
