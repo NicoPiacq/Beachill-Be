@@ -1,7 +1,9 @@
 package it.beachill.api.restcontrollers;
 
 
+import it.beachill.dtos.TournamentLevelDto;
 import it.beachill.dtos.TournamentTypeDto;
+import it.beachill.model.entities.tournament.TournamentLevel;
 import it.beachill.model.entities.tournament.TournamentType;
 import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,4 +33,10 @@ public class TournamentTypeRestController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/levels")
+    public ResponseEntity<?> getAllTournamentLevel(){
+        List<TournamentLevel> tournamentLevelList = tournamentsService.findAllLevels();
+        List<TournamentLevelDto> result = tournamentLevelList.stream().map(TournamentLevelDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
 }

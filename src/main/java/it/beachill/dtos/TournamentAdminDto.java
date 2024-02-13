@@ -1,6 +1,7 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.tournament.TournamentLevel;
 import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.entities.tournament.TournamentType;
 import it.beachill.model.entities.user.User;
@@ -17,6 +18,7 @@ public class TournamentAdminDto {
     private String place;
     private Integer status;
     private UserDto userDto;
+    private String levelName;
 
 
     public TournamentAdminDto() {}
@@ -45,6 +47,9 @@ public class TournamentAdminDto {
         } else {
             this.place = tournament.getPlace().getPlace();
         }
+        if(tournament.getTournamentLevel() != null){
+            this.levelName = tournament.getTournamentLevel().getLevelName();
+        }
         this.status= tournament.getStatus();
         this.userDto= new UserDto(tournament.getManager());
     }
@@ -52,9 +57,7 @@ public class TournamentAdminDto {
     public Tournament fromDto(){
         Tournament tournament = new Tournament();
         tournament.setTournamentName(this.tournamentName);
-        // da implementare la creazione di un place da stringa(forse devo solo cercarlo sul db
-        // o magari creare un dto apposta solo per place e uno per add tournament with place)
-        // new oggetto place
+
         if(Objects.equals(this.place, "")){       //se gli passo la stringa vuota (non ha selezionato il place) allora mi mette null
             tournament.setPlace(null);
         } else {
@@ -77,6 +80,8 @@ public class TournamentAdminDto {
         }
         tournament.setStartDate(this.startDate);
         tournament.setEndDate(this.endDate);
+
+        tournament.setTournamentLevel(new TournamentLevel(this.levelName));
         return tournament;
     }
 

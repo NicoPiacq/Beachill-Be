@@ -18,6 +18,7 @@ public class JPATournamentsService implements TournamentsService {
     private final TournamentTypeRepository tournamentTypeRepository;
     private final GroupStageStandingRepository groupStageStandingRepository;
     private final TeamRepository teamRepository;
+    private final TournamentLevelRepository tournamentLevelRepository;
 
     //aggiunta solo per implementare la funzione di test che genera i risultati
     // casuali e quindi anche i punteggi dei set
@@ -27,7 +28,7 @@ public class JPATournamentsService implements TournamentsService {
     public JPATournamentsService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
                                  GroupStageStandingRepository groupStageStandingRepository,
                                  SetMatchRepository setMatchRepository, TournamentPlaceRepository tournamentPlaceRepository,
-                                 TournamentTypeRepository tournamentTypeRepository, TeamRepository teamRepository){
+                                 TournamentTypeRepository tournamentTypeRepository, TeamRepository teamRepository, TournamentLevelRepository tournamentLevelRepository){
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.teamRepository = teamRepository;
@@ -35,6 +36,7 @@ public class JPATournamentsService implements TournamentsService {
         this.setMatchRepository = setMatchRepository;
         this.tournamentPlaceRepository = tournamentPlaceRepository;
         this.tournamentTypeRepository = tournamentTypeRepository;
+        this.tournamentLevelRepository = tournamentLevelRepository;
     }
 
     // --------------------------------- METODI CREATE e UPDATE -----------------------------------
@@ -82,7 +84,12 @@ public class JPATournamentsService implements TournamentsService {
         teamInTournament.setStatus(2);
         teamInTournamentRepository.save(teamInTournament);
     }
-    
+
+    @Override
+    public List<TournamentLevel> findAllLevels() {
+        return tournamentLevelRepository.findAll();
+    }
+
     public List<TournamentType> findAllTournamentsTypes(){
         return tournamentTypeRepository.findAll();
     }

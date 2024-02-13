@@ -1,6 +1,7 @@
 package it.beachill.model.services.abstraction;
 
 import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.tournament.TournamentLevel;
 import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.entities.tournament.TournamentType;
 import it.beachill.model.entities.user.User;
@@ -16,4 +17,6 @@ public interface TournamentsService {
     List<TournamentPlace> findAllPlaces();
 	
 	void enrolledTeam(User user, Long tournamentId, Long teamId) throws TournamentCheckFailedException;
+
+    List<TournamentLevel> findAllLevels();
 }
