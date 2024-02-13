@@ -1,5 +1,6 @@
 package it.beachill.model.services.abstraction;
 
+import it.beachill.dtos.MatchDto;
 import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
@@ -25,4 +26,7 @@ public interface MatchsService {
     List<Match> getAllMatchesByAdmin(User user);
 
     List<Match> getAllMatchesByTeam(Long teamId);
+
+
+    void createMatch(User user, Match match, int matchNumber) throws CheckFailedException;
 }

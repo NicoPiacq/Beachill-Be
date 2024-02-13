@@ -4,14 +4,14 @@ import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.LoginDto;
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.model.entities.tournament.Player;
+import it.beachill.model.entities.tournament.Score;
+import it.beachill.model.entities.tournament.ScoreType;
 import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.Token;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.LoginChecksFailedExceptions;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
-import it.beachill.model.repositories.abstractions.PlayerRepository;
-import it.beachill.model.repositories.abstractions.TokenRepository;
-import it.beachill.model.repositories.abstractions.UserRepository;
+import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,17 +36,22 @@ public class UsersServiceImpl implements UsersService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PlayerRepository playerRepository;
+    private final ScoreTypeRepository scoreTypeRepository;
+    private final ScoreRepository scoreRepository;
+
 
     @Autowired
     public UsersServiceImpl(UserRepository userRepository, TokenRepository tokenRepository,
                             PasswordEncoder passwordEncoder, JwtService jwtService,
-                            AuthenticationManager authenticationManager, PlayerRepository playerRepository) {
+                            AuthenticationManager authenticationManager, PlayerRepository playerRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.playerRepository = playerRepository;
+        this.scoreTypeRepository = scoreTypeRepository;
+        this.scoreRepository = scoreRepository;
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -81,12 +87,23 @@ public class UsersServiceImpl implements UsersService {
         //DA CAMBIARE!!!!
         request.setRole(Role.ADMIN);
         //FINE
+
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
+
         Player newPlayer = playerRepository.save((new Player()));
         newUser.setPlayer(newPlayer);
         newUser.setRegistrationDate(LocalDate.now());
+
         userRepository.save(newUser);
+
         newPlayer.setUser(newUser);
+
+        //AGGIUNGE TUTTE LE RIGHE NELLA TABELLA SCORE
+        List<ScoreType> scoreTypeList = scoreTypeRepository.findAll();
+        for (ScoreType scoreType : scoreTypeList){
+            scoreRepository.save(new Score(scoreType, newPlayer, 1000));
+        }
+
         String jwtToken = jwtService.generateToken(newUser);
         saveUserToken(newUser, jwtToken);
         return new AuthenticationResponseDto(jwtToken, newUser);
@@ -97,21 +114,6 @@ public class UsersServiceImpl implements UsersService {
         return checkUser.isPresent();
     }
 
-
-    /* @Override
-    public AuthenticationResponseDto login(LoginDto request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
-        if(userOpt.isEmpty()) {
-            throw new UsernameNotFoundException("EMAIL_NOT_FOUND");
-        }
-        User user = userOpt.get();
-        String newJwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, newJwtToken);
-        return new AuthenticationResponseDto(newJwtToken, user);
-    } */
 
     @Override
     public AuthenticationResponseDto refreshToken(HttpServletRequest request, HttpServletResponse response) {

@@ -44,6 +44,10 @@ public class Tournament {
 
     public Tournament() {}
 
+    public Tournament(Long id) {
+        this.id = id;
+    }
+
     public Tournament(Long id, String tournamentName, Timestamp startDate,
                       Timestamp endDate, TournamentType tournamentType, TournamentPlace place) {
         this.id = id;

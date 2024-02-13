@@ -1,6 +1,10 @@
 package it.beachill.dtos;
 
 import it.beachill.model.entities.tournament.Match;
+import it.beachill.model.entities.tournament.MatchType;
+import it.beachill.model.entities.tournament.Team;
+import it.beachill.model.entities.tournament.Tournament;
+import it.beachill.model.entities.user.User;
 
 import java.sql.Timestamp;
 
@@ -18,6 +22,8 @@ public class MatchDto {
     private Integer fieldNumber;
     private Timestamp startDate;
     private Long winnerTeamId;
+    private Long adminId;
+    private int setNumber;
 
     public MatchDto() {}
 
@@ -50,9 +56,34 @@ public class MatchDto {
             this.awayTeamId = null;
             this.awayTeamName = null;
         }
+        this.adminId = match.getMatchAdmin().getId();
         this.matchType = match.getMatchType().getType();
         this.startDate = match.getStartDate();
         this.winnerTeamId = match.getWinnerTeam().getId();
+        this.setNumber = match.getSets().size();
+    }
+
+    public Match fromDto(){
+        Match match = new Match();
+        match.setId(this.id);
+        if(this.tournamentId != null){
+            match.setMatchNumber(this.matchNumber);
+            match.setGroupStage(this.groupStage);
+            match.setTournament(new Tournament(this.tournamentId));
+            match.setFieldNumber(this.fieldNumber);
+        }
+
+        match.setMatchType(new MatchType(this.matchType));
+
+        match.setHomeTeam(new Team(this.homeTeamId));
+        match.setAwayTeam(new Team(this.awayTeamId));
+
+        if(this.winnerTeamId != null){
+            match.setWinnerTeam(new Team(this.winnerTeamId));
+        }
+
+        match.setMatchAdmin(new User(this.adminId));
+        return match;
     }
 
     public Long getId() {
@@ -157,5 +188,21 @@ public class MatchDto {
 
     public void setWinnerTeamId(Long winnerTeamId) {
         this.winnerTeamId = winnerTeamId;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public int getSetNumber() {
+        return setNumber;
+    }
+
+    public void setSetNumber(int setNumber) {
+        this.setNumber = setNumber;
     }
 }

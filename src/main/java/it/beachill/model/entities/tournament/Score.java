@@ -20,9 +20,10 @@ public class Score {
     public Score() {
     }
 
-    public Score(ScoreType scoreType, Player player) {
+    public Score(ScoreType scoreType, Player player, int score) {
         this.scoreType = scoreType;
         this.player = player;
+        this.score = score;
     }
     
     public int addScore(int score){

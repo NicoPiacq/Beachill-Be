@@ -4,6 +4,7 @@ import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,8 +39,8 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User matchAdmin;
-    @OneToMany(mappedBy = "match")
-    private List<SetMatch> sets;
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
+    private List<SetMatch> sets = new ArrayList<>();
     public Match() {}
     
     public Match(Long id) {

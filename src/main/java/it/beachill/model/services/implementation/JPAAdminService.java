@@ -3,14 +3,12 @@ package it.beachill.model.services.implementation;
 import it.beachill.dtos.AuthenticationResponseDto;
 import it.beachill.dtos.RegistrationDto;
 import it.beachill.dtos.TournamentAdminDto;
-import it.beachill.dtos.TournamentDto;
 import it.beachill.model.entities.reservation.Field;
 import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
-import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.exceptions.TournamentCheckFailedException;
@@ -196,7 +194,6 @@ public class JPAAdminService implements AdminsService {
         }
         return matches;
     }
-    
 
     
     public boolean calculateGroupStageStanding(Long id) {
@@ -341,7 +338,7 @@ public class JPAAdminService implements AdminsService {
         matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1, 1, 1));
         matches.addAll(generateRoundPhaseMatches(listRound2, tournamentRoundPhaseSchema, 2, matches.size()+1, 2, 1));
 
-        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
+        matches.addAll(generateSecondPhaseSlots(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
         matchRepository.saveAll(matches);
         return true;
     }
@@ -370,7 +367,7 @@ public class JPAAdminService implements AdminsService {
         matches.addAll(generateRoundPhaseMatches(listRound1, tournamentRoundPhaseSchema, 1, 1, 1, 1));
         matches.addAll(generateRoundPhaseMatches(listRound2, tournamentRoundPhaseSchema, 2, matches.size()+1, 2, 1));
 
-        matches.addAll(generateSecondPhaseMatches(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
+        matches.addAll(generateSecondPhaseSlots(tournamentSecondPhaseSchema, matches.size() + 1, tournament, 1));
         matchRepository.saveAll(matches);
         return true;
     }
@@ -390,7 +387,7 @@ public class JPAAdminService implements AdminsService {
         return matches;
     }
 
-    private List<Match> generateSecondPhaseMatches(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
+    private List<Match> generateSecondPhaseSlots(String[][] tournamentSchema, int matchNumber, Tournament tournament, int setsNumber){
         List<Match> matches = new ArrayList<>();
         for(int i = 0; i < tournamentSchema.length; i++){
             matches.add(matchsService.createMatchAndSets(matchNumber++, matchTypeRepository.findById(tournamentSchema[i][0]).get(), tournament, Integer.parseInt(tournamentSchema[i][1]), setsNumber, tournament.getManager()));

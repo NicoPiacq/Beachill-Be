@@ -1,13 +1,11 @@
 package it.beachill.model.services.implementation;
 
+import it.beachill.dtos.MatchDto;
 import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
-import it.beachill.model.repositories.abstractions.MatchRepository;
-import it.beachill.model.repositories.abstractions.ScoreRepository;
-import it.beachill.model.repositories.abstractions.ScoreTypeRepository;
-import it.beachill.model.repositories.abstractions.SetMatchRepository;
+import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.MatchsService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +26,15 @@ public class JPAMatchsService implements MatchsService {
     private final ScoreTypeRepository scoreTypeRepository;
     private final ScoreRepository scoreRepository;
 
+    private final TeamRepository teamRepository;
+
     @Autowired
-    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository) {
+    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository, TeamRepository teamRepository) {
         this.matchRepository = matchRepository;
         this.setMatchRepository = setMatchRepository;
         this.scoreTypeRepository = scoreTypeRepository;
         this.scoreRepository = scoreRepository;
+        this.teamRepository = teamRepository;
     }
 
     public List<Match> getAllMatchesByTournament(Long tournamentId){
@@ -159,6 +160,22 @@ public class JPAMatchsService implements MatchsService {
     public List<Match> getAllMatchesByTeam(Long teamId) {
         return matchRepository.findByHomeTeamOrAwayTeam(new Team(teamId), new Team(teamId));
     }
+
+    @Transactional
+    @Override
+    public void createMatch(User user, Match match, int setNumber) throws CheckFailedException {
+        Optional<Team> homeTeamOptional = teamRepository.findById(match.getHomeTeam().getId());
+        Optional<Team> awayTeamOptional = teamRepository.findById(match.getAwayTeam().getId());
+        if(homeTeamOptional.isEmpty() || awayTeamOptional.isEmpty()){
+            throw new CheckFailedException("Uno dei team non esiste");
+        }
+        for(int i = 0; i < setNumber; i++){
+            SetMatch setMatch = new SetMatch(match, i+1);
+            match.getSets().add(setMatch);
+        }
+        matchRepository.save(match);
+    }
+
 
     //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)
     public Match createMatchAndSets(int matchNumber, MatchType matchType, int groupStage,

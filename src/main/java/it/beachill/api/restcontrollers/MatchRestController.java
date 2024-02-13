@@ -27,6 +27,17 @@ public class MatchRestController {
         this.matchsService = matchsService;
     }
 
+
+    @PostMapping("")
+    public ResponseEntity<?> createMatch(@AuthenticationPrincipal User user, @RequestBody MatchDto matchDto) {
+        try {
+            matchsService.createMatch(user, matchDto.fromDto(), matchDto.getSetNumber());
+        } catch (CheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("")
     public ResponseEntity<?> getAllMatchesByAdmin(@AuthenticationPrincipal User user){
         List<Match> matches = matchsService.getAllMatchesByAdmin(user);
