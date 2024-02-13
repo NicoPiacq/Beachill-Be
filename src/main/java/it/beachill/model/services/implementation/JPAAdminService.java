@@ -96,7 +96,7 @@ public class JPAAdminService implements AdminsService {
         if(tournamentOptional.isEmpty()){
             throw new TournamentCheckFailedException("Il torneo non esiste");
         }
-        if(user.getId().equals(tournamentOptional.get().getManager().getId())){
+        if(!user.getId().equals(tournamentOptional.get().getManager().getId())){
             throw new TournamentCheckFailedException("Non sei l'admin del torneo");
         }
         tournamentRepository.delete(tournamentOptional.get());
