@@ -58,7 +58,7 @@ public class AdminRestController {
         } catch(TournamentCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
-        return ResponseEntity.ok(new TournamentDto(tournament));
+        return ResponseEntity.ok(new TournamentAdminDto(tournament));
     }
 
     @PostMapping("/tournament")
