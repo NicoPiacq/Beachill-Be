@@ -17,12 +17,11 @@ public interface MatchsService {
 
     List<Match> getAllMatchesByTournament(Long tournamentId);
     
+    void updateMatchResultAndPlayersScore(User user, Long matchId) throws CheckFailedException;
     void updateMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException;
-
+    
     List<SetMatch> getAllSetsByMatchId(Long setMatchId) throws CheckFailedException;
-
-    void updateMatchResult(User user, Long matchId) throws CheckFailedException;
-
+    
     List<Match> getAllMatchesByAdmin(User user);
 
     List<Match> getAllMatchesByTeam(Long teamId);

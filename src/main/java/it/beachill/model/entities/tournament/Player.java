@@ -4,6 +4,7 @@ import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "player", schema = "tournament")
@@ -21,7 +22,7 @@ public class Player {
     List<Score> scoreList;
     @OneToOne(mappedBy = "player")
     private User user;
-
+    
     public Player() {}
 
     public Player(User user) {
@@ -35,7 +36,11 @@ public class Player {
     public Player(Long id) {
         this.id = id;
     }
-    
+    //add method to player
+    public Optional<Integer> getScoreForType(ScoreType scoreType){
+        var scoreOpt=scoreList.stream().filter(sc -> sc.getScoreType().getName().equals(scoreType.getName())).findFirst();
+        return scoreOpt.map(Score::getScore);
+    }
     public Long getId() {
         return id;
     }
@@ -43,8 +48,7 @@ public class Player {
     public void setId(Long id) {
         this.id = id;
     }
-
-
+    
     public List<Team> getTeamsCaptainedBy() {
         return teamsCaptainedBy;
     }

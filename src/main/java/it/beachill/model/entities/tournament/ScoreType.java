@@ -47,5 +47,8 @@ public class ScoreType {
     public void setScoreList(List<Score> scoreList) {
         this.scoreList = scoreList;
     }
-
+    
+    public int getBaseWinScore() {
+        return baseWinScore;
+    }
 }

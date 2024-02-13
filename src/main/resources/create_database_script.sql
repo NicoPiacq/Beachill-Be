@@ -29,7 +29,7 @@ create table tournament.player (
 create table tournament.score (
     id serial,
     score_type varchar,
-    score bigint default 1000,
+    score int default 1000,
     player_id bigint,
     constraint score_pk primary key(id),
     constraint score_type_fk foreign key (score_type) references tournament.domain_type_score(name),

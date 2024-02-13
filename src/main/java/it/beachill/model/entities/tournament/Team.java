@@ -3,6 +3,7 @@ package it.beachill.model.entities.tournament;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "team", schema = "tournament")
@@ -113,6 +114,17 @@ public class Team {
     public void setGroupStageStandings(List<GroupStageStanding> groupStageStandings) {
         this.groupStageStandings = groupStageStandings;
     }
-
-
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return Objects.equals(id, team.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

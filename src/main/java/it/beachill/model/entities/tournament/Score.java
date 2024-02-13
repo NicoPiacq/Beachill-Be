@@ -9,7 +9,7 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long score;
+    private int score;
     @ManyToOne
     @JoinColumn(name = "score_type")
     ScoreType scoreType;
@@ -24,7 +24,15 @@ public class Score {
         this.scoreType = scoreType;
         this.player = player;
     }
-
+    
+    public int addScore(int score){
+        this.score+=score;
+        return this.score;
+    }
+    public int subtractScore(int score){
+        this.score-=score;
+        return this.score;
+    }
     public Long getId() {
         return id;
     }
@@ -48,4 +56,14 @@ public class Score {
     public void setPlayer(Player player) {
         this.player = player;
     }
+    
+    public int getScore() {
+        return score;
+    }
+    
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+    
 }

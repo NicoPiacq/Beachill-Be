@@ -75,7 +75,7 @@ public class MatchRestController {
     @PatchMapping("/{matchId}")
     public ResponseEntity<?> checkSetResultAndUpdateMatch(@AuthenticationPrincipal User user, @PathVariable Long matchId){
         try{
-            matchsService.updateMatchResult(user, matchId);
+            matchsService.updateMatchResultAndPlayersScore(user, matchId);
         } catch (CheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
