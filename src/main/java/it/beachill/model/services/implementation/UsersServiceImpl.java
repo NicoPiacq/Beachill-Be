@@ -15,6 +15,7 @@ import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -79,6 +80,7 @@ public class UsersServiceImpl implements UsersService {
         return new AuthenticationResponseDto(newJwtToken, user);
     }
 
+    @Transactional
     public AuthenticationResponseDto register(RegistrationDto request) throws RegistrationChecksFailedException {
         // TESTA SE L'UTENTE GIA' ESISTE: SE VERO, LANCIA UNA EXCEPTION CUSTOM
         if(checkUserAlreadyRegistered(request.getEmail())) {
