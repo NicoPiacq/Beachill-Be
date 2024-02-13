@@ -149,4 +149,11 @@ public class TournamentAdminDto {
         this.userDto = userDto;
     }
 
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
 }

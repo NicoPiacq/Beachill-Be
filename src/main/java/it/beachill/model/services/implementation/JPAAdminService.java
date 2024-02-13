@@ -84,7 +84,7 @@ public class JPAAdminService implements AdminsService {
 
     @Override
     public void createTournament(User user, TournamentAdminDto tournamentAdminDto) throws TournamentCheckFailedException {
-        if(user.getId().equals(tournamentAdminDto.getUserDto().getId())){
+        if(!user.getId().equals(tournamentAdminDto.getUserDto().getId())){
             throw new TournamentCheckFailedException("I dati dell'utente non sono corretti");
         }
         tournamentRepository.save(tournamentAdminDto.fromDto());
