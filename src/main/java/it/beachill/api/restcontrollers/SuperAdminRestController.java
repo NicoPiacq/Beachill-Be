@@ -62,7 +62,7 @@ public class SuperAdminRestController {
 	}
 	
 	//------------------------USER---------------------------
-	@GetMapping("/user")
+	@GetMapping("/users")
 	public ResponseEntity<?> getAllUser(){
 		List<User> users= superAdminService.getAllUser();
 		List<UserDto> result= users.stream().map(UserDto::new).toList();
