@@ -9,6 +9,7 @@ import it.beachill.model.entities.tournament.ScoreType;
 import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.Token;
 import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.exceptions.LoginChecksFailedExceptions;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.repositories.abstractions.*;
@@ -171,6 +172,15 @@ public class UsersServiceImpl implements UsersService {
         revokeAllUserTokens(user);
         saveUserToken(user, newToken);
         return new AuthenticationResponseDto(newToken, user);
+    }
+
+    @Override
+    public String getUserRole(User user) throws CheckFailedException {
+        Optional<User> userOptional = userRepository.findById(user.getId());
+        if(userOptional.isEmpty()){
+            throw new CheckFailedException("L' utente non esiste");
+        }
+        return userOptional.get().getRole().name();
     }
 
     private void revokeAllUserTokens(User user) {
