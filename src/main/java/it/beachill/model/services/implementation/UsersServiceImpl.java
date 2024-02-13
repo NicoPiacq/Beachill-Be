@@ -80,7 +80,6 @@ public class UsersServiceImpl implements UsersService {
         return new AuthenticationResponseDto(newJwtToken, user);
     }
 
-    @Transactional
     public AuthenticationResponseDto register(RegistrationDto request) throws RegistrationChecksFailedException {
         // TESTA SE L'UTENTE GIA' ESISTE: SE VERO, LANCIA UNA EXCEPTION CUSTOM
         if(checkUserAlreadyRegistered(request.getEmail())) {
