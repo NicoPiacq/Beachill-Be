@@ -68,6 +68,17 @@ public class SuperAdminRestController {
 		List<UserDto> result= users.stream().map(UserDto::new).toList();
 		return ResponseEntity.ok(result);
 	}
+
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getUserDetails(@PathVariable Long id){
+		User user;
+		try {
+			user = superAdminService.getUserDetails(id);
+		} catch (CheckFailedException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+		}
+		return ResponseEntity.ok(new UserDto(user));
+	}
 	
 	@PostMapping("/user/role")
 	public ResponseEntity<?> setUserRole(@RequestBody UserDto userDto){

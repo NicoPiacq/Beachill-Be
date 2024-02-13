@@ -165,8 +165,8 @@ create table tournament.domain_tournament_level(
 create table tournament.tournament (
     id serial,
     tournament_name varchar(255) not null,
-    start_date timestamp,
-    end_date timestamp,
+    start_date date,
+    end_date date,
     place varchar(255),
     tournament_type varchar,
     tournament_level varchar,

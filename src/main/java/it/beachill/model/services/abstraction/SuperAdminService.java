@@ -26,4 +26,6 @@ public interface SuperAdminService {
 	Optional<Team> deleteTeam(Long teamId) throws TeamCheckFailedException;
 	
 	Optional<Team> deleteEnrolledPlayer(Long teamComponentId, Long teamId) throws TeamCheckFailedException;
+
+    User getUserDetails(Long id) throws CheckFailedException;
 }

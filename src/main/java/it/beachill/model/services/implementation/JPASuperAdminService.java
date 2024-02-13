@@ -161,4 +161,13 @@ public class JPASuperAdminService implements SuperAdminService {
 		}
 		throw new TeamCheckFailedException("Il team o il player non sono presenti!");
 	}
+
+	@Override
+	public User getUserDetails(Long id) throws CheckFailedException {
+		Optional<User> userOptional = userRepository.findById(id);
+		if(userOptional.isEmpty()){
+			throw new CheckFailedException("L' utente non esiste");
+		}
+		return userOptional.get();
+	}
 }

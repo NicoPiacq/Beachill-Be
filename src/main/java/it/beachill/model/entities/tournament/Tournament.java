@@ -4,6 +4,7 @@ import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -15,9 +16,9 @@ public class Tournament {
     @Column(name = "tournament_name", nullable = false)
     private String tournamentName;
     @Column(name = "start_date")
-    private Timestamp startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private Timestamp endDate;
+    private LocalDate endDate;
     @ManyToOne
     @JoinColumn(name = "tournament_type")
     private TournamentType tournamentType;
@@ -27,6 +28,10 @@ public class Tournament {
     @ManyToOne
     @JoinColumn(name = "tournament_level")
     private TournamentLevel tournamentLevel;
+    @ManyToOne
+    @JoinColumn(name="_user")
+    private User manager;
+    private Integer status;
 
     @OneToMany(mappedBy = "tournament")
     private List<GroupStageStanding> groupStageStandingList;
@@ -36,10 +41,7 @@ public class Tournament {
     private List<PizzaOrder> pizzaOrders;
     @OneToMany(mappedBy = "tournament")
     private List<TeamInTournament> enrolledTeams;
-    @ManyToOne
-    @JoinColumn(name="_user")
-    private User manager;
-    private Integer status;
+
 
 
     public Tournament() {}
@@ -48,8 +50,8 @@ public class Tournament {
         this.id = id;
     }
 
-    public Tournament(Long id, String tournamentName, Timestamp startDate,
-                      Timestamp endDate, TournamentType tournamentType, TournamentPlace place) {
+    public Tournament(Long id, String tournamentName, LocalDate startDate,
+                      LocalDate endDate, TournamentType tournamentType, TournamentPlace place) {
         this.id = id;
         this.tournamentName = tournamentName;
         this.startDate = startDate;
@@ -74,19 +76,19 @@ public class Tournament {
         this.tournamentName = tournamentName;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

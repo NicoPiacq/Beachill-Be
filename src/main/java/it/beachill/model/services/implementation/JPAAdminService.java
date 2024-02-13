@@ -16,9 +16,11 @@ import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.AdminsService;
 import it.beachill.model.services.abstraction.MatchsService;
 import it.beachill.model.services.abstraction.TeamsService;
+import it.beachill.model.services.abstraction.TournamentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,12 +40,15 @@ public class JPAAdminService implements AdminsService {
     private final UsersServiceImpl userService;
     private final TeamsService teamsService;
     private final FieldRepository fieldRepository;
+    private final TournamentsService tournamentsService;
 
     @Autowired
     public JPAAdminService(TournamentRepository tournamentRepository, TeamInTournamentRepository teamInTournamentRepository,
                            MatchRepository matchRepository, MatchTypeRepository matchTypeRepository,
                            GroupStageStandingRepository groupStageStandingRepository, MatchsService matchsService,
-                           ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository, UsersServiceImpl userService, TeamsService teamsService, FieldRepository fieldRepository) {
+                           ReservationPlaceRepository reservationPlaceRepository, SchedulePropRepository schedulePropRepository, SetMatchRepository setMatchRepository,
+                           UsersServiceImpl userService, TeamsService teamsService,
+                           FieldRepository fieldRepository, TournamentsService tournamentsService) {
         this.tournamentRepository = tournamentRepository;
         this.teamInTournamentRepository = teamInTournamentRepository;
         this.matchRepository = matchRepository;
@@ -56,6 +61,7 @@ public class JPAAdminService implements AdminsService {
         this.userService = userService;
         this.teamsService = teamsService;
         this.fieldRepository = fieldRepository;
+        this.tournamentsService = tournamentsService;
     }
 
     // --------------------------------- METODI CREATE e UPDATE -----------------------------------
@@ -415,27 +421,17 @@ public class JPAAdminService implements AdminsService {
     @Override
     public boolean insertScript() {
         try {
-            //CREA NUM user e quindi player
-            int num = 10;
-            for (int i = 1; i <= num; i++) {
-                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user" + i, "user" + i, "user" + i + "@gmail.com", "pass", null));
-                Team team = new Team();
-                team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
-                team.setTeamName("Team " + i);
-                teamsService.createTeam(team);
-//                if(i > 0){
-//                    teamsService.invitePlayerToTeam(team.getId(), i-1,  )
-//                }
-            }
-
-
-            // CREA MANAGER E PLACE
-            for(int i = 1; i < 3; i++){
+            int numOfAdmin = 2;
+            Tournament tournament1 = null;
+            Tournament tournament2 = null;
+            // CREA Admin, PLACE E UN TORNEO
+            for(int i = 1; i <= numOfAdmin; i++){
 
                 AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("Manager" + i, "Manager" + i, "Manager" + i + "@gmail.com", "pass", null));
                 ReservationPlace reservationPlace = new ReservationPlace();
                 reservationPlace.setName("Campo di: " + authenticationResponseDto.getUser().getName());
-                reservationPlace.setManager(new User(authenticationResponseDto.getUser().getId()));
+                User user =  new User(authenticationResponseDto.getUser().getId());
+                reservationPlace.setManager(user);
                 ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
 
                 for(int k = 0; k < 3; k++) {
@@ -474,11 +470,54 @@ public class JPAAdminService implements AdminsService {
                         }
                     }
                 }
-
+                if(i == 1) {
+                    tournament1 = new Tournament();
+                    tournament1.setTournamentName("Prova " + (i + 1) + "Base 10 corto");
+                    tournament1.setStartDate(LocalDate.now());
+                    tournament1.setEndDate(LocalDate.now());
+                    tournament1.setTournamentType(new TournamentType("10-corto"));
+                    tournament1.setPlace(new TournamentPlace("generation"));
+                    tournament1.setTournamentLevel(new TournamentLevel("BASE"));
+                    tournament1.setManager(user);
+                    tournament1.setStatus(0);
+                    tournament2 = new Tournament();
+                    tournament2.setTournamentName("Prova " + (i + 2) + "Intermedio 10 lungo");
+                    tournament2.setStartDate(LocalDate.now());
+                    tournament2.setEndDate(LocalDate.now());
+                    tournament2.setTournamentType(new TournamentType("10-lungo"));
+                    tournament2.setPlace(new TournamentPlace("generation"));
+                    tournament2.setTournamentLevel(new TournamentLevel("INTERMEDIO"));
+                    tournament2.setManager(user);
+                    tournament2.setStatus(0);
+                }
+                tournamentRepository.save(tournament1);
+                tournamentRepository.save(tournament2);
             }
+
+            //CREA NUM user e quindi player
+            int num = 10 + numOfAdmin;
+            for (int i = 1 + numOfAdmin; i <= num; i++) {
+                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("user" + i, "user" + i, "user" + i + "@gmail.com", "pass", null));
+                Team team = new Team();
+                team.setTeamLeader(new Player(authenticationResponseDto.getUser().getPlayer().getId()));
+                team.setTeamName("Team " + i);
+                teamsService.createTeam(team);
+                User user =  new User(authenticationResponseDto.getUser().getId());
+                user.setPlayer(team.getTeamLeader());
+                tournamentsService.enrolledTeam(user, tournament1.getId(), team.getId());
+                tournamentsService.enrolledTeam(user, tournament2.getId(), team.getId());
+//                if(i > 0){
+//                    teamsService.invitePlayerToTeam(team.getId(), i-1,  )
+//                }
+            }
+
+
+
             return true;
         }catch(RegistrationChecksFailedException | TeamCheckFailedException e){
             return false;
+        } catch (TournamentCheckFailedException e) {
+            throw new RuntimeException(e);
         }
     }
 

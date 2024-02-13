@@ -5,12 +5,13 @@ import it.beachill.model.entities.tournament.TournamentPlace;
 import it.beachill.model.entities.tournament.TournamentType;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class TournamentDto {
     private Long id;
     private String tournamentName;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String tournamentTypeName;
     private String place;
 
@@ -80,19 +81,19 @@ public class TournamentDto {
         this.tournamentName = tournamentName;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
