@@ -59,7 +59,9 @@ public class MatchDto {
         this.adminId = match.getMatchAdmin().getId();
         this.matchType = match.getMatchType().getType();
         this.startDate = match.getStartDate();
-        this.winnerTeamId = match.getWinnerTeam().getId();
+        if(match.getWinnerTeam() != null) {
+            this.winnerTeamId = match.getWinnerTeam().getId();
+        }
         this.setNumber = match.getSets().size();
     }
 
