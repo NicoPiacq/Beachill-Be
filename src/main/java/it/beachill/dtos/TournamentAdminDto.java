@@ -34,7 +34,7 @@ public class TournamentAdminDto {
         if(tournament.getEndDate() == null) {
             this.endDate = null;
         } else {
-            this.endDate = tournament.getStartDate();
+            this.endDate = tournament.getEndDate();
         }
 
         if(tournament.getTournamentType() == null){
