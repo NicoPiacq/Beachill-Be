@@ -16,7 +16,6 @@ import it.beachill.model.repositories.abstractions.*;
 import it.beachill.model.services.abstraction.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,7 +62,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public AuthenticationResponseDto login(LoginDto request) throws LoginChecksFailedExceptions {
-        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+        Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.getEmail());
         if(userOpt.isEmpty()) {
             throw new LoginChecksFailedExceptions("CREDENTIALS_NOT_VALID"); // Gli errori sono uguali solo per sicurezza.
         }
@@ -112,7 +111,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     private boolean checkUserAlreadyRegistered(String email) {
-        Optional<User> checkUser = userRepository.findByEmail(email);
+        Optional<User> checkUser = userRepository.findByEmailIgnoreCase(email);
         return checkUser.isPresent();
     }
 
@@ -147,7 +146,7 @@ public class UsersServiceImpl implements UsersService {
         }
 
         // CHECK SE TROVA UN USER ASSOCIATO ALL'EMAIL ESTRATTA DAL TOKEN
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userRepository.findByEmailIgnoreCase(email);
         if(userOpt.isEmpty()) {
             try {
                 response.sendError(400, "RICHIESTA NON VALIDA: UTENTE NON TROVATO");

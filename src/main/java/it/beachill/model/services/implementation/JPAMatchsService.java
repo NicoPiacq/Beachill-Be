@@ -170,7 +170,7 @@ public class JPAMatchsService implements MatchsService {
         if(homeTeamOptional.isEmpty() || awayTeamOptional.isEmpty()){
             throw new CheckFailedException("Uno dei team non esiste");
         }
-        Match match = new Match(homeTeamOptional.get(), awayTeamOptional.get(), date, user, 2);
+        Match match = new Match(homeTeamOptional.get(), awayTeamOptional.get(), date, user, 2, new MatchType("PRIVATO"));
         for(int i = 0; i < setNumber; i++){
             SetMatch setMatch = new SetMatch(match, i+1);
             match.getSets().add(setMatch);

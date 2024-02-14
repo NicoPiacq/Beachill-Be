@@ -49,12 +49,13 @@ public class Match {
         this.id = id;
     }
 
-    public Match(Team homeTeam, Team awayTeam, LocalDate startDate, User matchAdmin, Integer status) {
+    public Match(Team homeTeam, Team awayTeam, LocalDate startDate, User matchAdmin, Integer status, MatchType matchType) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.startDate = startDate;
         this.matchAdmin = matchAdmin;
         this.status = status;
+        this.matchType = matchType;
     }
 
     public Match(Integer matchNumber, MatchType matchType, Integer groupStage, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, User matchAdmin) {
