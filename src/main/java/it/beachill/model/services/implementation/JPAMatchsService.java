@@ -214,8 +214,10 @@ public class JPAMatchsService implements MatchsService {
     @Override
     public List<Match> getAllMatchesByPlayer(User user) {
        List<TeamComponent> teamComponentList = teamComponentRepository.findByPlayerId(user.getPlayer().getId());
-       Set<Team> enrolledTeamList = new HashSet<>();
-       Set<Match> matches=new HashSet<>();
+       List<Team> enrolledTeamList = new ArrayList<>();
+       List<Match> matches = new ArrayList<>();
+//       Set<Team> enrolledTeamList = new HashSet<>();
+//       Set<Match> matches=new HashSet<>();
        for( TeamComponent teamComponent: teamComponentList){
            enrolledTeamList.add(teamComponent.getTeam());
        }
