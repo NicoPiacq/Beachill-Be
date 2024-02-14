@@ -2,8 +2,10 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.PlayerDto;
 import it.beachill.dtos.TeamComponentDto;
+import it.beachill.dtos.UserDto;
 import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.tournament.TeamComponent;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.PlayerChecksFailedException;
 import it.beachill.model.services.abstraction.PlayersService;
 import it.beachill.model.services.implementation.JwtService;
@@ -43,6 +45,12 @@ public class PlayerRestController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
         List<TeamComponentDto> result = players.stream().map(TeamComponentDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPlayerByString(@RequestParam String toFind){
+        List<User> players = playersService.searchPlayerByString(toFind);
+        List<UserDto> result = players.stream().map(UserDto::new).toList();
         return ResponseEntity.ok(result);
     }
 }
