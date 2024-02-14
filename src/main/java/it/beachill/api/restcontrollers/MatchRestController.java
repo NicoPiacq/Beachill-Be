@@ -33,7 +33,7 @@ public class MatchRestController {
     @PostMapping("")
     public ResponseEntity<?> createMatch(@AuthenticationPrincipal User user, @RequestBody MatchRequestDto matchRequestDto) {
         try {
-            matchsService.createMatch(user, matchRequestDto.getHomeTeamId(), matchRequestDto.getHomeTeamId(), matchRequestDto.getSetNumber(), matchRequestDto.getStartDate());
+            matchsService.createMatch(user, matchRequestDto.getHomeTeamId(), matchRequestDto.getAwayTeamId(), matchRequestDto.getSetNumber(), matchRequestDto.getStartDate());
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
