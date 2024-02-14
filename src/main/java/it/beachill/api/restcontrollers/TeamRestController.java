@@ -1,6 +1,7 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.InvitationResponseDto;
+import it.beachill.dtos.InvitePlayerRequest;
 import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TeamDto;
 import it.beachill.model.entities.tournament.Player;
@@ -127,12 +128,15 @@ public class TeamRestController {
     }
 
     @PostMapping("/invite")
-    public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user,@RequestBody TeamComponentDto teamComponentDto) {
+    public ResponseEntity<?> invitePlayerToTeam(@AuthenticationPrincipal User user, @RequestBody InvitePlayerRequest invitePlayerRequest) {
         Optional<Team> teamOptional;
+        if(!Objects.equals(user.getPlayer().getId(), invitePlayerRequest.getRequestingPlayerId())){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("I dati non sono corretti");
+        }
         try {
             teamOptional = teamsService.invitePlayerToTeam(
-                    teamComponentDto.getTeamDto().getId(),
-                    teamComponentDto.getPlayerId(),
+                    invitePlayerRequest.getTeamId(),
+                    invitePlayerRequest.getPlayerToAddId(),
                     user.getPlayer().getId());
         } catch(TeamCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
