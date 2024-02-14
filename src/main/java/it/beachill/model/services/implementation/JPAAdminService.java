@@ -8,6 +8,7 @@ import it.beachill.model.entities.reservation.ReservationPlace;
 import it.beachill.model.entities.reservation.ScheduleProp;
 import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.tournament.*;
+import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
@@ -119,9 +120,12 @@ public class JPAAdminService implements AdminsService {
         if(tournamentOptional.isEmpty()){
             throw new TournamentCheckFailedException("Il torneo non esiste");
         }
-        if(!user.getId().equals(tournamentOptional.get().getManager().getId())){
-            throw new TournamentCheckFailedException("Non sei l'admin del torneo");
+        if(!user.getRole().equals(Role.SUPERADMIN)){
+            if(!user.getId().equals(tournamentOptional.get().getManager().getId())){
+                throw new TournamentCheckFailedException("Non sei l'admin del torneo");
+            }
         }
+
         List<TeamInTournament> enrolledTeams = teamInTournamentRepository.findByTournamentId(id);
         if(enrolledTeams.isEmpty()){
             throw new TournamentCheckFailedException("Non ci sono team iscritti al torneo");
