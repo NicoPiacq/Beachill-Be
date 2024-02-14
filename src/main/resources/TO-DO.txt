@@ -15,4 +15,6 @@ cose da implementare daje forza!!
 
 - Gestione set e match sia fuori da un torneo che all' interno di un torneo
 
-- DA CAMBIARE LA DATA DEL MATCH SIA DB CHE BACKEND CHE FRONTEND
+- DA CAMBIARE LA DATA DEL MATCH SIA DB CHE BACKEND CHE FRONTEND -- backend FATTOOOO
+
+- aggiungere la possibilità di vedere le statistiche di un team in un torneo (es quozioente punti) e le statistiche di un team in generale (es win rate)

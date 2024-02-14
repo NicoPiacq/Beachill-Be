@@ -7,6 +7,7 @@ import it.beachill.model.entities.tournament.Tournament;
 import it.beachill.model.entities.user.User;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class MatchDto {
     private Long id;
@@ -20,7 +21,7 @@ public class MatchDto {
     private Long awayTeamId;
     private String awayTeamName;
     private Integer fieldNumber;
-    private Timestamp startDate;
+    private LocalDate startDate;
     private Long winnerTeamId;
     private Long adminId;
     private int setNumber;
@@ -176,11 +177,11 @@ public class MatchDto {
         this.fieldNumber = fieldNumber;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

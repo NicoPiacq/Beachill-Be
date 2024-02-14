@@ -4,6 +4,7 @@ import it.beachill.model.entities.user.User;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Match {
     @Column(name = "field_number")
     private Integer fieldNumber;
     @Column(name = "start_date")
-    private Timestamp startDate;
+    private LocalDate startDate;
     @ManyToOne
     @JoinColumn(name = "winner_team_id")
     private Team winnerTeam;
@@ -66,7 +67,7 @@ public class Match {
         this.matchAdmin= matchAdmin;
     }
 
-    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Team winnerTeam) {
+    public Match(Long id, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, LocalDate startDate, Team winnerTeam) {
         this.id = id;
         this.tournament = tournament;
         this.homeTeam = homeTeam;
@@ -76,7 +77,7 @@ public class Match {
         this.winnerTeam = winnerTeam;
     }
     
-    public Match(Long id, Integer matchNumber, Integer groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, Timestamp startDate, Team winnerTeam, User matchAdmin) {
+    public Match(Long id, Integer matchNumber, Integer groupStage, MatchType matchType, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, LocalDate startDate, Team winnerTeam, User matchAdmin) {
         this.id = id;
         this.matchNumber = matchNumber;
         this.groupStage = groupStage;
@@ -156,11 +157,11 @@ public class Match {
     }
 
 
-    public Timestamp getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

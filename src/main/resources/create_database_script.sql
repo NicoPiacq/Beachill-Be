@@ -224,7 +224,7 @@ create table tournament.match (
     home_team_id bigint,
     away_team_id bigint,
     field_number int,
-    start_date timestamp,
+    start_date date,
     user_id bigint,
     winner_team_id bigint,
     constraint match_pk primary key (id),
