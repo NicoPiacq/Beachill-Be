@@ -39,14 +39,14 @@ public class MatchRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/invite")
+    @GetMapping("/invites")
     public ResponseEntity<?> getAllMatchesInvite(@AuthenticationPrincipal User user){
         List<Match> matches = matchsService.getAllMatchesInvite(user);
         List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/invite")
+    @PostMapping("/invites")
     public ResponseEntity<?> updateStatusMatch(@AuthenticationPrincipal User user, @RequestBody StatusMatchResponseDto statusMatchResponseDto) {
         try {
             matchsService.updateStatusMatch(user, statusMatchResponseDto.getMatchId(), statusMatchResponseDto.getStatus());
