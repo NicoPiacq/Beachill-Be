@@ -1,11 +1,11 @@
 package it.beachill.dtos;
 
-public class InvitePlayerRequest {
+public class InvitePlayerRequestDto {
     private Long teamId;
     private Long playerToAddId;
     private Long requestingPlayerId;
 
-    public InvitePlayerRequest() {
+    public InvitePlayerRequestDto() {
     }
 
     public Long getTeamId() {
