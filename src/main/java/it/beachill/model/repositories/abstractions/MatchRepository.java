@@ -20,4 +20,6 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     List<Match> findByMatchAdmin(User user);
 
     List<Match> findByHomeTeamOrAwayTeam(Team homeTeam, Team awayTeam);
+
+    List<Match> findByAwayTeamAndStatus(Team team, Integer i);
 }

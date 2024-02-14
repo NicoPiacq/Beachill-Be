@@ -172,7 +172,40 @@ public class JPAMatchsService implements MatchsService {
         for(int i = 0; i < setNumber; i++){
             SetMatch setMatch = new SetMatch(match, i+1);
             match.getSets().add(setMatch);
+            match.setStatus(2);
         }
+        matchRepository.save(match);
+    }
+
+    @Override
+    public List<Match> getAllMatchesInvite(User user) {
+        List<Team> teamsCaptainedBy = teamRepository.findAllByTeamLeader(user.getPlayer());
+        List<Match> matchesInvite = new ArrayList<>();
+        for(Team team : teamsCaptainedBy){
+            Integer i = 2;
+            List<Match> matches = matchRepository.findByAwayTeamAndStatus(team, i);
+            matchesInvite.addAll(matches);
+        }
+        return matchesInvite;
+    }
+
+    @Override
+    public void updateStatusMatch(User user, Long matchId, Integer status) throws CheckFailedException {
+        Optional<Match> matchOptional = matchRepository.findById(matchId);
+        if(matchOptional.isEmpty()){
+            throw new CheckFailedException("Il match non esiste");
+        }
+        Match match = matchOptional.get();
+        if(!Objects.equals(user.getPlayer().getId(), match.getAwayTeam().getTeamLeader().getId())){
+            throw new CheckFailedException("Non sei il capitano del team che deve accettare il match");
+        }
+        if(match.getStatus() != 2){
+            if(match.getStatus() == 1)
+            throw new CheckFailedException("Il match è gia stato accettato");
+        } else {
+            throw new CheckFailedException("Il match è gia stato rifiutato");
+        }
+        match.setStatus(status);
         matchRepository.save(match);
     }
 
@@ -182,6 +215,7 @@ public class JPAMatchsService implements MatchsService {
                                     Tournament tournament, Team homeTeam, Team awayTeam,
                                     int fieldNumber, int setsnumber, User matchAdmin){
         Match match = new Match(matchNumber, matchType, groupStage, tournament, homeTeam, awayTeam, fieldNumber,matchAdmin);
+        match.setStatus(1);
         matchRepository.save(match);
         List<SetMatch> matchSets = new ArrayList<>();
         for(int i = 0; i < setsnumber; i++){
@@ -195,6 +229,7 @@ public class JPAMatchsService implements MatchsService {
     public Match createMatchAndSets(int matchNumber, MatchType matchType, Tournament tournament,
                                     int fieldNumber, int setsnumber, User matchAdmin){
         Match match = new Match(matchNumber, matchType, tournament, fieldNumber, matchAdmin);
+        match.setStatus(1);
         matchRepository.save(match);
         List<SetMatch> matchSets = new ArrayList<>();
         for(int i = 0; i < setsnumber; i++){

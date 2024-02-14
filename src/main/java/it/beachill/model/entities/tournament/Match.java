@@ -40,6 +40,7 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User matchAdmin;
+    private Integer status;
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
     private List<SetMatch> sets = new ArrayList<>();
     public Match() {}
@@ -193,5 +194,13 @@ public class Match {
 
     public void setWinnerTeam(Team winnerTeam) {
         this.winnerTeam = winnerTeam;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

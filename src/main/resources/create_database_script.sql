@@ -227,6 +227,7 @@ create table tournament.match (
     start_date date,
     user_id bigint,
     winner_team_id bigint,
+    status int,
     constraint match_pk primary key (id),
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
     constraint match_home_team_fk foreign key (home_team_id) references tournament.team(id),

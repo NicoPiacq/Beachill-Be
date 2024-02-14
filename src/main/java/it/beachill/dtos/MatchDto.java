@@ -25,6 +25,7 @@ public class MatchDto {
     private Long winnerTeamId;
     private Long adminId;
     private int setNumber;
+    private Integer status;
 
     public MatchDto() {}
 
@@ -64,6 +65,9 @@ public class MatchDto {
             this.winnerTeamId = match.getWinnerTeam().getId();
         }
         this.setNumber = match.getSets().size();
+        if(match.getStatus() != null){
+            this.status = match.getStatus();
+        }
     }
 
     public Match fromDto(){
@@ -83,6 +87,9 @@ public class MatchDto {
 
         if(this.winnerTeamId != null){
             match.setWinnerTeam(new Team(this.winnerTeamId));
+        }
+        if(this.status != null){
+            match.setStatus(this.status);
         }
 
         match.setMatchAdmin(new User(this.adminId));
@@ -201,11 +208,23 @@ public class MatchDto {
         this.adminId = adminId;
     }
 
-    public int getSetNumber() {
+    public Integer getSetNumber() {
         return setNumber;
+    }
+
+    public void setSetNumber(Integer setNumber) {
+        this.setNumber = setNumber;
     }
 
     public void setSetNumber(int setNumber) {
         this.setNumber = setNumber;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

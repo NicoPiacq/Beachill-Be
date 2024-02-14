@@ -1,11 +1,11 @@
 package it.beachill.dtos;
 
-public class InvitationResponse {
+public class InvitationResponseDto {
     private Long teamId;
     private Long teamComponentId;
     private Integer status;
 
-    public InvitationResponse() {
+    public InvitationResponseDto() {
     }
 
     public Long getTeamId() {

@@ -2,6 +2,7 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.MatchDto;
 import it.beachill.dtos.SetMatchDto;
+import it.beachill.dtos.StatusMatchResponseDto;
 import it.beachill.model.entities.tournament.Match;
 import it.beachill.model.entities.tournament.SetMatch;
 import it.beachill.model.entities.user.User;
@@ -32,6 +33,23 @@ public class MatchRestController {
     public ResponseEntity<?> createMatch(@AuthenticationPrincipal User user, @RequestBody MatchDto matchDto) {
         try {
             matchsService.createMatch(user, matchDto.fromDto(), matchDto.getSetNumber());
+        } catch (CheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/invite")
+    public ResponseEntity<?> getAllMatchesInvite(@AuthenticationPrincipal User user){
+        List<Match> matches = matchsService.getAllMatchesInvite(user);
+        List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<?> updateStatusMatch(@AuthenticationPrincipal User user, @RequestBody StatusMatchResponseDto statusMatchResponseDto) {
+        try {
+            matchsService.updateStatusMatch(user, statusMatchResponseDto.getMatchId(), statusMatchResponseDto.getStatus());
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

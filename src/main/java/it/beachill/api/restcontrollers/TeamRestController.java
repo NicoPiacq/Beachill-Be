@@ -1,6 +1,6 @@
 package it.beachill.api.restcontrollers;
 
-import it.beachill.dtos.InvitationResponse;
+import it.beachill.dtos.InvitationResponseDto;
 import it.beachill.dtos.TeamComponentDto;
 import it.beachill.dtos.TeamDto;
 import it.beachill.model.entities.tournament.Player;
@@ -148,9 +148,9 @@ public class TeamRestController {
     }
 
     @PatchMapping("/invite")
-    public ResponseEntity<?> updateStatusInvitation(@AuthenticationPrincipal User user, @RequestBody InvitationResponse invitationResponse){
+    public ResponseEntity<?> updateStatusInvitation(@AuthenticationPrincipal User user, @RequestBody InvitationResponseDto invitationResponseDto){
         try {
-            teamsService.updateStatusInvitation(invitationResponse.getTeamComponentId(), invitationResponse.getTeamId(), user, invitationResponse.getStatus());
+            teamsService.updateStatusInvitation(invitationResponseDto.getTeamComponentId(), invitationResponseDto.getTeamId(), user, invitationResponseDto.getStatus());
         } catch (TeamCheckFailedException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

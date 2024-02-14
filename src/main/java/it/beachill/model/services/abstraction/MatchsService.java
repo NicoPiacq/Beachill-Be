@@ -29,4 +29,8 @@ public interface MatchsService {
 
 
     void createMatch(User user, Match match, int matchNumber) throws CheckFailedException;
+
+    List<Match> getAllMatchesInvite(User user);
+
+    void updateStatusMatch(User user, Long matchId, Integer status) throws CheckFailedException;
 }
