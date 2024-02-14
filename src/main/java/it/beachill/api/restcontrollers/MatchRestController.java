@@ -70,6 +70,13 @@ public class MatchRestController {
         List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
         return ResponseEntity.ok(result);
     }
+    
+    @GetMapping("/player")
+    public ResponseEntity<?> getAllMatchesByPlayer(@AuthenticationPrincipal User user){
+        List<Match> matches = matchsService.getAllMatchesByPlayer(user);
+        List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
 
 
     

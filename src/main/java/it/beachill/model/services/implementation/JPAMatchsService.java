@@ -1,6 +1,5 @@
 package it.beachill.model.services.implementation;
 
-import it.beachill.dtos.MatchDto;
 import it.beachill.dtos.SetMatchDto;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
@@ -26,15 +25,16 @@ public class JPAMatchsService implements MatchsService {
     private final SetMatchRepository setMatchRepository;
     private final ScoreTypeRepository scoreTypeRepository;
     private final ScoreRepository scoreRepository;
-
+    private final TeamComponentRepository teamComponentRepository;
     private final TeamRepository teamRepository;
 
     @Autowired
-    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository, TeamRepository teamRepository) {
+    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository, TeamComponentRepository teamComponentRepository, TeamRepository teamRepository) {
         this.matchRepository = matchRepository;
         this.setMatchRepository = setMatchRepository;
         this.scoreTypeRepository = scoreTypeRepository;
         this.scoreRepository = scoreRepository;
+        this.teamComponentRepository = teamComponentRepository;
         this.teamRepository = teamRepository;
     }
 
@@ -210,8 +210,22 @@ public class JPAMatchsService implements MatchsService {
         match.setStatus(status);
         matchRepository.save(match);
     }
-
-
+    
+    @Override
+    public List<Match> getAllMatchesByPlayer(User user) {
+       List<TeamComponent> teamComponentList = teamComponentRepository.findByPlayerId(user.getPlayer().getId());
+       Set<Team> enrolledTeamList = new HashSet<>();
+       Set<Match> matches=new HashSet<>();
+       for( TeamComponent teamComponent: teamComponentList){
+           enrolledTeamList.add(teamComponent.getTeam());
+       }
+       for (Team enrolledTeam: enrolledTeamList){
+           matches.addAll(matchRepository.findByHomeTeamOrAwayTeam(enrolledTeam,enrolledTeam));
+       }
+       return matches.stream().toList();
+    }
+    
+    
     //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)
     public Match createMatchAndSets(int matchNumber, MatchType matchType, int groupStage,
                                     Tournament tournament, Team homeTeam, Team awayTeam,

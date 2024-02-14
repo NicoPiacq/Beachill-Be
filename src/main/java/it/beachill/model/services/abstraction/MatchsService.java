@@ -34,4 +34,6 @@ public interface MatchsService {
     List<Match> getAllMatchesInvite(User user);
 
     void updateStatusMatch(User user, Long matchId, Integer status) throws CheckFailedException;
+    
+    List<Match> getAllMatchesByPlayer(User user);
 }
