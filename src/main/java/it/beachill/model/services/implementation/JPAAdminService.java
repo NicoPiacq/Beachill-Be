@@ -336,7 +336,7 @@ public class JPAAdminService implements AdminsService {
         List<TeamInTournament> enrolledTeams = findAllTeamInTournament(tournament.getId());
 
         //funzione che genera un girone ed elimina le partite selezionate da enrolledTeams
-        //l' ho richiamata di nuovo due volte perchè ho aggiunto che intanto crea le righe per la tabella della classifica
+        //aggiunto che intanto crea le righe per la tabella della classifica
         List<TeamInTournament> listRound1 = setRoundForNumOfRandomTeams(tournament, enrolledTeams, 1, 5);
         List<TeamInTournament> listRound2 = setRoundForNumOfRandomTeams(tournament, enrolledTeams, 2, 5);
 
