@@ -204,7 +204,7 @@ public class JPAMatchsService implements MatchsService {
         if(match.getStatus() != 2){
             if(match.getStatus() == 1)
             throw new CheckFailedException("Il match è gia stato accettato");
-        } else {
+        } else if (match.getStatus() == 0){
             throw new CheckFailedException("Il match è gia stato rifiutato");
         }
         match.setStatus(status);
