@@ -5,6 +5,7 @@ import it.beachill.model.entities.tournament.Team;
 import it.beachill.model.entities.tournament.TeamComponent;
 import it.beachill.model.entities.tournament.TeamInTournament;
 import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.repositories.abstractions.PlayerRepository;
 import it.beachill.model.repositories.abstractions.TeamComponentRepository;
@@ -112,6 +113,9 @@ public class JPATeamsService implements TeamsService {
     @Override
     public Optional<Team> invitePlayerToTeam(Long teamId, Long playerToAddId, Long requestingPlayerId) throws TeamCheckFailedException {
         Optional<Team> team=teamRepository.findById(teamId);
+        if(Objects.equals(playerToAddId, requestingPlayerId)){
+            throw new TeamCheckFailedException("Non puoi invitare te stesso, stupido");
+        }
         if(team.isEmpty()){
             throw new TeamCheckFailedException("Il team non è presente!");
         }
