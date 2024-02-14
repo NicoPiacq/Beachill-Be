@@ -30,4 +30,6 @@ public interface TeamsService {
 	Optional<Team> findTeamById(Long id);
 
 	List<TeamComponent> getAllInvite(User user);
+	
+	List<Team> searchTeamByString(String toFind);
 }

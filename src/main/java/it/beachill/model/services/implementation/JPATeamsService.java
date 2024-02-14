@@ -15,10 +15,7 @@ import it.beachill.model.services.abstraction.TeamsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JPATeamsService implements TeamsService {
@@ -52,7 +49,12 @@ public class JPATeamsService implements TeamsService {
     public List<TeamComponent> getAllInvite(User user) {
         return teamComponentRepository.findByPlayerIdAndStatus(user.getPlayer().getId(), 2);
     }
-
+    
+    @Override
+    public List<Team> searchTeamByString(String toFind) {
+        return teamRepository.findByTeamNameContainingIgnoreCase(toFind);
+    }
+    
     @Override
     public List<Team> findAllTeamsByTeamLeader(Long playerId) {
         return teamRepository.findAllByTeamLeader(new Player(playerId));

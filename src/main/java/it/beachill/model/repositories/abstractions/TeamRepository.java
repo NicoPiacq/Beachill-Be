@@ -11,5 +11,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 	List<Team> findAllByTeamLeader(Player player);
 	
 	Optional<Team> findByTeamName(String teamName);
+	
+	List<Team> findByTeamNameContainingIgnoreCase(String toFind);
 	//List<Team> findByTournamentId(Long id);
 }

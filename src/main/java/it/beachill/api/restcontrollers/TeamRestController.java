@@ -1,9 +1,6 @@
 package it.beachill.api.restcontrollers;
 
-import it.beachill.dtos.InvitationResponseDto;
-import it.beachill.dtos.InvitePlayerRequestDto;
-import it.beachill.dtos.TeamComponentDto;
-import it.beachill.dtos.TeamDto;
+import it.beachill.dtos.*;
 import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.tournament.Team;
 import it.beachill.model.entities.tournament.TeamComponent;
@@ -173,5 +170,12 @@ public class TeamRestController {
                 .map(c -> ResponseEntity.noContent().build())
                 .findFirst()
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/search")
+    public ResponseEntity<?> searchTeamByString(@RequestParam String toFind){
+        List<Team> teams = teamsService.searchTeamByString(toFind);
+        List<TeamDto> result = teams.stream().map(TeamDto::new).toList();
+        return ResponseEntity.ok(result);
     }
 }
