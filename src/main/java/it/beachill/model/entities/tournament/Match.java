@@ -48,7 +48,15 @@ public class Match {
     public Match(Long id) {
         this.id = id;
     }
-    
+
+    public Match(Team homeTeam, Team awayTeam, LocalDate startDate, User matchAdmin, Integer status) {
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.startDate = startDate;
+        this.matchAdmin = matchAdmin;
+        this.status = status;
+    }
+
     public Match(Integer matchNumber, MatchType matchType, Integer groupStage, Tournament tournament, Team homeTeam, Team awayTeam, Integer fieldNumber, User matchAdmin) {
         this.matchNumber = matchNumber;
         this.matchType = matchType;

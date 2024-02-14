@@ -1,6 +1,7 @@
 package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.MatchDto;
+import it.beachill.dtos.MatchRequestDto;
 import it.beachill.dtos.SetMatchDto;
 import it.beachill.dtos.StatusMatchResponseDto;
 import it.beachill.model.entities.tournament.Match;
@@ -30,9 +31,9 @@ public class MatchRestController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> createMatch(@AuthenticationPrincipal User user, @RequestBody MatchDto matchDto) {
+    public ResponseEntity<?> createMatch(@AuthenticationPrincipal User user, @RequestBody MatchRequestDto matchRequestDto) {
         try {
-            matchsService.createMatch(user, matchDto.fromDto(), matchDto.getSetNumber());
+            matchsService.createMatch(user, matchRequestDto.getHomeTeamId(), matchRequestDto.getHomeTeamId(), matchRequestDto.getSetNumber(), matchRequestDto.getStartDate());
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }

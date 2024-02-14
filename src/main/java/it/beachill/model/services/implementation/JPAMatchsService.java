@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -163,12 +164,13 @@ public class JPAMatchsService implements MatchsService {
 
     @Transactional
     @Override
-    public void createMatch(User user, Match match, int setNumber) throws CheckFailedException {
-        Optional<Team> homeTeamOptional = teamRepository.findById(match.getHomeTeam().getId());
-        Optional<Team> awayTeamOptional = teamRepository.findById(match.getAwayTeam().getId());
+    public void createMatch(User user, Long homeTeamId, Long awayTeamId, int setNumber, LocalDate date) throws CheckFailedException {
+        Optional<Team> homeTeamOptional = teamRepository.findById(homeTeamId);
+        Optional<Team> awayTeamOptional = teamRepository.findById(awayTeamId);
         if(homeTeamOptional.isEmpty() || awayTeamOptional.isEmpty()){
             throw new CheckFailedException("Uno dei team non esiste");
         }
+        Match match = new Match(homeTeamOptional.get(), awayTeamOptional.get(), date, user, 2);
         for(int i = 0; i < setNumber; i++){
             SetMatch setMatch = new SetMatch(match, i+1);
             match.getSets().add(setMatch);

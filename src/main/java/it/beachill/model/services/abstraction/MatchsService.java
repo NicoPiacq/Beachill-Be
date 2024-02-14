@@ -6,6 +6,7 @@ import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.User;
 import it.beachill.model.exceptions.CheckFailedException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MatchsService {
@@ -28,7 +29,7 @@ public interface MatchsService {
     List<Match> getAllMatchesByTeam(Long teamId);
 
 
-    void createMatch(User user, Match match, int matchNumber) throws CheckFailedException;
+    void createMatch(User user, Long homeTeamId, Long awayTeamId, int matchNumber, LocalDate date) throws CheckFailedException;
 
     List<Match> getAllMatchesInvite(User user);
 
