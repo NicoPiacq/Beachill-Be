@@ -28,7 +28,7 @@ public class ReservationPlaceDto {
 
     public ReservationPlace fromDto(){
         ReservationPlace reservationPlace = new ReservationPlace();
-        if(this.id > 0) {
+        if(this.id != null) {
             reservationPlace.setId(this.id);
         }
         reservationPlace.setName(this.name);
