@@ -22,6 +22,9 @@ public class TeamDto {
     
     public Team fromDto(){
         Team team = new Team();
+        if(this.id != null) {
+            team.setId(this.id);
+        }
         team.setTeamLeader(new Player(this.idTeamLeader));
         team.setTeamName(this.teamName);
         return team;
