@@ -116,6 +116,7 @@ public class JPAMatchsService implements MatchsService {
                 throw new CheckFailedException("Il numero di set vinti e punti fatti-subiti sono uguali, aggiungi un set o tira una monetina.");
             }
         }
+        match.setStatus(3);
     }
     
     private void updatePlayersScore(Match match) {
