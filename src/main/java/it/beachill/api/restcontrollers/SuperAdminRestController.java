@@ -69,6 +69,13 @@ public class SuperAdminRestController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/user/search")
+	public ResponseEntity<?> searchUserByString(@RequestParam String toFind){
+		List<User> users = superAdminService.searchUserByString(toFind);
+		List<UserDto> result= users.stream().map(UserDto::new).toList();
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/user/{id}")
 	public ResponseEntity<?> getUserDetails(@PathVariable Long id){
 		User user;
@@ -80,10 +87,10 @@ public class SuperAdminRestController {
 		return ResponseEntity.ok(new UserDto(user));
 	}
 	
-	@PostMapping("/user/role")
-	public ResponseEntity<?> setUserRole(@RequestBody UserDto userDto){
+	@PatchMapping("/user")
+	public ResponseEntity<?> changeUserDetails(@RequestBody UserDto userDto){
 		try{
-			superAdminService.setUserRole(userDto);
+			superAdminService.changeUserDetails(userDto.fromDto());
 		} catch (CheckFailedException e){
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
 		}

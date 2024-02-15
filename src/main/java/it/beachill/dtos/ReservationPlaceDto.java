@@ -28,7 +28,9 @@ public class ReservationPlaceDto {
 
     public ReservationPlace fromDto(){
         ReservationPlace reservationPlace = new ReservationPlace();
-        reservationPlace.setId(this.id);
+        if(this.id > 0) {
+            reservationPlace.setId(this.id);
+        }
         reservationPlace.setName(this.name);
         reservationPlace.setAddress(this.address);
         reservationPlace.setManager(new User(this.managerId));

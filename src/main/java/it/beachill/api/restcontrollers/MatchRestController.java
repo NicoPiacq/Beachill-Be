@@ -40,6 +40,18 @@ public class MatchRestController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getAllMatchesByUserId(@PathVariable Long id) {
+        List<Match> matches = null;
+        try {
+            matches = matchsService.getAllMatchesByUserId(id);
+        } catch (CheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        List<MatchDto> result = matches.stream().map(MatchDto::new).toList();
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/invites")
     public ResponseEntity<?> getAllMatchesInvite(@AuthenticationPrincipal User user){
         List<Match> matches = matchsService.getAllMatchesInvite(user);

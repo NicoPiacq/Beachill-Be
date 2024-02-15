@@ -36,4 +36,6 @@ public interface MatchsService {
     void updateStatusMatch(User user, Long matchId, Integer status) throws CheckFailedException;
     
     List<Match> getAllMatchesByPlayer(User user);
+
+    List<Match> getAllMatchesByUserId(Long id) throws CheckFailedException;
 }

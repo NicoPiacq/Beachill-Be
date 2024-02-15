@@ -26,4 +26,7 @@ public interface ReservationsService {
     List<ReservationSlotsDto> getAllSlotsPerDate(Long fieldId, LocalDate date);
 
     List<Reservation> getAllReservationByUser(User user);
+
+    List<ReservationPlace> searchPlaceByString(String toFind);
+
 }

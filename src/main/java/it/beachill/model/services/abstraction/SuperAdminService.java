@@ -28,4 +28,8 @@ public interface SuperAdminService {
 	Optional<Team> deleteEnrolledPlayer(Long teamComponentId, Long teamId) throws TeamCheckFailedException;
 
     User getUserDetails(Long id) throws CheckFailedException;
+
+	void changeUserDetails(User user) throws CheckFailedException;
+
+	List<User> searchUserByString(String toFind);
 }

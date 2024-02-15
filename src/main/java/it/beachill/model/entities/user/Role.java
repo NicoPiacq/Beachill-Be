@@ -63,4 +63,19 @@ public enum Role {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return authorities;
     }
+
+    static public Role fromString(String string){
+        switch(string){
+            case "USER":
+                return Role.USER;
+            case "MANAGER":
+                return Role.MANAGER;
+            case "ADMIN":
+                return Role.ADMIN;
+            case "SUPERADMIN":
+                return Role.SUPERADMIN;
+            default:
+                return null;
+        }
+    }
 }

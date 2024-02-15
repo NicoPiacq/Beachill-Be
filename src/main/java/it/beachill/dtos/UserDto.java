@@ -1,5 +1,6 @@
 package it.beachill.dtos;
 
+import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.User;
 
 import java.time.LocalDate;
@@ -29,6 +30,20 @@ public class UserDto {
         this.player = new PlayerDto(user.getPlayer());
         this.role = user.getRole().toString();
     }
+
+    public User fromDto(){
+        User user = new User();
+        user.setId(this.id);
+        user.setName(this.name);
+        user.setSurname(this.surname);
+        user.setEmail(this.email);
+        user.setRegistrationDate(this.registrationDate);
+        user.setLastLogin(this.lastLogin);
+        user.setPlayer(this.player.fromDto());
+        user.setRole(Role.fromString(this.role));
+        return user;
+    }
+
    
     public Long getId() {
         return id;

@@ -43,7 +43,7 @@ public class JPAPlayersService implements PlayersService {
     
     @Override
     public List<User> searchPlayerByString(String toFind) {
-		Set<User> playersFound = new HashSet<>(userRepository.findByEmailContaining(toFind));
+		Set<User> playersFound = new HashSet<>(userRepository.findByEmailContainingIgnoreCase(toFind));
         playersFound.addAll(userRepository.findByNameContainingIgnoreCase(toFind));
         playersFound.addAll(userRepository.findBySurnameContainingIgnoreCase(toFind));
         return playersFound.stream().toList();

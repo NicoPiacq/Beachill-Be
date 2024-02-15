@@ -128,4 +128,9 @@ public class JPAReservationsService implements ReservationsService {
         return reservationRepository.findByUser(user);
     }
 
+    @Override
+    public List<ReservationPlace> searchPlaceByString(String toFind) {
+        return reservationPlaceRepository.findByNameContainingIgnoreCase(toFind);
+    }
+
 }

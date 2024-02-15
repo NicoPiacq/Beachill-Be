@@ -27,15 +27,17 @@ public class JPAMatchsService implements MatchsService {
     private final ScoreRepository scoreRepository;
     private final TeamComponentRepository teamComponentRepository;
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository, TeamComponentRepository teamComponentRepository, TeamRepository teamRepository) {
+    public JPAMatchsService(MatchRepository matchRepository, SetMatchRepository setMatchRepository, ScoreTypeRepository scoreTypeRepository, ScoreRepository scoreRepository, TeamComponentRepository teamComponentRepository, TeamRepository teamRepository, UserRepository userRepository) {
         this.matchRepository = matchRepository;
         this.setMatchRepository = setMatchRepository;
         this.scoreTypeRepository = scoreTypeRepository;
         this.scoreRepository = scoreRepository;
         this.teamComponentRepository = teamComponentRepository;
         this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Match> getAllMatchesByTournament(Long tournamentId){
@@ -121,8 +123,6 @@ public class JPAMatchsService implements MatchsService {
     
     private void updatePlayersScore(Match match) {
 
-//      //ABBIAMO TOLTO LO SCORE DAL PLAYER DATO CHE ADESSO è ALL' INTERNO DELLA TABELLA SCORE E GIUSTAMENTE QUA MUORE :( Rip
-        
         //controllare il tipo del match
         String scoreTypeString;
         if (match.getTournament() != null) {
@@ -210,14 +210,23 @@ public class JPAMatchsService implements MatchsService {
         match.setStatus(status);
         matchRepository.save(match);
     }
-    
+
+
+    @Override
+    public List<Match> getAllMatchesByUserId(Long id) throws CheckFailedException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isEmpty()){
+            throw new CheckFailedException("L' utente non esiste");
+        }
+        return getAllMatchesByPlayer(userOptional.get());
+    }
+
+
     @Override
     public List<Match> getAllMatchesByPlayer(User user) {
        List<TeamComponent> teamComponentList = teamComponentRepository.findByPlayerId(user.getPlayer().getId());
        List<Team> enrolledTeamList = new ArrayList<>();
        List<Match> matches = new ArrayList<>();
-//       Set<Team> enrolledTeamList = new HashSet<>();
-//       Set<Match> matches=new HashSet<>();
        for( TeamComponent teamComponent: teamComponentList){
            enrolledTeamList.add(teamComponent.getTeam());
        }
@@ -226,8 +235,9 @@ public class JPAMatchsService implements MatchsService {
        }
        return matches.stream().toList();
     }
-    
-    
+
+
+
     //UTILIZZATA PER CREARE UN MATCH DI UN TORNEO (PRIMA FASE)
     public Match createMatchAndSets(int matchNumber, MatchType matchType, int groupStage,
                                     Tournament tournament, Team homeTeam, Team awayTeam,

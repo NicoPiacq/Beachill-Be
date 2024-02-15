@@ -2,9 +2,11 @@ package it.beachill.api.restcontrollers;
 
 import it.beachill.dtos.ReservationPlaceDto;
 import it.beachill.model.entities.reservation.ReservationPlace;
+import it.beachill.model.entities.user.User;
 import it.beachill.model.services.abstraction.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,5 +38,12 @@ public class ReservationPlaceRestController {
         }
         ReservationPlaceDto reservationPlaceDto = new ReservationPlaceDto(reservationPlaceOptional.get());
         return ResponseEntity.ok(reservationPlaceDto);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPlaceByString(@RequestParam String toFind){
+        List<ReservationPlace> reservationPlaceList = reservationsService.searchPlaceByString(toFind);
+        List<ReservationPlaceDto> result = reservationPlaceList.stream().map(ReservationPlaceDto::new).toList();
+        return ResponseEntity.ok(result);
     }
 }

@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import it.beachill.model.entities.user.Role;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -169,5 +166,22 @@ public class JPASuperAdminService implements SuperAdminService {
 			throw new CheckFailedException("L' utente non esiste");
 		}
 		return userOptional.get();
+	}
+
+	@Override
+	public void changeUserDetails(User user) throws CheckFailedException {
+		Optional<User> userOptional = userRepository.findById(user.getId());
+		if(userOptional.isEmpty()){
+			throw new CheckFailedException("L' utente non esiste");
+		}
+		userRepository.save(user);
+	}
+
+	@Override
+	public List<User> searchUserByString(String toFind) {
+		Set<User> usersFound = new HashSet<>(userRepository.findByEmailContainingIgnoreCase(toFind));
+		usersFound.addAll(userRepository.findByNameContainingIgnoreCase(toFind));
+		usersFound.addAll(userRepository.findBySurnameContainingIgnoreCase(toFind));
+		return usersFound.stream().toList();
 	}
 }
