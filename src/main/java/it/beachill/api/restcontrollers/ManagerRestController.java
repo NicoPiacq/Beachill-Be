@@ -75,5 +75,5 @@ public class ManagerRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/reservation/")
+   // @GetMapping("/reservation/")
 }
