@@ -136,7 +136,7 @@ create table tournament.team_component (
     status int default 2,
     constraint team_component_pk primary key (id),
     constraint team_component_unique unique(team_id, player_id),
-    constraint team_compo_team_fk foreign key (team_id) references tournament.team(id),
+    constraint team_compo_team_fk foreign key (team_id) references tournament.team(id) on delete cascade,
     constraint team_compo_player_fk foreign key (player_id) references tournament.player(id) ON DELETE CASCADE
 );
 
@@ -191,7 +191,7 @@ create table tournament.group_stage_standing(
     points int default 0,
     constraint group_stage_standing_pk primary key (id),
     constraint group_stage_tournament_fk foreign key (tournament_id) references tournament.tournament (id) on delete cascade,
-    constraint group_stage_team_fk foreign key (team_id) references tournament.team
+    constraint group_stage_team_fk foreign key (team_id) references tournament.team on delete cascade
 );
 
 
@@ -204,7 +204,7 @@ create table tournament.team_in_tournament(
     status int default 2,
     constraint team_in_tournament_pk primary key (id),
     constraint team_in_tournament_unique unique (team_id, tournament_id),
-    constraint team_in_tournament_team_fk foreign key (team_id) references tournament.team,
+    constraint team_in_tournament_team_fk foreign key (team_id) references tournament.team on delete cascade,
     constraint team_in_tournament_tournament_fk foreign key (tournament_id) references tournament.tournament on delete cascade
 );
 
@@ -230,9 +230,9 @@ create table tournament.match (
     status int,
     constraint match_pk primary key (id),
     constraint match_description_fk foreign key(match_type) references tournament.domain_match_type(type),
-    constraint match_home_team_fk foreign key (home_team_id) references tournament.team(id),
-    constraint match_away_team_fk foreign key (away_team_id) references tournament.team(id),
-    constraint match_winner_team_fk foreign key (winner_team_id) references tournament.team(id),
+    constraint match_home_team_fk foreign key (home_team_id) references tournament.team(id) on delete cascade,
+    constraint match_away_team_fk foreign key (away_team_id) references tournament.team(id) on delete cascade,
+    constraint match_winner_team_fk foreign key (winner_team_id) references tournament.team(id) on delete cascade,
     constraint match_tournament_id_fk foreign key (tournament_id) references tournament.tournament(id) on delete cascade,
     constraint match_user_fk foreign key (user_id) references user_util._user(id)
 );

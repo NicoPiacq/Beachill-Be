@@ -19,6 +19,10 @@ public class ScoreType {
     public ScoreType() {
     }
 
+    public ScoreType(String name) {
+        this.name = name;
+    }
+
     public ScoreType(String name, String description) {
         this.name = name;
         this.description = description;
