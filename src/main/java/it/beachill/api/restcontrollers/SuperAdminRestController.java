@@ -109,7 +109,7 @@ public class SuperAdminRestController {
 	
 	//------------------------TEAM---------------------------
 	
-	@DeleteMapping("/{teamId}")
+	@DeleteMapping("/team/{teamId}")
 	public ResponseEntity<?> deleteTeam(@PathVariable Long teamId) {
 		Optional<Team> result;
 		try {
@@ -135,5 +135,15 @@ public class SuperAdminRestController {
 				.map(c -> ResponseEntity.noContent().build())
 				.findFirst()
 				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@PatchMapping("/team")
+	public ResponseEntity<?> changeTeamDetails(@RequestBody TeamDto teamDto){
+		try{
+			superAdminService.changeTeamDetails(teamDto.fromDto());
+		} catch (CheckFailedException e){
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+		}
+		return ResponseEntity.ok().build();
 	}
 }

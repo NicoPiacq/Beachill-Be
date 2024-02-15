@@ -184,4 +184,13 @@ public class JPASuperAdminService implements SuperAdminService {
 		usersFound.addAll(userRepository.findBySurnameContainingIgnoreCase(toFind));
 		return usersFound.stream().toList();
 	}
+	
+	@Override
+	public void changeTeamDetails(Team team) throws CheckFailedException {
+		Optional<Team> teamOptional = teamRepository.findById(team.getId());
+		if(teamOptional.isEmpty()){
+			throw new CheckFailedException("Il team non esiste");
+		}
+		teamRepository.save(team);
+	}
 }

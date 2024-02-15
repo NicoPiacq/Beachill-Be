@@ -32,4 +32,6 @@ public interface SuperAdminService {
 	void changeUserDetails(User user) throws CheckFailedException;
 
 	List<User> searchUserByString(String toFind);
+	
+	void changeTeamDetails(Team team) throws CheckFailedException;
 }
