@@ -23,6 +23,7 @@ public class MatchDto {
     private Integer fieldNumber;
     private LocalDate startDate;
     private Long winnerTeamId;
+    private String winnerTeamName;
     private Long adminId;
     private int setNumber;
     private Integer status;
@@ -63,6 +64,7 @@ public class MatchDto {
         this.startDate = match.getStartDate();
         if(match.getWinnerTeam() != null) {
             this.winnerTeamId = match.getWinnerTeam().getId();
+            this.winnerTeamName = match.getWinnerTeam().getTeamName();
         }
         this.setNumber = match.getSets().size();
         if(match.getStatus() != null){
