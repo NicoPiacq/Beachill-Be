@@ -1,0 +1,28 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: beachill-database.cnau084k0lhl.eu-north-1.rds.amazonaws.com
+    username: quaifede
+    password: goPostgresGo
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    root: WARN
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970 # in futuro da cambiare
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
