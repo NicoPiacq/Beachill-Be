@@ -99,6 +99,17 @@ public class MatchRestController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMatchDetails(@PathVariable Long id){
+        Match match;
+        try {
+            match = matchsService.getMatchDetails(id);
+        } catch (CheckFailedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.ok(new MatchDto(match));
+    }
+
     @GetMapping("/{matchId}/set")
     public ResponseEntity<?> getAllSetsByMatchId(@PathVariable Long matchId){
         List<SetMatch> setMatchList;
@@ -110,7 +121,7 @@ public class MatchRestController {
         return ResponseEntity.ok(setMatchList);
     }
     
-    @PatchMapping("/{setMatchId}/set")
+    @PatchMapping("/set/{setMatchId}")
     public ResponseEntity<?> updateMatchSetResult(@AuthenticationPrincipal User user, @PathVariable Long setMatchId, @RequestBody SetMatchDto setMatchDto) {
         try {
             matchsService.updateMatchSetResult(user, setMatchId, setMatchDto);
@@ -130,4 +141,5 @@ public class MatchRestController {
         }
         return ResponseEntity.ok().build();
     }
+
 }

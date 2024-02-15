@@ -221,6 +221,15 @@ public class JPAMatchsService implements MatchsService {
         return getAllMatchesByPlayer(userOptional.get());
     }
 
+    @Override
+    public Match getMatchDetails(Long id) throws CheckFailedException {
+        Optional<Match> matchOptional = matchRepository.findById(id);
+        if(matchOptional.isEmpty()){
+            throw new CheckFailedException("Il match non esiste.");
+        }
+        return matchOptional.get();
+    }
+
 
     @Override
     public List<Match> getAllMatchesByPlayer(User user) {

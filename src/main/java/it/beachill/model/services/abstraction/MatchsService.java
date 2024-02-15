@@ -38,4 +38,6 @@ public interface MatchsService {
     List<Match> getAllMatchesByPlayer(User user);
 
     List<Match> getAllMatchesByUserId(Long id) throws CheckFailedException;
+
+    Match getMatchDetails(Long id) throws CheckFailedException;
 }
