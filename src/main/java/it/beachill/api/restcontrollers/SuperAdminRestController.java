@@ -32,7 +32,7 @@ public class SuperAdminRestController {
 	}
 	//------------------------TOURNAMENT---------------------------
 	@DeleteMapping("/tournament/{id}")
-	public ResponseEntity<?> deleteTournament(@AuthenticationPrincipal User user, @PathVariable Long id){
+	public ResponseEntity<?> deleteTournament(@PathVariable Long id){
 		try {
 			superAdminService.deleteTournament(id);
 		} catch (TournamentCheckFailedException e) {

@@ -1,5 +1,6 @@
 package it.beachill.dtos;
 
+import it.beachill.model.entities.tournament.Player;
 import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.User;
 
@@ -39,7 +40,7 @@ public class UserDto {
         user.setEmail(this.email);
         user.setRegistrationDate(this.registrationDate);
         user.setLastLogin(this.lastLogin);
-        user.setPlayer(this.player.fromDto());
+        user.setPlayer(new Player(this.id));
         user.setRole(Role.fromString(this.role));
         return user;
     }
