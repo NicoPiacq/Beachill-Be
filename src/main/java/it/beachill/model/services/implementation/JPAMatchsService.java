@@ -45,19 +45,16 @@ public class JPAMatchsService implements MatchsService {
     }
     
     @Override
-    public void updateMatchSetResult(User user, Long setMatchId, SetMatchDto setMatchDto) throws CheckFailedException {
-        if(!Objects.equals(setMatchId, setMatchDto.getMatchId())){
-            throw new CheckFailedException("I dati del set non sono coerenti");
-        }
-        Optional<SetMatch> setMatchOptional = setMatchRepository.findById(setMatchId);
+    public void updateMatchSetResult(User user, SetMatchDto setMatchDto) throws CheckFailedException {
+        Optional<SetMatch> setMatchOptional = setMatchRepository.findById(setMatchDto.getId());
         if(setMatchOptional.isEmpty()){
             throw new CheckFailedException("Il set che vuoi modificare non esiste");
         }
-        Optional<Match> match = matchRepository.findById(setMatchId);
+        Optional<Match> match = matchRepository.findById(setMatchDto.getMatchId());
         if(match.isEmpty()){
             throw new CheckFailedException("Il match associato al set non esiste");
         }
-        if(match.get().getMatchAdmin().getId() != user.getId()){
+        if(!Objects.equals(match.get().getMatchAdmin().getId(), user.getId())){
             throw new CheckFailedException("Non sei l' admin del match.");
         }
         setMatchRepository.save(setMatchDto.fromDto());

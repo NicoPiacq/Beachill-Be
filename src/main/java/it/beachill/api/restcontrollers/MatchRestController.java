@@ -123,9 +123,9 @@ public class MatchRestController {
     }
     
     @PatchMapping("/set/{setMatchId}")
-    public ResponseEntity<?> updateMatchSetResult(@AuthenticationPrincipal User user, @PathVariable Long setMatchId, @RequestBody SetMatchDto setMatchDto) {
+    public ResponseEntity<?> updateMatchSetResult(@AuthenticationPrincipal User user, @RequestBody SetMatchDto setMatchDto) {
         try {
-            matchsService.updateMatchSetResult(user, setMatchId, setMatchDto);
+            matchsService.updateMatchSetResult(user, setMatchDto);
         } catch (CheckFailedException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
