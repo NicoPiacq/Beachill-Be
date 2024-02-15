@@ -229,4 +229,12 @@ public class MatchDto {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public String getWinnerTeamName() {
+        return winnerTeamName;
+    }
+
+    public void setWinnerTeamName(String winnerTeamName) {
+        this.winnerTeamName = winnerTeamName;
+    }
 }
