@@ -78,7 +78,7 @@ public class JPAMatchsService implements MatchsService {
         if(matchOptional.isEmpty()){
             throw new CheckFailedException("Il match non esiste.");
         }
-        if(matchOptional.get().getMatchAdmin().getId() != user.getId()){
+        if(!Objects.equals(matchOptional.get().getMatchAdmin().getId(), user.getId())){
             throw new CheckFailedException("Non sei l' admin del match.");
         }
         Match match= matchOptional.get();

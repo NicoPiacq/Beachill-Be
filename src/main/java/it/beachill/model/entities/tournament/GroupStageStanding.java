@@ -46,6 +46,10 @@ public class GroupStageStanding implements Comparable<GroupStageStanding>{
         this.team = team;
     }
 
+    public boolean isForTeam(long teamId){
+        return teamId == this.getTeam().getId();
+    }
+
     //ho fatto una cosa brutta, ho chiesto a chatGPT e ho copiaincollato oops
     @Override
     public boolean equals(Object o) {

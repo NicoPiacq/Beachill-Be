@@ -210,85 +210,74 @@ public class JPAAdminService implements AdminsService {
     
     public boolean calculateGroupStageStanding(Long id) {
         Optional<Tournament> tournamentOptional = tournamentRepository.findById(id);
-        if(tournamentOptional.isPresent()) {
+        if (tournamentOptional.isPresent()) {
             Tournament tournament = tournamentOptional.get();
             MatchType matchType = matchTypeRepository.findById("GIRONE").get();
             List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeAndWinnerTeamIsNotNull(id, matchType);
             List<GroupStageStanding> groupStageStandingList = groupStageStandingRepository.findByTournamentId(id);
+
             for (Match match : matches) {
                 Team homeTeam = match.getHomeTeam();
                 Team awayTeam = match.getAwayTeam();
 
-                for(int i = 0; i < groupStageStandingList.size(); i++){
-                    if(groupStageStandingList.get(i).getTeam().getId().equals(homeTeam.getId())) {
-                        if (match.getWinnerTeam().equals(homeTeam)) { //vince il team casa
-                            groupStageStandingList.get(i).addWinPoints();
-                        }
-                        List<SetMatch> setsMatch = setMatchRepository.findByMatchId(match.getId());
-                        for (SetMatch setMatch : setsMatch) {
-                            groupStageStandingList.get(i).addPointScoredAndPointConceded(setMatch.getHomeTeamScore(), setMatch.getAwayTeamScore());
-                        }
+                for (GroupStageStanding groupStageStanding : groupStageStandingList) {
+                    if (match.getWinnerTeam().equals(groupStageStanding.getTeam())) {
+                        groupStageStanding.addWinPoints();
                     }
-                    if(groupStageStandingList.get(i).getTeam().getId().equals(awayTeam.getId())) {
-                        if (match.getWinnerTeam().equals(awayTeam)) {
-                            groupStageStandingList.get(i).addWinPoints();
-                        }
-                        List<SetMatch> setsMatch = setMatchRepository.findByMatchId(match.getId());
-                        for (SetMatch setMatch : setsMatch) {
-                            groupStageStandingList.get(i).addPointScoredAndPointConceded(setMatch.getAwayTeamScore(), setMatch.getHomeTeamScore());
+                    List<SetMatch> sets = setMatchRepository.findByMatchId(match.getId());
+                    for (SetMatch set : sets) {
+                        if (groupStageStanding.getTeam().equals(match.getHomeTeam())) {
+                            groupStageStanding.addPointScoredAndPointConceded(set.getHomeTeamScore(), set.getAwayTeamScore());
+                        } else if (groupStageStanding.getTeam().equals(match.getAwayTeam())) {
+                            groupStageStanding.addPointScoredAndPointConceded(set.getAwayTeamScore(), set.getHomeTeamScore());
                         }
                     }
                 }
-                //forse si riuscirebbe a non eseguire volta per volta una query ma creando una lista
-                // con tutti i group stage, aggiornandoli qua, e poi salvando su database tutta la lista
-                //GroupStageStanding groupStageStanding = groupStageStandingRepository.findByTournamentIdAndTeamId(tournament, winnerTeam);
-                //groupStageStanding.addWinPoints();
             }
-            //------------------------------------ SONO ARRIVATO QUA --------------------------------
-            //sempre chat gpt, dovrebbe divedermi la lista in tante sottoliste groopedBy groupStage
-            Map<Integer, List<GroupStageStanding>> groupedByGroupStage = GroupStageStanding.groupByGroupStage(groupStageStandingList);
 
-            //Collections.sort(groupedByGroupStage.get(0));
+                //------------------------------------ SONO ARRIVATO QUA --------------------------------
+                //sempre chat gpt, dovrebbe divedermi la lista in tante sottoliste groopedBy groupStage
+                Map<Integer, List<GroupStageStanding>> groupedByGroupStage = GroupStageStanding.groupByGroupStage(groupStageStandingList);
 
-            List<Integer> groupStageKeys = new ArrayList<>(groupedByGroupStage.keySet());
+                //Collections.sort(groupedByGroupStage.get(0));
 
-            boolean thereAreDuplicate;
+                List<Integer> groupStageKeys = new ArrayList<>(groupedByGroupStage.keySet());
 
-            for (Integer groupStage : groupStageKeys) {
-                List<GroupStageStanding> standingsList = groupedByGroupStage.get(groupStage);
-                Collections.sort(standingsList);
+                boolean thereAreDuplicate;
 
-                // proviamo a vedere qualcosa per le squadre pari punti
-                thereAreDuplicate = standingsList.stream()
-                        .map(GroupStageStanding::getPointScored)
-                        .collect(Collectors.toSet())
-                        .size() < standingsList.size();
-                /////////// fine prova
+                for (Integer groupStage : groupStageKeys) {
+                    List<GroupStageStanding> standingsList = groupedByGroupStage.get(groupStage);
+                    Collections.sort(standingsList);
 
-                for(int i = 0; i < standingsList.size(); i++){
-                    //AGGIUNTA PER LO SWAP DEI TEAM CON GLI STESSI PUNTEGGI
-                    //implementato il caso di due team con lo stesso punteggio ma non generalizzato a n team con lo stesso punteggio
-                    if(thereAreDuplicate && i < standingsList.size()-1){
-                        //DA RICORDARCI CHE SVILUPPIAMO SOLO IL CASO CON 2 SCORE UGUALI
-                        if(standingsList.get(i).getPoints() == standingsList.get(i+1).getPoints()){
-                            double quotientPointsA = (double) standingsList.get(i).getPointScored() / standingsList.get(i).getPointConceded();
-                            double quotientPointsB = (double) standingsList.get(i+1).getPointScored() / standingsList.get(i+1).getPointConceded();
-                            if(quotientPointsA < quotientPointsB){
-                                standingsList.get(i).setStanding(i+2);
-                                standingsList.get(i).setStanding(i+1);
+                    // proviamo a vedere qualcosa per le squadre pari punti
+                    thereAreDuplicate = standingsList.stream()
+                            .map(GroupStageStanding::getPointScored)
+                            .collect(Collectors.toSet())
+                            .size() < standingsList.size();
+                    /////////// fine prova
+
+                    for (int i = 0; i < standingsList.size(); i++) {
+                        if (thereAreDuplicate && i < standingsList.size() - 1) {
+                            //DA RICORDARCI CHE SVILUPPIAMO SOLO IL CASO CON 2 SCORE UGUALI
+                            if (standingsList.get(i).getPoints() == standingsList.get(i + 1).getPoints()) {
+                                double quotientPointsA = (double) standingsList.get(i).getPointScored() / standingsList.get(i).getPointConceded();
+                                double quotientPointsB = (double) standingsList.get(i + 1).getPointScored() / standingsList.get(i + 1).getPointConceded();
+                                if (quotientPointsA < quotientPointsB) {
+                                    standingsList.get(i).setStanding(i + 2);
+                                    standingsList.get(i).setStanding(i + 1);
+                                }
+
                             }
-
+                        } else {
+                            standingsList.get(i).setStanding(i + 1);
                         }
-                    } else {
-                        standingsList.get(i).setStanding(i + 1);
                     }
+                    groupStageStandingRepository.saveAll(standingsList);
                 }
-                groupStageStandingRepository.saveAll(standingsList);
+                return true;
             }
-            return true;
+            return false;
         }
-        return false;
-    }
 
     @Override
 
