@@ -119,7 +119,7 @@ public class MatchRestController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
         List<SetMatchDto> result = setMatchList.stream().map(SetMatchDto::new).toList();
-        return ResponseEntity.ok(setMatchList);
+        return ResponseEntity.ok(result);
     }
     
     @PatchMapping("/set/{setMatchId}")
