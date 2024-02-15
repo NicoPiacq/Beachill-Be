@@ -122,7 +122,7 @@ public class MatchRestController {
         return ResponseEntity.ok(result);
     }
     
-    @PatchMapping("/set/{setMatchId}")
+    @PatchMapping("/set")
     public ResponseEntity<?> updateMatchSetResult(@AuthenticationPrincipal User user, @RequestBody SetMatchDto setMatchDto) {
         try {
             matchsService.updateMatchSetResult(user, setMatchDto);
