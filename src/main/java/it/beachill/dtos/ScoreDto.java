@@ -15,6 +15,8 @@ public class ScoreDto {
     private int pointConceded;
 
     private Long playerId;
+    private String playerName;
+    private String playerSurname;
 
     public ScoreDto() {
     }
@@ -24,6 +26,8 @@ public class ScoreDto {
         this.score = score.getScore();
         this.scoreType = score.getScoreType().getName();
         this.playerId = score.getPlayer().getId();
+        this.playerName = score.getPlayer().getUser().getName();
+        this.playerSurname = score.getPlayer().getUser().getSurname();
         this.matchWin = score.getMatchWin();
         this.matchLose = score.getMatchLose();
         this.pointScored = score.getPointScored();
@@ -92,5 +96,21 @@ public class ScoreDto {
 
     public void setPointConceded(int pointConceded) {
         this.pointConceded = pointConceded;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public String getPlayerSurname() {
+        return playerSurname;
+    }
+
+    public void setPlayerSurname(String playerSurname) {
+        this.playerSurname = playerSurname;
     }
 }
