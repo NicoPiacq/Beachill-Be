@@ -4,6 +4,7 @@ import it.beachill.dtos.ReservationDto;
 import it.beachill.dtos.ScoreDto;
 import it.beachill.dtos.ScoreTypeDto;
 import it.beachill.model.entities.tournament.Score;
+import it.beachill.model.entities.tournament.ScoreType;
 import it.beachill.model.services.abstraction.ScoresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ public class ScoreRestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getRankingByScoreType(@RequestBody ScoreTypeDto scoreTypeDto){
+    public ResponseEntity<?> getRankingByScoreType(@RequestParam String type){
+        ScoreTypeDto scoreTypeDto = new ScoreTypeDto(new ScoreType((type)));
         List<Score> scoreList = scoresService.getRankingByScoreType(scoreTypeDto.fromDto());
         List<ScoreDto> result = scoreList.stream().map(ScoreDto::new).toList();
         return ResponseEntity.ok(result);
