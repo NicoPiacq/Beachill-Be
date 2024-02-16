@@ -10,6 +10,7 @@ import it.beachill.model.entities.reservation.Sport;
 import it.beachill.model.entities.tournament.*;
 import it.beachill.model.entities.user.Role;
 import it.beachill.model.entities.user.User;
+import it.beachill.model.exceptions.CheckFailedException;
 import it.beachill.model.exceptions.RegistrationChecksFailedException;
 import it.beachill.model.exceptions.TeamCheckFailedException;
 import it.beachill.model.exceptions.TournamentCheckFailedException;
@@ -161,7 +162,7 @@ public class JPAAdminService implements AdminsService {
         if(tournamentOptional.isEmpty()){
             throw new TournamentCheckFailedException("Il torneo non esiste");
         }
-        if(user.getId().equals(tournamentOptional.get().getManager().getId())){
+        if(!user.getId().equals(tournamentOptional.get().getManager().getId())){
             throw new TournamentCheckFailedException("Non sei l'admin del torneo");
         }
         List<Match> matches = matchRepository.findByTournamentIdAndMatchTypeNot(id, new MatchType("GIRONE"));
@@ -288,28 +289,38 @@ public class JPAAdminService implements AdminsService {
             MatchType matchType = matchTypeRepository.findById("GIRONE").get();
             Random random = new Random();
             List<Match> matches = matchRepository.findByTournamentIdAndMatchType(id, matchType);
-            for(int i = 0; i < matches.size(); i++){
+            for(int i = 0; i < matches.size(); i++) {
                 List<SetMatch> setsMatch;
-                if(random.nextBoolean()) {
+                if (random.nextBoolean()) {
                     Match match = matches.get(i);
-                    match.setWinnerTeam(match.getHomeTeam());
+                    //match.setWinnerTeam(match.getHomeTeam());
                     setsMatch = setMatchRepository.findByMatchId(match.getId());
-                    for(SetMatch setMatch : setsMatch){
+                    for (SetMatch setMatch : setsMatch) {
                         setMatch.setHomeTeamScore(21);
                         setMatch.setAwayTeamScore(random.nextInt(19));
                     }
+                    setMatchRepository.saveAll(setsMatch);
+                    try {
+                        matchsService.updateMatchResultAndPlayersScore(match.getMatchAdmin(), match.getId());
+                    } catch (CheckFailedException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     Match match = matches.get(i);
-                    matches.get(i).setWinnerTeam(match.getAwayTeam());
+                    //matches.get(i).setWinnerTeam(match.getAwayTeam());
                     setsMatch = setMatchRepository.findByMatchId(match.getId());
-                    for(SetMatch setMatch : setsMatch){
+                    for (SetMatch setMatch : setsMatch) {
                         setMatch.setHomeTeamScore(random.nextInt(19));
                         setMatch.setAwayTeamScore(21);
                     }
                     setMatchRepository.saveAll(setsMatch);
+                    try {
+                        matchsService.updateMatchResultAndPlayersScore(match.getMatchAdmin(), match.getId());
+                    } catch (CheckFailedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-            matchRepository.saveAll(matches);
             return true;
         }
         return false;
@@ -417,14 +428,16 @@ public class JPAAdminService implements AdminsService {
             int numOfAdmin = 2;
             Tournament tournament1 = null;
             Tournament tournament2 = null;
+            Tournament tournament3 = null;
             // CREA Admin, PLACE E UN TORNEO
             for(int i = 1; i <= numOfAdmin; i++){
 
-                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("Manager" + i, "Manager" + i, "Manager" + i + "@gmail.com", "pass", null));
+                AuthenticationResponseDto authenticationResponseDto = userService.register(new RegistrationDto("Manager " + i, "", "manager" + i + "@gmail.com", "pass", null));
                 ReservationPlace reservationPlace = new ReservationPlace();
-                reservationPlace.setName("Campo di: " + authenticationResponseDto.getUser().getName());
+                reservationPlace.setName("Struttura di: " + authenticationResponseDto.getUser().getName());
                 User user =  new User(authenticationResponseDto.getUser().getId());
                 reservationPlace.setManager(user);
+                reservationPlace.setCity("Generation");
                 ReservationPlace reservationPlaceSaved = reservationPlaceRepository.save(reservationPlace);
 
                 for(int k = 0; k < 3; k++) {
@@ -465,7 +478,7 @@ public class JPAAdminService implements AdminsService {
                 }
                 if(i == 1) {
                     tournament1 = new Tournament();
-                    tournament1.setTournamentName("Prova " + (i + 1) + "Base 10 corto");
+                    tournament1.setTournamentName("Generation 1");
                     tournament1.setStartDate(LocalDate.now());
                     tournament1.setEndDate(LocalDate.now());
                     tournament1.setTournamentType(new TournamentType("10-corto"));
@@ -474,7 +487,7 @@ public class JPAAdminService implements AdminsService {
                     tournament1.setManager(user);
                     tournament1.setStatus(1);
                     tournament2 = new Tournament();
-                    tournament2.setTournamentName("Prova " + (i + 2) + "Intermedio 10 lungo");
+                    tournament2.setTournamentName("Generation 2");
                     tournament2.setStartDate(LocalDate.now());
                     tournament2.setEndDate(LocalDate.now());
                     tournament2.setTournamentType(new TournamentType("10-lungo"));
@@ -482,9 +495,19 @@ public class JPAAdminService implements AdminsService {
                     tournament2.setTournamentLevel(new TournamentLevel("INTERMEDIO"));
                     tournament2.setManager(user);
                     tournament2.setStatus(1);
+                    tournament3 = new Tournament();
+                    tournament3.setTournamentName("Generation 3");
+                    tournament3.setStartDate(LocalDate.now());
+                    tournament3.setEndDate(LocalDate.now());
+                    tournament3.setTournamentType(new TournamentType("10-lungo"));
+                    tournament3.setPlace(new TournamentPlace("generation"));
+                    tournament3.setTournamentLevel(new TournamentLevel("INTERMEDIO"));
+                    tournament3.setManager(user);
+                    tournament3.setStatus(1);
                 }
                 tournamentRepository.save(tournament1);
                 tournamentRepository.save(tournament2);
+                tournamentRepository.save(tournament3);
             }
 
             //CREA NUM user e quindi player
@@ -499,9 +522,6 @@ public class JPAAdminService implements AdminsService {
                 user.setPlayer(team.getTeamLeader());
                 tournamentsService.enrolledTeam(user, tournament1.getId(), team.getId());
                 tournamentsService.enrolledTeam(user, tournament2.getId(), team.getId());
-//                if(i > 0){
-//                    teamsService.invitePlayerToTeam(team.getId(), i-1,  )
-//                }
             }
 
 

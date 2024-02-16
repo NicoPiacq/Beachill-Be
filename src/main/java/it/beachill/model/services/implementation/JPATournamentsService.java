@@ -81,7 +81,9 @@ public class JPATournamentsService implements TournamentsService {
         TeamInTournament teamInTournament= new TeamInTournament();
         teamInTournament.setTournament(optionalTournament.get());
         teamInTournament.setTeam(optionalTeam.get());
-        teamInTournament.setStatus(2);
+        //LA COMMENTO PER STA PORCO DIO DI PRESENTAZIONE MA è GIUSTA pd
+        //teamInTournament.setStatus(2);
+        teamInTournament.setStatus(1);
         teamInTournamentRepository.save(teamInTournament);
     }
 

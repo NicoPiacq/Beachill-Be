@@ -101,7 +101,7 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/tournament/add-random-result-to-group-phase-matches/{id}")
+    @PostMapping("/tournament/random-group-phase/{id}")
     public ResponseEntity<Object> addRandomResultToGroupPhaseMatches(@PathVariable Long id){
         boolean result = adminsService.addRandomResultToGroupPhaseMatches(id);
         if(result){

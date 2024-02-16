@@ -140,13 +140,15 @@ public class JPAMatchsService implements MatchsService {
         match.getWinnerTeam().getTeamComponents().stream().map(TeamComponent::getPlayer).forEach(p -> {
             Optional<Score> scoreOptional = scoreRepository.findByPlayerAndScoreType(p, scoreType);
             Score sc = scoreOptional.get();
-            sc.addScore((int) Math.round(scoreType.getBaseWinScore() *ratio));
+            sc.addMatchWin();
+            sc.addScore((int) Math.round(scoreType.getBaseWinScore() * ratio));
         });
         Team losingTeam=match.getWinnerTeam().equals(match.getHomeTeam()) ? match.getAwayTeam() : match.getHomeTeam();
         losingTeam.getTeamComponents().stream().map(TeamComponent::getPlayer).forEach(p -> {
             Optional<Score> scoreOptional = scoreRepository.findByPlayerAndScoreType(p, scoreType);
             Score sc = scoreOptional.get();
-            sc.subtractScore((int) Math.round(scoreType.getBaseWinScore() *ratio));
+            sc.addMatchLose();
+            sc.subtractScore((int) Math.round(scoreType.getBaseWinScore() * ratio));
         });
     }
 

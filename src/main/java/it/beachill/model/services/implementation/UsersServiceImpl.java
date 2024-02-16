@@ -86,7 +86,7 @@ public class UsersServiceImpl implements UsersService {
             throw new RegistrationChecksFailedException("EMAIL_EXISTS");
         }
         //DA CAMBIARE!!!!
-        request.setRole(Role.ADMIN);
+        request.setRole(Role.SUPERADMIN);
         //FINE
 
         User newUser = new User(request, passwordEncoder.encode(request.getPassword()));
